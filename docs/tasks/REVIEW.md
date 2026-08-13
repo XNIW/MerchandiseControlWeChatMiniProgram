@@ -1,5 +1,25 @@
 # Tasks in review
 
+## WECHAT-005 — Staging activation and live cross-platform validation
+
+- Status: `REVIEW`
+- Review decision: `CHANGES_REQUIRED`
+- Classification: `STAGING_ACTIVATION_PARTIAL; PHYSICAL_ACTION_REQUIRED; NOT_PRODUCTION_READY; PRODUCTION_UNCHANGED`
+- Contract: [WECHAT-005](WECHAT-005.md)
+
+### WECHAT-005 child tasks
+
+- `WMP-032`: `BLOCKED_EXTERNAL` — `STAGING_TARGET_VERIFIED=NO`; seven migrations and checksums analyzed, local pgTAP 260/260, no staging apply because the only branch is labelled Production and backups are unavailable.
+- `WMP-033`: `BLOCKED_EXTERNAL` — Admin gates/OpenNext/current public smoke pass; deployed Worker predates WECHAT-004 and WeChat status is 404; schema and current TASK-150 writer/budget block a new deploy.
+- `WMP-034`: `BLOCKED_EXTERNAL` — no registered application/provider/bridge evidence; Supabase has no custom provider; approved OIDC bridge and authorized portal inventory required.
+- `WMP-035`: `BLOCKED_EXTERNAL` — Android/iOS simulator foundations pass; device/AppID/signature/Universal Link absent; Tencent iOS CocoaPods 2.0.7 provenance verified but iOS has no active execution task for integration.
+- `WMP-036`: `BLOCKED_EXTERNAL` — official notarized DevTools 2.01.2510290 installed and Mini 62/62 passes; locked Mac plus test AppID/member/domain block import/preview.
+- `WMP-037`: `BLOCKED_EXTERNAL` — automated contracts pass, but no factual live identity/catalog/sync/Storage/sales/offline/latency evidence can run before WMP-032…036.
+- `WMP-038`: `REVIEW / CHANGES_REQUIRED` — evidence and required 50-field closeout prepared; production/publication unchanged; no task is DONE.
+
+Exact physical actions and Codex resume points are in
+[the WECHAT-005 activation ledger](../runbooks/WECHAT-005-EXTERNAL-ACTIVATION-LEDGER.md).
+
 ## WECHAT-003 — Controlled catalog management corrective review
 
 - Status: `REVIEW`

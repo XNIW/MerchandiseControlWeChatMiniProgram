@@ -1,5 +1,12 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+**WECHAT-005** is in `REVIEW / CHANGES_REQUIRED` after the maximum safe
+staging-only inventory and independent gates. `WMP-032…WMP-037` are
+`BLOCKED_EXTERNAL`; `WMP-038` is in `REVIEW`. The candidate Supabase branch is
+explicitly labelled Production and has no Free-plan backup, the Admin staging
+writer is occupied, and official apps/provider/AppIDs/accounts/devices remain
+unavailable. Production and public publication remain disabled.
+
 **WECHAT-004** is `DONE` with classification
 `MERGED_CODE_COMPLETE_EXTERNAL_ACTIVATION_REQUIRED` and result
 `INTEGRATED_SYNC_POLICY_PARITY_PASS`. Corrective parents **WECHAT-001**,
@@ -44,6 +51,7 @@ Non-goals include POS staff login, staff/device/role writes, sales/refund/void/p
 | M17 | Durable outbox and incremental sync parity | M16; canonical sync_events | Restart-safe ordered outbox, watermark/delta/gap/epoch/reconcile and explicit conflicts | Private push not proven; polling limitation | DONE |
 | M18 | Local cross-platform E2E and security closeout | M16–M17; Android/iOS apply engines | Real local Supabase mutation/event/readback, production apply tests, targeted security scan | Staging/device/provider external | DONE |
 | M19 | Four-repository GitHub integration | M16–M18; green local gates | Normal PR/CI/merge, post-merge verification, clean published heads | External activation only | DONE |
+| M20 | Staging activation and live cross-platform validation | M19; verified non-production environments; official apps/provider/devices | Staging schema/deploy, progressive flags, factual live identity/sync/Storage/sales evidence and closeout | Target is labelled Production/no backup; writer, apps, provider and devices absent | REVIEW / CHANGES_REQUIRED |
 
 ## Task sequence
 
@@ -55,6 +63,13 @@ WECHAT-004 supersedes the repository-controlled blockers without rewriting that
 history. WMP-026…WMP-031 are `DONE` after normal merges and post-merge gates.
 Auth remains `DONE_CODE / EXTERNAL_ACTIVATION_REQUIRED`, Excel remains deferred
 and DevTools/live evidence remains externally blocked.
+
+WECHAT-005 adds WMP-032…WMP-038 without rewriting WECHAT-001…004. The target,
+migrations, staging deployment, official runtime and client prerequisites were
+fully inventoried; independent Mini/Admin/local DB/Android/iOS gates pass and
+official WeChat DevTools is installed. WMP-032…WMP-037 are now
+`BLOCKED_EXTERNAL`; WMP-038 and the parent are `REVIEW / CHANGES_REQUIRED`.
+No unavailable surface is presented as live.
 
 ## Completion criteria
 
