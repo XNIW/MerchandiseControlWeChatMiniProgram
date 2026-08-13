@@ -1,0 +1,2 @@
+@import "../shared.wxss";
+.logout{background:#fff;color:#b3261e}

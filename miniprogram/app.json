@@ -1,0 +1,37 @@
+{
+  "entryPagePath": "pages/index/index",
+  "pages": [
+    "pages/index/index",
+    "pages/sales/index",
+    "pages/database/index",
+    "pages/account/index",
+    "pages/sale-detail/index",
+    "pages/product-detail/index",
+    "pages/product-form/index",
+    "pages/catalog-entity-form/index",
+    "pages/catalog-lifecycle/index",
+    "pages/categories/index",
+    "pages/suppliers/index",
+    "pages/history/index",
+    "pages/webview/index"
+  ],
+  "tabBar": {
+    "color": "#648078",
+    "selectedColor": "#0d5c46",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/sales/index", "text": "销售" },
+      { "pagePath": "pages/database/index", "text": "数据库" },
+      { "pagePath": "pages/history/index", "text": "历史" },
+      { "pagePath": "pages/account/index", "text": "我的" }
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#0d5c46",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "MerchandiseControl",
+    "enablePullDownRefresh": true
+  }
+}

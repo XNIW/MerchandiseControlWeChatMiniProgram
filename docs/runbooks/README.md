@@ -16,3 +16,5 @@ If identity conflict, replay, token leakage, unauthorized shop access, or provid
 ## WeChat DevTools
 
 Use an authorized AppID and non-production test account. Keep `project.private.config.json` untracked. Verify request-domain allowlisting, build output, console/network logs, session expiration, foreground refresh, and read-only navigation. Do not publish, submit for review, accept contracts, or expose AppSecret.
+
+Use the ordered [external activation checklist](EXTERNAL_ACTIVATION.md).

@@ -1,0 +1,11 @@
+{
+  "compileType": "miniprogram",
+  "description": "MerchandiseControl Mini Program: read-only sales and controlled catalog management",
+  "miniprogramRoot": "dist/",
+  "setting": {
+    "checkSiteMap": true,
+    "es6": true,
+    "minified": true,
+    "postcss": true
+  }
+}

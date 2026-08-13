@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist-test",
+    "rootDir": ".",
+    "sourceMap": false,
+    "types": ["miniprogram-api-typings"]
+  },
+  "include": ["miniprogram/**/*.ts", "tests/**/*.ts"]
+}

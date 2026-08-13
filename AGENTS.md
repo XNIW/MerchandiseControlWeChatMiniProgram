@@ -1,16 +1,17 @@
 # MerchandiseControl WeChat Mini Program — Agent Guide
 
-This repository contains the read-only WeChat Mini Program companion for MerchandiseControl. It is a separate product surface: it is not the Admin Web, Android, iOS, Win7POS, ClientMerchandiseControl, or a POS staff client.
+This repository contains the WeChat Mini Program companion for MerchandiseControl. It is a separate product surface: it is not the Admin Web, Android, iOS, Win7POS, ClientMerchandiseControl, or a POS staff client. Sales/POS/staff capabilities remain read-only; WECHAT-003 permits only controlled catalog mutations through the Admin-owned server boundary.
 
-## Initial scope
+## Current scope
 
 - Personal WeChat sign-in through the canonical WECHAT-001 identity contract.
 - Authorized shop selection.
 - Today's net sales summary and paginated sales list.
 - Automatic refresh or a documented near-realtime fallback.
-- Read-only access throughout.
+- Read-only sales, payments, refunds, voids, POS history, sync status and staff metadata.
+- Capability-gated product, category, supplier, current-price and private product-image management for authorized personal shop members.
 
-Product editing, import/export, staff management, staff PIN or POS login, sales creation, refund/void, payments, platform administration, direct database writes, and client-side service-role access are out of scope.
+Excel import is deferred by DEC-002 and must not have placeholder UI. Staff management, staff PIN or POS login, sales creation, refund/void, payments, platform administration, direct database writes, client-authored audit/sync events, camera barcode scanning and client-side service-role access are out of scope.
 
 ## Architecture boundaries
 
@@ -18,6 +19,7 @@ Product editing, import/export, staff management, staff PIN or POS login, sales 
 - This repository never owns Supabase migrations.
 - Supabase `auth.users` and the personal profile are the canonical MerchandiseControl identity.
 - `shop_id` is the business-data boundary. The client may call only authorized, shop-scoped APIs/RPCs and must never receive indiscriminate POS-table access.
+- Every catalog write is re-authorized server-side and uses the real capability, lifecycle and concurrency token returned by the Admin boundary. Client role labels are presentation hints only.
 - Personal accounts and POS staff credentials are separate authentication systems.
 - Source priority: Admin Web for contracts/backend/Supabase/governance; Android for functional behavior; iOS for mobile UX; official WeChat and Supabase documentation for platform behavior.
 
@@ -35,6 +37,7 @@ Product editing, import/export, staff management, staff PIN or POS login, sales 
 - OpenID is an external identifier, never a bearer token.
 - Do not commit credentials, tokens, certificates, private DevTools configuration, or complete WeChat identifiers in evidence.
 - Fail closed on identity conflict, callback confusion, replay, missing membership, suspended user/shop, or cross-shop access.
+- Fail closed on viewer mutation, stale catalog revision, idempotency-key mismatch, invalid replacement, arbitrary image path or signed-URL scope mismatch.
 - Do not store long-lived tokens in unprotected client storage without an approved threat model.
 - Never modify production from this repository.
 

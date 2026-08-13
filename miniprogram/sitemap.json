@@ -1,0 +1,4 @@
+{
+  "desc": "Read-only authenticated companion; pages are not indexed.",
+  "rules": [{ "action": "disallow", "page": "*" }]
+}

@@ -1,0 +1,2 @@
+@import "../shared.wxss";
+.toolbar{align-items:center;display:flex;gap:16rpx;margin-bottom:18rpx}.toolbar button{margin:0}.primary{background:#0d5c46;color:#fff}.read-only{background:#eef5f2;border-radius:12rpx;color:#42675c;padding:14rpx}.row view{flex:1}

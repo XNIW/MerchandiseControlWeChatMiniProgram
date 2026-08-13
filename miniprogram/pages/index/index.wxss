@@ -1,0 +1,139 @@
+.page {
+  padding: 32rpx;
+}
+
+.header,
+.summary-row,
+.sale-row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header {
+  margin-bottom: 28rpx;
+}
+
+.eyebrow,
+.label,
+.updated,
+.sale-time,
+.sale-status,
+.state-detail {
+  color: #648078;
+  display: block;
+  font-size: 24rpx;
+}
+
+.shop-name,
+.state-title {
+  display: block;
+  font-size: 38rpx;
+  font-weight: 650;
+  margin-top: 8rpx;
+}
+
+.quiet {
+  background: transparent;
+  color: #0d5c46;
+  font-size: 24rpx;
+  margin: 0;
+}
+
+.summary-card,
+.state-card,
+.sales-list {
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 28rpx rgba(13, 92, 70, 0.08);
+  margin-bottom: 24rpx;
+  padding: 32rpx;
+}
+
+.summary-grid,
+.action-grid {
+  display: grid;
+  gap: 16rpx;
+  grid-template-columns: 1fr 1fr;
+}
+
+.summary-grid {
+  background: #f4f7f6;
+  border-radius: 18rpx;
+  margin-bottom: 24rpx;
+  padding: 22rpx;
+}
+
+.metric-label,
+.metric-value,
+.warning-text {
+  display: block;
+}
+
+.metric-label,
+.warning-text {
+  color: #648078;
+  font-size: 22rpx;
+}
+
+.metric-value {
+  font-size: 27rpx;
+  font-weight: 650;
+  margin-top: 6rpx;
+}
+
+.live-pill {
+  background: #e9f8ef;
+  border-radius: 999rpx;
+  color: #087a43;
+  font-size: 22rpx;
+  padding: 10rpx 18rpx;
+}
+
+.warning-text { margin-top: 10rpx; }
+.compact { margin-top: 24rpx; }
+.action-grid button { background: #ffffff; color: #0d5c46; }
+
+.amount {
+  display: block;
+  font-size: 54rpx;
+  font-weight: 720;
+  margin: 14rpx 0 30rpx;
+}
+
+.updated {
+  margin-top: 24rpx;
+}
+
+.state-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-top: 120rpx;
+  text-align: center;
+}
+
+.sale-row {
+  border-bottom: 1rpx solid #e6eeeb;
+  padding: 24rpx 0;
+}
+
+.sale-row:last-child {
+  border-bottom: 0;
+}
+
+.sale-number,
+.sale-right text {
+  display: block;
+}
+
+.sale-right {
+  text-align: right;
+}
+
+.load-more {
+  background: transparent;
+  color: #0d5c46;
+  font-size: 26rpx;
+  margin-top: 20rpx;
+}

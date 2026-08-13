@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="database-actions">
+    <button wx:if="{{canCreate}}" class="primary compact" bindtap="createProduct">{{text.newProduct}}</button>
+    <text wx:else class="read-only">{{text.readOnlyCatalog}}</text>
+  </view>
+  <input class="search" placeholder="{{text.search}} · {{text.name}} / {{text.barcode}}" value="{{search}}" bindinput="search"/>
+  <view class="quick-links">
+    <button size="mini" bindtap="openCategories">{{text.categories}}</button>
+    <button size="mini" bindtap="openSuppliers">{{text.suppliers}}</button>
+    <button size="mini" bindtap="openHistory">{{text.history}}</button>
+    <button size="mini" bindtap="viewArchived">{{text.viewArchived}}</button>
+    <button wx:if="{{categoryFilterId || supplierFilterId}}" size="mini" bindtap="clearCatalogFilter">{{text.clearFilters}}</button>
+    <picker range="{{sortLabels}}" value="{{sortIndex}}" bindchange="chooseSort"><view class="sort">{{sortLabels[sortIndex]}}</view></picker>
+  </view>
+  <text wx:if="{{loading}}" class="muted">{{text.loading}}</text>
+  <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
+  <view wx:if="{{!loading && products.length === 0}}" class="empty">{{text.empty}}</view>
+  <view class="list"><view wx:for="{{products}}" wx:key="product_id" class="product-row" data-id="{{item.product_id}}" bindtap="openProduct"><image wx:if="{{item.thumbnail_url}}" class="thumb" src="{{item.thumbnail_url}}" mode="aspectFill" lazy-load/><view wx:else class="placeholder">{{text.imageUnavailable}}</view><view class="product-copy"><text class="strong">{{item.product_name || item.second_product_name || item.barcode}}</text><text class="muted">{{item.barcode}} · {{item.item_number || text.none}}</text><text class="muted">{{item.category_name || text.none}} · {{item.supplier_name || text.none}}</text></view><text class="price">{{item.retail_price === null ? text.none : item.retail_price}} {{currencyCode}}</text></view></view>
+  <button wx:if="{{products.length >= 50}}" bindtap="loadMore">{{text.loadMore}}</button>
+</view>

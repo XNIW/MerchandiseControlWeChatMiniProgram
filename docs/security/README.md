@@ -5,3 +5,5 @@ The WECHAT-001 review covers code interception, CSRF/state mismatch, replay, ses
 P0/P1 controls required before activation include a single server exchange boundary, one-time short-lived state/code handling, signed OIDC issuer/JWKS/audience/nonce validation through the approved Supabase contract, strict surface/callback binding, bounded validated bodies/outbound calls, sanitized logs/errors, short session lifecycle, fail-closed linking, per-request shop authorization, minimal read payloads, dependency provenance, and automated replay/cross-shop/secret tests.
 
 No threat is considered mitigated merely because the feature is OFF; tests/evidence must accompany activation.
+
+The control-by-control status is in [THREAT_MODEL.md](THREAT_MODEL.md).
