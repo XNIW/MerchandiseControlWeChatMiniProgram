@@ -9,6 +9,5 @@ Each task must be expanded from the template before activation. Do not activate 
 
 WMP-011 through WMP-022 and WMP-024 retain their historical `REVIEW` state;
 WMP-023 and WMP-025 retain external activation blockers. WECHAT-004 and
-WMP-026…WMP-031 have moved directly to `REVIEW` with implemented local evidence,
-so they are not duplicated in the planned backlog. WMP-021 is deferred by its
-architecture decision, not queued for implementation.
+WMP-026…WMP-031 are `DONE`, so they are not duplicated in the planned backlog.
+WMP-021 is deferred by its architecture decision, not queued for implementation.

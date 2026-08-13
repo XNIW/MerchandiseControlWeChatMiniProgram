@@ -1,32 +1,5 @@
 # Tasks in review
 
-## WECHAT-004 — Final integration review
-
-- Status: `REVIEW`
-- Review decision: `APPROVED_FOR_NORMAL_PR_MERGE_WITH_FLAGS_OFF`
-- Classification: `CODE_COMPLETE_AWAITING_GITHUB_MERGE; EXTERNAL_ACTIVATION_REQUIRED`
-- Contract: [WECHAT-004](WECHAT-004.md)
-
-### WECHAT-004 child tasks
-
-- `WMP-026`: durable per-user/shop outbox, retry/order/restart/conflict/image-path
-  state implemented and locally verified.
-- `WMP-027`: minimal delta, watermark, gap, epoch, reconcile and adaptive
-  automatic polling implemented and locally verified.
-- `WMP-028`: opaque Mini session and legacy-sink closure implemented and locally
-  verified; no general Supabase bearer is issued to the Mini.
-- `WMP-029`: link/audit recovery saga is `DONE_CODE` but external provider
-  activation remains required.
-- `WMP-030`: real rollback-only local Supabase convergence plus Android/iOS
-  production apply-engine tests pass; staging/live is not claimed.
-- `WMP-031`: authorized GitHub integration is the only repository-controlled
-  acceptance item still pending.
-
-The targeted Admin security scan closed all 66 worklist rows. Five Medium and
-two Low snapshot findings were fixed and regression-tested. A separate Low
-follow-up remains for production-like measurement of bounded concurrent image
-finalize work; it is not an unresolved P0/P1.
-
 ## WECHAT-003 — Controlled catalog management corrective review
 
 - Status: `REVIEW`

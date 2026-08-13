@@ -1,11 +1,11 @@
 # WECHAT-004 — Final sync policy parity and integration closeout
 
-- Status: `REVIEW`
-- Classification: `CODE_COMPLETE_AWAITING_GITHUB_MERGE; EXTERNAL_ACTIVATION_REQUIRED`
+- Status: `DONE`
+- Classification: `MERGED_CODE_COMPLETE_EXTERNAL_ACTIVATION_REQUIRED`
 - Parent/epic: final successor to `WECHAT-001`, `WECHAT-002` and `WECHAT-003`
 - Owner: Admin Web owns identity/session/API/migrations; Mini owns durable client state; Android/iOS own native adapters and apply engines; authorized operator owns activation
 - Opened / updated: 2026-08-13 / 2026-08-13
-- Commit / PR, if any: pending the authorized four-repository integration flow
+- Commit / PR, if any: Admin `4b325980` / PR #85; Mini `a76dd18e` / PR #1; Android `bf11e8ca` / PR #8; iOS `1f63b071` / PR #6; all merged normally
 
 ## Context and objective
 
@@ -49,8 +49,8 @@ WeChat authentication remains a separate external gate.
 - [x] Delta/watermark/gap/epoch/reconcile semantics match Android/iOS.
 - [x] Real local Supabase mutation/event/readback is consumed by Android/iOS production apply engines.
 - [x] Targeted security review has no unresolved P0/P1 and all reportable snapshot findings are fixed.
-- [ ] Four feature PRs and the final governance closeout PR are merged with green CI.
-- [ ] Final repository heads and clean states are recorded in WMP-031.
+- [x] Four feature PRs are merged normally with green CI; the governance-only closeout PR records the final state.
+- [x] Final repository heads and clean states are recorded in WMP-031.
 - [x] Flags remain OFF and staging/production remain unchanged.
 
 ## Checks and evidence
@@ -61,7 +61,7 @@ WeChat authentication remains a separate external gate.
 | Real local convergence | Rollback-only Supabase fixture plus Android/iOS production apply tests | PASS | Recorded local runs | External forensic evidence bundle |
 | Admin/Supabase | Foundation/pgTAP/reset/lint/build gates | PASS before final rerun | Recorded | Admin WECHAT-004 matrix |
 | Mini | Typecheck/lint/tests/build/governance/secrets | PASS before final rerun | Recorded | Mini `npm run verify` |
-| GitHub integration | Feature PRs, CI, normal merge, post-merge gates | PENDING | — | WMP-031 |
+| GitHub integration | Feature PRs, CI, normal merge, post-merge gates | PASS | Admin #85, Mini #1, Android #8, iOS #6 | WMP-031 |
 
 ## Risks and remaining problems
 
@@ -83,9 +83,6 @@ forensic evidence bundle outside the repository.
 
 ## Next step and handoff
 
-Merge the four feature PRs in dependency order, run post-merge gates, then land
-the Mini governance-only closeout that records exact SHAs/PRs and marks the
-code-complete tasks `DONE`.
-
-`DONE` requires the already-authorized final merge verification; external live
-activation remains separately blocked.
+The repository-controlled work is merged and closed as
+`INTEGRATED_SYNC_POLICY_PARITY_PASS`. The sole next phase is the separately
+authorized external activation runbook; live WeChat evidence is not claimed.

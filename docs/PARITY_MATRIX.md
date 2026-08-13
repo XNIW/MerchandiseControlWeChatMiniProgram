@@ -63,6 +63,5 @@ Global classification: `CHANGES_REQUIRED — FOUNDATION_IMPLEMENTED, LIVE AUTH A
 The implementation deliberately differs only in platform mechanics: Mini uses
 official local storage/file APIs and foreground adaptive delta polling instead
 of WorkManager/SwiftData schedulers. No separate sync lane was introduced.
-Private push is not claimed; the UI says automatic update. Final status becomes
-`INTEGRATED_SYNC_POLICY_PARITY_PASS` only after all four main branches contain
-the verified code.
+Private push is not claimed; the UI says automatic update. All four main
+branches now contain the verified code: `INTEGRATED_SYNC_POLICY_PARITY_PASS`.
