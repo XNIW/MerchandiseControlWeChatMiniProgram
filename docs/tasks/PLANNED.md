@@ -11,3 +11,6 @@ WMP-011 through WMP-022 and WMP-024 retain their historical `REVIEW` state;
 WMP-023 and WMP-025 retain external activation blockers. WECHAT-004 and
 WMP-026…WMP-031 are `DONE`, so they are not duplicated in the planned backlog.
 WMP-021 is deferred by its architecture decision, not queued for implementation.
+WECHAT-005/WMP-032…038 are no longer planning backlog: the parent and WMP-038
+are in `REVIEW / CHANGES_REQUIRED`, while WMP-032…037 are individually
+`BLOCKED_EXTERNAL`. See `REVIEW.md` and the activation ledger.
