@@ -1,0 +1,31 @@
+<view class="page">
+  <text wx:if="{{loading}}" class="muted">{{text.loading}}</text>
+  <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
+  <view wx:if="{{!loading && product}}">
+    <image wx:if="{{imageUrl}}" class="hero-image" src="{{imageUrl}}" mode="aspectFit" lazy-load/>
+    <view wx:else class="hero-placeholder">{{text.imageUnavailable}}</view>
+    <view wx:if="{{canManageImages}}" class="action-row">
+      <button size="mini" loading="{{imageBusy}}" disabled="{{imageBusy}}" bindtap="replaceImage">{{product.primary_image_version_id ? text.replaceImage : text.addImage}}</button>
+      <button wx:if="{{product.primary_image_version_id}}" size="mini" disabled="{{imageBusy}}" bindtap="removeImage">{{text.removeImage}}</button>
+    </view>
+    <text wx:if="{{!canEdit}}" class="read-only">{{text.readOnlyCatalog}}</text>
+    <view class="card">
+      <text class="section-title">{{product.product_name || product.second_product_name || product.barcode}}</text>
+      <view class="row"><text>{{text.barcode}}</text><text>{{product.barcode}}</text></view>
+      <view class="row"><text>{{text.itemNumber}}</text><text>{{product.item_number || text.none}}</text></view>
+      <view class="row"><text>{{text.category}}</text><text>{{product.category_name || text.none}}</text></view>
+      <view class="row"><text>{{text.supplier}}</text><text>{{product.supplier_name || text.none}}</text></view>
+      <view class="row"><text>{{text.retailPrice}} · {{currencyCode}}</text><text>{{product.retail_price === null ? text.none : product.retail_price}}</text></view>
+      <view class="row"><text>{{text.stock}}</text><text>{{product.stock_quantity === null ? text.none : product.stock_quantity}}</text></view>
+      <text class="muted">{{text.updated}} · {{product.updated_at}}</text>
+    </view>
+    <view wx:if="{{canEdit}}" class="action-row">
+      <button class="primary" disabled="{{mutating}}" bindtap="edit">{{text.edit}}</button>
+      <button class="danger" loading="{{mutating}}" disabled="{{mutating}}" bindtap="archive">{{text.archive}}</button>
+    </view>
+    <text class="section-title">{{text.priceHistory}}</text>
+    <view wx:if="{{prices.length === 0}}" class="empty">{{text.noHistory}}</view>
+    <view class="list"><view wx:for="{{prices}}" wx:key="price_id" class="row"><view><text class="strong">{{item.price_type_label}}</text><text class="muted">{{item.effective_at}} · {{item.source || text.none}}</text></view><text>{{item.price}} {{currencyCode}}</text></view></view>
+  </view>
+  <view wx:if="{{!loading && !product && !errorMessage}}" class="empty">{{text.empty}}</view>
+</view>

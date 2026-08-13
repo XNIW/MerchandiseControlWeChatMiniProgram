@@ -1,0 +1,3 @@
+@import "../shared.wxss";
+.hero-image,.hero-placeholder{background:#fff;border-radius:22rpx;height:520rpx;margin-bottom:22rpx;width:100%}.hero-placeholder{align-items:center;color:#648078;display:flex;justify-content:center}
+.action-row{display:flex;gap:16rpx;margin:18rpx 0}.action-row button{flex:1}.danger{background:#fff0ef;color:#9b1c16}.read-only{background:#eef5f2;border-radius:14rpx;color:#42675c;display:block;margin:16rpx 0;padding:18rpx}

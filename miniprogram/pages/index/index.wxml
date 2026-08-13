@@ -1,0 +1,23 @@
+<view class="page">
+  <view wx:if="{{viewState === 'disabled'}}" class="state-card"><text class="state-title">{{text.disabledTitle}}</text><text class="state-detail">{{text.disabledDetail}}</text></view>
+  <view wx:elif="{{viewState === 'signed_out' || viewState === 'session_expired'}}" class="state-card"><text wx:if="{{errorMessage}}" class="state-detail">{{errorMessage}}</text><text class="state-detail">{{text.consent}}</text><button class="primary" bindtap="signIn">{{text.login}}</button></view>
+  <view wx:elif="{{viewState === 'link_required' || viewState === 'unauthorized'}}" class="state-card"><text class="state-detail">{{errorMessage}}</text><button class="quiet" bindtap="signOut">{{text.signOut}}</button></view>
+  <view wx:elif="{{viewState === 'loading'}}" class="state-card"><text class="state-title">{{text.loading}}</text></view>
+  <view wx:else>
+    <view class="header"><view><text class="eyebrow">{{text.home}}</text><picker range="{{shops}}" range-key="shop_name" bindchange="chooseShop"><text class="shop-name">{{currentShop.shop_name}}</text></picker></view><text class="live-pill">{{text.autoUpdate}}</text></view>
+    <view class="summary-card">
+      <text class="label">{{text.netRevenue}}</text><text class="amount">{{netRevenue}}</text>
+      <view class="summary-grid">
+        <view><text class="metric-label">{{text.grossRevenue}}</text><text class="metric-value">{{grossRevenue}}</text></view>
+        <view><text class="metric-label">{{text.refunds}}</text><text class="metric-value">{{refunds}}</text></view>
+        <view><text class="metric-label">{{text.saleCount}}</text><text class="metric-value">{{saleCount}}</text></view>
+        <view><text class="metric-label">{{text.averageSale}}</text><text class="metric-value">{{averageSale}}</text></view>
+      </view>
+      <view class="summary-row"><text>{{text.comparison}}</text><text>{{comparison}}</text></view>
+      <view class="summary-row"><text>{{text.latestSale}}</text><text>{{latestSale}}</text></view>
+      <text class="updated">{{text.updated}} · {{lastUpdated}}</text><text class="warning-text">{{text.notRealtime}}</text>
+    </view>
+    <view wx:if="{{viewState === 'offline' || viewState === 'error'}}" class="state-card compact"><text>{{errorMessage}}</text><button bindtap="refresh">{{text.retry}}</button></view>
+    <view class="action-grid"><button bindtap="openSales">{{text.sales}}</button><button bindtap="openDatabase">{{text.database}}</button></view>
+  </view>
+</view>

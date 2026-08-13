@@ -1,0 +1,17 @@
+<view class="page">
+  <text wx:if="{{loading}}" class="muted">{{text.loading}}</text>
+  <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
+  <view wx:if="{{!loading && formReady}}" class="form-card">
+    <label class="field"><text>{{text.barcode}} *</text><input maxlength="96" value="{{barcode}}" bindinput="changeBarcode"/></label>
+    <label class="field"><text>{{text.itemNumber}}</text><input maxlength="120" value="{{itemNumber}}" bindinput="changeItemNumber"/></label>
+    <label class="field"><text>{{text.productName}} *</text><input maxlength="240" value="{{productName}}" bindinput="changeProductName"/></label>
+    <label class="field"><text>{{text.secondProductName}}</text><input maxlength="240" value="{{secondProductName}}" bindinput="changeSecondProductName"/></label>
+    <label class="field"><text>{{text.category}}</text><picker range="{{categoryOptions}}" range-key="label" value="{{categoryIndex}}" bindchange="chooseCategory"><view class="picker-value">{{categoryOptions[categoryIndex].label || text.none}}</view></picker></label>
+    <label class="field"><text>{{text.supplier}}</text><picker range="{{supplierOptions}}" range-key="label" value="{{supplierIndex}}" bindchange="chooseSupplier"><view class="picker-value">{{supplierOptions[supplierIndex].label || text.none}}</view></picker></label>
+    <label class="field"><text>{{text.purchasePrice}} · {{currencyCode}}</text><input type="digit" disabled="{{!canChangePrices}}" value="{{purchasePrice}}" bindinput="changePurchasePrice"/></label>
+    <label class="field"><text>{{text.retailPrice}} · {{currencyCode}}</text><input type="digit" disabled="{{!canChangePrices}}" value="{{retailPrice}}" bindinput="changeRetailPrice"/></label>
+    <label class="field"><text>{{text.stock}}</text><input type="digit" value="{{stockQuantity}}" bindinput="changeStockQuantity"/></label>
+    <button class="primary save" loading="{{saving}}" disabled="{{saving}}" bindtap="save">{{saving ? text.saving : text.save}}</button>
+  </view>
+  <view wx:if="{{errorMessage && !formReady}}" class="error-card"><button bindtap="retryLoad">{{text.retry}}</button></view>
+</view>

@@ -11,3 +11,5 @@
 ## Live only with external prerequisites
 
 Official WeChat DevTools/device login, same canonical identity across web/Android/iOS/Mini Program, domain/approval checks, removed membership/suspended user denial, sale/refund refresh, and verification that logs/bundles contain no credentials. Record these as `NOT RUN — external prerequisite` until evidenced; fixtures are not live tests.
+
+See [TEST_MATRIX.md](TEST_MATRIX.md) for the current evidence boundary.

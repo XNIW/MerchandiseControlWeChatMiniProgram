@@ -1,0 +1,2 @@
+@import "../shared.wxss";
+.entity-row{align-items:center;border-bottom:1rpx solid #e6eeeb;display:flex;gap:16rpx;padding:22rpx 0}.entity-copy{flex:1}.read-only{background:#eef5f2;border-radius:14rpx;color:#42675c;display:block;margin-bottom:18rpx;padding:18rpx}

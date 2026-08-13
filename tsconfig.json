@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2022"],
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "target": "ES2019",
+    "types": ["miniprogram-api-typings"]
+  },
+  "include": ["miniprogram/**/*.ts", "tests/**/*.ts"]
+}

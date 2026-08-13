@@ -1,0 +1,11 @@
+<view class="page">
+  <view class="toolbar">
+    <button wx:if="{{canManage}}" size="mini" class="primary" bindtap="create">{{text.newSupplier}}</button>
+    <text wx:else class="read-only">{{text.readOnlyCatalog}}</text>
+    <button size="mini" bindtap="viewArchived">{{text.viewArchived}}</button>
+  </view>
+  <input class="search" placeholder="{{text.search}}" bindinput="search"/>
+  <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
+  <view wx:if="{{!loading && !errorMessage && items.length === 0}}" class="empty">{{text.empty}}</view>
+  <view class="list"><view wx:for="{{items}}" wx:key="supplier_id" class="row" data-id="{{item.supplier_id}}" bindtap="openProducts"><view><text class="strong">{{item.supplier_name}}</text><text class="muted">{{text.productCount}} · {{item.product_count}}</text></view><button wx:if="{{canManage}}" size="mini" data-id="{{item.supplier_id}}" catchtap="manage">{{text.manage}}</button></view></view>
+</view>
