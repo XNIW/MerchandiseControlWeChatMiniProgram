@@ -61,5 +61,6 @@ Global classification: `CHANGES_REQUIRED — FOUNDATION_IMPLEMENTED, LIVE AUTH A
   physical-device same-identity login are `NOT RUN` and are not represented by
   fixtures.
 
-The final pre-commit and post-merge command results, CI runs, commit/PR/merge
-identifiers and exact main SHAs are appended by WMP-031.
+WMP-031 records green pre-commit, GitHub CI and post-merge gates. Feature PRs
+Admin #85, Mini #1, Android #8 and iOS #6 are merged normally; external staging,
+DevTools and live Auth remain explicitly not run.
