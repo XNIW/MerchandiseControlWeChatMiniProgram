@@ -5,7 +5,7 @@
 - Parent/epic: successor to `WECHAT-004`; prior epics retain their historical states
 - Owner: Codex coordinates; Admin owns server/migrations; each client owns its official adapter; the authorized operator owns identity/legal/2FA actions
 - Opened / updated: 2026-08-13 / 2026-08-13
-- Commit / PR, if any: pending governance PR on `codex/wechat-005-mini-staging`
+- Commit / PR, if any: `197dd64` / Mini PR #3 on `codex/wechat-005-mini-staging`
 
 ## Context and objective
 
