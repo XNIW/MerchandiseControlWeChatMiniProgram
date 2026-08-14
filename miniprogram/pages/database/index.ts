@@ -42,6 +42,7 @@ Page({
     categoryFilterId: "",
     currencyCode: "",
     errorMessage: "",
+    featureReady: app.featureReady,
     loading: false,
     products: [] as readonly ProductRow[],
     search: "",
@@ -52,6 +53,10 @@ Page({
     text: translationsFor(app.locale),
   },
   onPullDownRefresh() {
+    if (!app.featureReady) {
+      wx.stopPullDownRefresh();
+      return;
+    }
     void this.refresh(true).finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
@@ -63,6 +68,7 @@ Page({
       text,
     });
     wx.setNavigationBarTitle({ title: text.database });
+    if (!app.featureReady) return;
     pageRuntime(this).unsubscribeSync?.();
     pageRuntime(this).unsubscribeSync = app.syncCoordinator?.subscribe((notification) =>
       this.applySync(notification),
@@ -78,6 +84,7 @@ Page({
     pageRuntime(this).unsubscribeSync = undefined;
   },
   async applySync(notification: MiniSyncNotification) {
+    if (!app.featureReady) return;
     const shop = app.activeShop;
     if (!shop || notification.shopId !== shop.shop_id || !app.salesClient) return;
     if (notification.kind === "reconcile") {
@@ -213,6 +220,7 @@ Page({
     void this.refresh(true);
   },
   async ensureShop() {
+    if (!app.featureReady) return null;
     if (app.sessionStore.load() === null) {
       app.clearSessionContext();
       this.setData({

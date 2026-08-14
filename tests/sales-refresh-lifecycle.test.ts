@@ -50,6 +50,7 @@ test("sales page runs bounded refresh only while visible", async () => {
   const app = {
     activeShop: shop,
     clearSessionContext() {},
+    featureReady: true,
     locale: "en",
     salesClient: {
       async periodSummary() {

@@ -61,6 +61,7 @@ Page({
     entityIndex: 0,
     entityOptions: [] as readonly FilterOption<CatalogEntityType>[],
     errorMessage: "",
+    featureReady: app.featureReady,
     fromDate: "",
     hasMoreCatalog: false,
     hasMoreSync: false,
@@ -73,6 +74,10 @@ Page({
     viewMode: "catalog" as "catalog" | "sync",
   },
   onPullDownRefresh() {
+    if (!app.featureReady) {
+      wx.stopPullDownRefresh();
+      return;
+    }
     historyRequestGeneration += 1;
     this.setData({ loading: false });
     void this.load(true).finally(() => wx.stopPullDownRefresh());
@@ -115,6 +120,7 @@ Page({
       toDate: "",
     });
     wx.setNavigationBarTitle({ title: text.history });
+    if (!app.featureReady) return;
     void this.load(true);
   },
   onUnload() {
@@ -167,6 +173,7 @@ Page({
     void this.load(true);
   },
   async load(reset: boolean) {
+    if (!app.featureReady) return;
     const shop = app.activeShop;
     const salesClient = app.salesClient;
     const session = app.sessionStore.load();

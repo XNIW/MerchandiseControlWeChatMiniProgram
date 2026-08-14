@@ -30,6 +30,7 @@ Page({
     deviceIndex: 0,
     deviceOptions: [] as readonly SalesFilterEntity[],
     errorMessage: "",
+    featureReady: app.featureReady,
     from: today(),
     gross: "—",
     kindIndex: 0,
@@ -52,11 +53,16 @@ Page({
     to: today(),
   },
   onPullDownRefresh() {
+    if (!app.featureReady) {
+      wx.stopPullDownRefresh();
+      return;
+    }
     void this.refresh(true).finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
     this.stopAutomaticRefresh();
     this.setData({ text: translationsFor(app.locale) });
+    if (!app.featureReady) return;
     void this.refreshFilters().finally(async () => {
       await this.refresh(false);
       if (app.sessionStore.load() !== null && app.salesClient) this.startAutomaticRefresh();
@@ -120,6 +126,7 @@ Page({
     await this.refresh(true);
   },
   async ensureShop() {
+    if (!app.featureReady) return null;
     if (app.sessionStore.load() === null) {
       app.clearSessionContext();
       this.setData({
