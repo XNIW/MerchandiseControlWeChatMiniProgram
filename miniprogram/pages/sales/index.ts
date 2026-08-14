@@ -1,4 +1,6 @@
 import type { MerchandiseControlApp } from "../../app";
+import { runtimeConfig } from "../../config/runtime-config";
+import { AdaptiveRefreshController } from "../../lib/adaptive-refresh";
 import type { DailySale, DailySalesSummary, SalesFilterEntity } from "../../lib/contracts";
 import { resolveSalesRange, type SalesRangeKey, shiftDate } from "../../lib/date-ranges";
 import { SessionBoundedCache } from "../../lib/sensitive-cache";
@@ -53,8 +55,18 @@ Page({
     void this.refresh(true).finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
+    this.stopAutomaticRefresh();
     this.setData({ text: translationsFor(app.locale) });
-    void this.refreshFilters().finally(() => this.refresh(false));
+    void this.refreshFilters().finally(async () => {
+      await this.refresh(false);
+      if (app.sessionStore.load() !== null && app.salesClient) this.startAutomaticRefresh();
+    });
+  },
+  onHide() {
+    this.stopAutomaticRefresh();
+  },
+  onUnload() {
+    this.stopAutomaticRefresh();
   },
   chooseDate(event: WechatMiniprogram.PickerChange) {
     const date = String(event.detail.value);
@@ -161,7 +173,7 @@ Page({
       this.setData({ deviceOptions: [], paymentMethods: [""], staffOptions: [] });
     }
   },
-  async refresh(force: boolean) {
+  async refresh(force: boolean): Promise<boolean> {
     const sequence = ((this as unknown as { requestSequence?: number }).requestSequence ?? 0) + 1;
     (this as unknown as { requestSequence: number }).requestSequence = sequence;
     const shop = await this.ensureShop();
@@ -170,7 +182,7 @@ Page({
       !app.salesClient ||
       (this as unknown as { requestSequence: number }).requestSequence !== sequence
     ) {
-      return;
+      return false;
     }
     const cacheGeneration = app.sensitiveCaches.generation;
     const cacheKey = [
@@ -192,10 +204,10 @@ Page({
         app.sessionStore.load() === null ||
         app.activeShop?.shop_id !== shop.shop_id
       ) {
-        return;
+        return false;
       }
       this.applyResult(cached.days, cached.sales, shop.currency_code);
-      return;
+      return true;
     }
     this.setData({ errorMessage: "", loading: true });
     try {
@@ -229,23 +241,43 @@ Page({
         app.sessionStore.load() === null ||
         app.activeShop?.shop_id !== shop.shop_id
       ) {
-        return;
+        return false;
       }
       pageCache.set(cacheKey, { days, sales });
       this.applyResult(days, sales, shop.currency_code);
+      return true;
     } catch {
       if (
         (this as unknown as { requestSequence: number }).requestSequence !== sequence ||
         app.sensitiveCaches.generation !== cacheGeneration
       ) {
-        return;
+        return false;
       }
       this.setData({ errorMessage: this.data.text.offline });
+      return false;
     } finally {
       if ((this as unknown as { requestSequence: number }).requestSequence === sequence) {
         this.setData({ loading: false });
       }
     }
+  },
+  startAutomaticRefresh() {
+    this.stopAutomaticRefresh();
+    const controller = new AdaptiveRefreshController({
+      baseDelayMilliseconds: runtimeConfig.autoRefreshMilliseconds,
+      maximumDelayMilliseconds: runtimeConfig.autoRefreshMaximumMilliseconds,
+      refresh: async () => {
+        if (!(await this.refresh(true))) throw new Error("sales_refresh_failed");
+      },
+    });
+    (this as unknown as { refreshController?: AdaptiveRefreshController }).refreshController =
+      controller;
+    controller.start();
+  },
+  stopAutomaticRefresh() {
+    const holder = this as unknown as { refreshController?: AdaptiveRefreshController };
+    holder.refreshController?.stop();
+    delete holder.refreshController;
   },
   applyResult(days: readonly DailySalesSummary[], sales: readonly DailySale[], currency: string) {
     const format = (value: number) => `${currency} ${value.toLocaleString("zh-CN")}`;

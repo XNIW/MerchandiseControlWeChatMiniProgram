@@ -185,13 +185,14 @@ test("malformed cursor and session replacement fail closed before watermark publ
 
 test("active polling starts at three seconds, backs off to thirty, and burst entities deduplicate", () => {
   let delay = 3_000;
-  delay = nextMiniSyncPollDelay(delay, false);
+  delay = nextMiniSyncPollDelay(delay, "idle");
   assertEqual(delay, 6_000, "first idle cycle doubles delay");
-  delay = nextMiniSyncPollDelay(delay, false);
-  delay = nextMiniSyncPollDelay(delay, false);
-  delay = nextMiniSyncPollDelay(delay, false);
+  delay = nextMiniSyncPollDelay(delay, "error");
+  assertEqual(delay, 12_000, "a failed cycle also backs off");
+  delay = nextMiniSyncPollDelay(delay, "idle");
+  delay = nextMiniSyncPollDelay(delay, "error");
   assertEqual(delay, 30_000, "idle delay is capped at thirty seconds");
-  assertEqual(nextMiniSyncPollDelay(delay, true), 3_000, "a change restores active cadence");
+  assertEqual(nextMiniSyncPollDelay(delay, "changed"), 3_000, "a change restores active cadence");
 
   const notification: MiniSyncNotification = {
     events: [

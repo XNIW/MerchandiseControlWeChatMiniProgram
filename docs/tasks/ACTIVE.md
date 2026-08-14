@@ -1,18 +1,18 @@
 # Active task
 
-## WECHAT-006 — Shared public staging activation and live closeout
+## WECHAT-007 — Assisted registration, shared-staging live activation and E2E
 
 - Parent status: `EXECUTION`
-- Single active Mini child: `WMP-041 — WeChat Open Platform application and provider configuration`
-- Branch: `codex/wechat-006-mini-closeout`
+- Single active Mini child: `WMP-047 — Assisted operator registration and public configuration inventory`
+- Branch: `codex/wechat-007-assisted-activation`
 - Authorized target: `SHARED_PUBLIC_STAGING`
+- Current gate: `OPERATOR_ACTION_REQUIRED — WECHAT_PORTAL_REGISTRATION_PACKET`
 
-WMP-039 and WMP-040 have passed their technical gates and are in REVIEW, not
-self-approved DONE. WMP-041 is blocked only on `PHYSICAL_ACTION_REQUIRED —
-UNLOCK_MAC` for portal inventory; all WeChat flags remain OFF. WMP-042/043 have
-device-free evidence but retain their external provider/DevTools prerequisites;
-WMP-044…046 remain ordered follow-up work. WMP-042 is now in REVIEW after iOS
-PR #7/#8 merged normally and Android completed device-free without source changes.
+FAST BASELINE and the restricted operator packet pass. Official Website,
+Android, iOS and Mini AppIDs plus a real OIDC bridge remain absent; all flags
+are OFF. WMP-048…052 remain ordered and no live Auth or essential E2E claim has
+been made. Independent configuration, QA, harness and performance inventories
+are recorded without repeating WECHAT-006 backup/migration/deploy work.
 
-WECHAT-005/WMP-032…038 retain their historical review/blocker evidence.
-Production, Mini review/publication and general public WeChat flags remain excluded.
+WECHAT-006 is in `REVIEW / EXTERNAL_ACTION_HANDOFF_COMPLETE`. Production, Mini
+review/publication, store submissions and out-of-scope client source remain excluded.

@@ -27,6 +27,7 @@ test("session-bound cache never serves after expiry or session replacement", () 
   const cache = new SessionBoundedCache<string>(2, sessions);
 
   sessions.save(sessionFixture("a".repeat(43), 4_600), deviceId);
+  assertEqual(cache.get("missing"), undefined, "active-session cache miss is safe");
   cache.set("owner-view", "sensitive-row");
   assertEqual(cache.get("owner-view"), "sensitive-row", "active session may read its cache");
 

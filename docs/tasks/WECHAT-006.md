@@ -1,10 +1,10 @@
 # WECHAT-006 — Shared public staging activation and live closeout
 
-- Status: `EXECUTION`
-- Classification: `SHARED_PUBLIC_STAGING_AUTHORIZED; PRODUCTION_AND_PUBLICATION_EXCLUDED`
+- Status: `REVIEW`
+- Classification: `EXTERNAL_ACTION_HANDOFF_COMPLETE_TO_WECHAT-007; SHARED_PUBLIC_STAGING_AUTHORIZED; PRODUCTION_AND_PUBLICATION_EXCLUDED`
 - Parent/epic: successor to `WECHAT-005`; prior evidence and classifications remain historical
 - Owner: Codex coordinates; Admin owns schema/server; each client owns its adapter; the authorized operator owns legal/2FA actions
-- Opened / updated: 2026-08-13 / 2026-08-13
+- Opened / updated: 2026-08-13 / 2026-08-14
 - Commit / PR, if any: branch `codex/wechat-006-mini-closeout` from current `origin/main`
 
 ## Context and objective
@@ -74,6 +74,14 @@ deployment, build or device-free test work.
 See `docs/TASK_HISTORY.md`, `docs/AI_WORKLOG.md` and the external evidence path
 recorded there. Secrets, complete WeChat identifiers and PII are excluded.
 
+## WECHAT-007 successor handoff
+
+The Mac is now unlocked, but direct automation of `open.weixin.qq.com` is
+blocked by Computer Use policy. WECHAT-007 has taken the single Mini writer and
+created an operator-assisted registration packet outside repositories. The
+54-field snapshot below remains the factual WECHAT-006 closeout at handoff;
+unexecuted portal/provider/DevTools/live rows are not retroactively promoted.
+
 ## Mandatory 54-field closeout — current factual state
 
 1. Global classification: `PARTIAL / EXTERNAL_WECHAT_REGISTRATION_ACTION_REQUIRED`; schema and Admin deploy pass, live Auth/sync/sales do not.
@@ -133,10 +141,9 @@ recorded there. Secrets, complete WeChat identifiers and PII are excluded.
 
 ## Review decision
 
-`PENDING`
+`EXTERNAL_ACTION_HANDOFF_COMPLETE`
 
 ## Next step and handoff
 
-User unlocks the Mac; continue WMP-041 with read-only portal inventory, then ask
-at-action confirmation before any persistent provider/application/domain/secret
-change. `DONE` remains reserved for explicit user/designated-reviewer approval.
+Continue in WECHAT-007/WMP-047 with the operator registration packet. `DONE`
+remains reserved for explicit user/designated-reviewer approval.
