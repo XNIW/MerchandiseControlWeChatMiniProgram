@@ -64,14 +64,15 @@ suites or deploy unless drift or a bounded fix makes them necessary.
 | Operator registration packet | restricted local files, mode/template/JSON validation | `PASS` | Recorded | `/Users/minxiang/Projects/_codex-private/wechat-007/` |
 | Provider and live Auth | official public config plus staged runtime | `NOT_RUN — OPERATOR_ACTION_REQUIRED` | — | WMP-048/049 |
 | Mini runtime and essential E2E | official DevTools plus shared staging | `NOT_RUN — APPID/PROVIDER_REQUIRED` | — | WMP-050/051 |
-| Independent Mini corrections | public build substitution, Sales polling, sync failure backoff and cache-miss regression | `PASS — verify 63/63; TARGETED_SECURITY_NO_FINDINGS` | Recorded | WMP-050/052 |
+| Independent Mini corrections | public build substitution, Sales polling, sync failure backoff, cache-miss and coherent OFF-tab gates | `PASS — verify 64/64; TARGETED_SECURITY_NO_FINDINGS` | Recorded | WMP-050/052; PR #6 |
 | Performance/GitHub closeout | bounded live measurements and repository-native gates | `PARTIAL_PASS; LIVE_MEASUREMENT_PENDING` | Recorded | WMP-052 |
 
 ## Risks and remaining problems
 
 All official AppIDs and OIDC bridge values are absent. The Admin `/auth/callback`
 is a post-OAuth application redirect, not a proven WeChat portal callback.
-DevTools is installed and running but Computer Use cannot read its UI. Source
+DevTools test-account OFF compilation is readable and passes on all five tabs,
+but the official AppID/public provider configuration is still absent. Source
 inventory also found 3-second Home polling amplification, catalog delta N+1
 detail loads and a sync payload-limit mismatch. The Sales automatic-refresh and
 sync error-backoff gaps are fixed with regression tests; the remaining findings
