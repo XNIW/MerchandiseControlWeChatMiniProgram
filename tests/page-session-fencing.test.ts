@@ -134,6 +134,7 @@ test("history and account pages clear old scope and reject late session/shop/cac
     const historyShopIds: string[] = [];
     const historyApp = {
       activeShop: shopA,
+      featureReady: true,
       locale: "en",
       salesClient: {
         syncHistory(shopId: string) {
@@ -218,6 +219,7 @@ test("history and account pages clear old scope and reject late session/shop/cac
     const accountApp = {
       activeShop: shopA,
       clearSessionContext() {},
+      featureReady: true,
       locale: "en",
       salesClient: {
         account() {

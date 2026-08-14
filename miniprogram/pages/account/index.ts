@@ -30,6 +30,7 @@ Page({
   data: {
     account: null as AccountProfile | null,
     currentShop: null as AuthorizedShop | null,
+    featureReady: app.featureReady,
     localeIndex: Math.max(0, locales.indexOf(app.locale)),
     locales,
     loading: true,
@@ -47,12 +48,14 @@ Page({
       shops: [],
       text: translationsFor(app.locale),
     });
+    if (!app.featureReady) return;
     void this.load();
   },
   onUnload() {
     accountRequestGeneration += 1;
   },
   async load() {
+    if (!app.featureReady) return;
     const salesClient = app.salesClient;
     const session = app.sessionStore.load();
     if (this.data.loading || !salesClient || session === null) return;

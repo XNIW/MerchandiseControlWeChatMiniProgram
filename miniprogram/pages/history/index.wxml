@@ -1,4 +1,6 @@
 <view class="page">
+  <view wx:if="{{!featureReady}}" class="feature-gate"><text class="feature-gate-title">{{text.disabledTitle}}</text><text class="feature-gate-detail">{{text.disabledDetail}}</text></view>
+  <block wx:else>
   <view class="mode-tabs"><button class="{{viewMode === 'catalog' ? 'selected' : ''}}" bindtap="selectCatalog">{{text.catalogHistory}}</button><button class="{{viewMode === 'sync' ? 'selected' : ''}}" bindtap="selectSync">{{text.syncHistory}}</button></view>
   <view wx:if="{{viewMode === 'catalog' && canReadCatalogHistory}}" class="filters">
     <picker range="{{entityOptions}}" range-key="label" value="{{entityIndex}}" bindchange="chooseEntity"><view class="picker-value">{{text.filter}} · {{entityOptions[entityIndex].label}}</view></picker>
@@ -19,4 +21,5 @@
     <view class="list"><view wx:for="{{syncItems}}" wx:key="event_id" class="history-row"><view><text class="strong">{{item.domain}} · {{item.event_type}}</text><text class="muted">{{item.created_at}} · {{item.source || text.none}}</text></view><text>{{item.changed_count}}</text></view></view>
     <button wx:if="{{hasMoreSync}}" disabled="{{loading}}" bindtap="loadMore">{{text.loadMore}}</button>
   </view>
+  </block>
 </view>

@@ -1,4 +1,6 @@
 <view class="page">
+  <view wx:if="{{!featureReady}}" class="feature-gate"><text class="feature-gate-title">{{text.disabledTitle}}</text><text class="feature-gate-detail">{{text.disabledDetail}}</text></view>
+  <block wx:else>
   <view class="toolbar"><button size="mini" bindtap="previousDay">‹ {{text.previousDay}}</button><picker mode="date" value="{{anchorDate}}" bindchange="chooseDate"><view class="date-pill">{{anchorDate}}</view></picker><button size="mini" bindtap="nextDay">{{text.nextDay}} ›</button></view>
   <scroll-view scroll-x class="range-strip"><button size="mini" data-range="last_7" bindtap="selectRange">{{text.last7}}</button><button size="mini" data-range="last_30" bindtap="selectRange">{{text.last30}}</button><button size="mini" data-range="month" bindtap="selectRange">{{text.month}}</button></scroll-view>
   <view class="card"><text class="metric-title">{{text.netRevenue}}</text><text class="hero">{{net}}</text><view class="two-column"><text>{{text.grossRevenue}} · {{gross}}</text><text>{{text.refunds}} · {{refunds}}</text></view><view class="two-column"><text>{{text.saleCount}} · {{saleCount}}</text><text class="muted">{{timeZone}}</text></view></view>
@@ -9,4 +11,5 @@
   <view wx:if="{{!loading && sales.length === 0}}" class="empty">{{text.empty}}</view>
   <view class="list"><view wx:for="{{sales}}" wx:key="pos_sale_id" class="row" data-id="{{item.pos_sale_id}}" bindtap="openDetail"><view><text class="strong">{{item.sale_number}}</text><text class="muted">{{item.occurred_at}} · {{item.staff_name || item.device_name || ''}}</text></view><view class="right"><text>{{item.currency_code}} {{item.net_amount_clp}}</text><text class="muted">{{item.business_kind}}</text></view></view></view>
   <button wx:if="{{sales.length >= 50}}" bindtap="loadMore">{{text.loadMore}}</button>
+  </block>
 </view>

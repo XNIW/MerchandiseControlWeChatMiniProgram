@@ -1,5 +1,5 @@
 <view class="page">
-  <view wx:if="{{viewState === 'disabled'}}" class="state-card"><text class="state-title">{{text.disabledTitle}}</text><text class="state-detail">{{text.disabledDetail}}</text></view>
+  <view wx:if="{{viewState === 'disabled'}}" class="feature-gate"><text class="feature-gate-title">{{text.disabledTitle}}</text><text class="feature-gate-detail">{{text.disabledDetail}}</text></view>
   <view wx:elif="{{viewState === 'signed_out' || viewState === 'session_expired'}}" class="state-card"><text wx:if="{{errorMessage}}" class="state-detail">{{errorMessage}}</text><text class="state-detail">{{text.consent}}</text><button class="primary" bindtap="signIn">{{text.login}}</button></view>
   <view wx:elif="{{viewState === 'link_required' || viewState === 'unauthorized'}}" class="state-card"><text class="state-detail">{{errorMessage}}</text><button class="quiet" bindtap="signOut">{{text.signOut}}</button></view>
   <view wx:elif="{{viewState === 'loading'}}" class="state-card"><text class="state-title">{{text.loading}}</text></view>
