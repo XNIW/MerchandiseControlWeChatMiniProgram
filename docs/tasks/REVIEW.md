@@ -1,5 +1,15 @@
 # Tasks in review
 
+## WECHAT-006 — Shared public staging activation and live closeout
+
+- Status: `REVIEW`
+- Classification: `EXTERNAL_ACTION_HANDOFF_COMPLETE_TO_WECHAT-007`
+- Contract: [WECHAT-006](WECHAT-006.md)
+- Evidence retained: backup/restore, 137 migrations, Worker `f797c513`, four
+  merged heads, device-free gates and all flags OFF.
+- Remaining official registration/provider/DevTools/live work moved forward to
+  WECHAT-007/WMP-047…052 without rewriting WECHAT-006 factual evidence.
+
 ## WECHAT-005 — Staging activation and live cross-platform validation
 
 - Status: `REVIEW`

@@ -11,8 +11,10 @@ const maximumWatermarkBytes = 2_048;
 const basePollDelayMilliseconds = 3_000;
 const maximumPollDelayMilliseconds = 30_000;
 
-export function nextMiniSyncPollDelay(current: number, changed: boolean): number {
-  return changed
+export type MiniSyncPollOutcome = "changed" | "error" | "idle";
+
+export function nextMiniSyncPollDelay(current: number, outcome: MiniSyncPollOutcome): number {
+  return outcome === "changed"
     ? basePollDelayMilliseconds
     : Math.min(Math.max(basePollDelayMilliseconds, current) * 2, maximumPollDelayMilliseconds);
 }
@@ -216,8 +218,17 @@ export class MiniSyncCoordinator {
     const task = this.#sync(context)
       .then((changed) => {
         if (this.#runGeneration === context.runGeneration) {
-          this.#pollDelayMilliseconds = nextMiniSyncPollDelay(this.#pollDelayMilliseconds, changed);
+          this.#pollDelayMilliseconds = nextMiniSyncPollDelay(
+            this.#pollDelayMilliseconds,
+            changed ? "changed" : "idle",
+          );
         }
+      })
+      .catch((error: unknown) => {
+        if (this.#runGeneration === context.runGeneration) {
+          this.#pollDelayMilliseconds = nextMiniSyncPollDelay(this.#pollDelayMilliseconds, "error");
+        }
+        throw error;
       })
       .finally(() => {
         if (this.#inFlight.get(key) === task) this.#inFlight.delete(key);

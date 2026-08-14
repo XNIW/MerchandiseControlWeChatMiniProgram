@@ -7,15 +7,20 @@ export interface RuntimeConfig {
   readonly weChatAuthEnabled: boolean;
 }
 
-// Public client configuration only. Activation requires a reviewed change after
-// the request-domain/AppID checklist is complete. AppSecret never belongs here.
+function injectedPublicValue(value: string, fallback: string): string {
+  return value.startsWith("__MC_WECHAT_") ? fallback : value;
+}
+
+// Public client configuration only. scripts/build.mjs replaces these markers
+// from the approved build environment and leaves safe OFF defaults when absent.
+// AppID stays in ignored DevTools configuration. AppSecret never belongs here.
 export const runtimeConfig: RuntimeConfig = Object.freeze({
   autoRefreshMaximumMilliseconds: 30_000,
   autoRefreshMilliseconds: 3_000,
-  gatewayBaseUrl: "",
-  privacyUrl: "https://example.invalid/privacy",
-  supabaseStorageBaseUrl: "",
-  weChatAuthEnabled: false,
+  gatewayBaseUrl: injectedPublicValue("__MC_WECHAT_GATEWAY_BASE_URL__", ""),
+  privacyUrl: injectedPublicValue("__MC_WECHAT_PRIVACY_URL__", "https://example.invalid/privacy"),
+  supabaseStorageBaseUrl: injectedPublicValue("__MC_WECHAT_STORAGE_BASE_URL__", ""),
+  weChatAuthEnabled: injectedPublicValue("__MC_WECHAT_AUTH_ENABLED__", "0") === "1",
 });
 
 export function isRuntimeConfigReady(config: RuntimeConfig): boolean {

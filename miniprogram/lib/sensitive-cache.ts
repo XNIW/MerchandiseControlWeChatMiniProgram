@@ -57,7 +57,7 @@ export class SessionBoundedCache<Value> implements ClearableSensitiveCache {
       return undefined;
     }
     const entry = this.#cache.get(key);
-    if (entry?.sessionGeneration !== this.#sessions.generation) {
+    if (!entry || entry.sessionGeneration !== this.#sessions.generation) {
       this.#cache.delete(key);
       return undefined;
     }

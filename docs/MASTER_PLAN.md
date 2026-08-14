@@ -1,13 +1,15 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-**WECHAT-006** is in `EXECUTION` for the user-authorized
-`SHARED_PUBLIC_STAGING` target. WMP-039/040 passed their technical gates and are
-in REVIEW; `WMP-041` is the single active Mini lane with
-`PHYSICAL_ACTION_REQUIRED — UNLOCK_MAC`. The exact target
-is Supabase project `merchandisecontrol-dev` (`jpgoimipbothfgkokyvm`) and the
-public staging Worker named in the task contract. The Supabase dashboard badge
-`main / Production` does not override this explicit business classification.
-No different production environment or public application publication is in scope.
+**WECHAT-007** is in `EXECUTION` for assisted official registration and live
+validation on the user-authorized `SHARED_PUBLIC_STAGING` target. `WMP-047` is
+the single active Mini lane with `OPERATOR_ACTION_REQUIRED —
+WECHAT_PORTAL_REGISTRATION_PACKET`; WMP-048…052 are ordered. FAST BASELINE and
+the restricted operator packet pass, while all AppIDs and real OIDC bridge
+values remain absent and every WeChat flag stays OFF. No different production
+environment or public application publication is in scope.
+
+**WECHAT-006** is in `REVIEW / EXTERNAL_ACTION_HANDOFF_COMPLETE`; its verified
+backup/schema/Worker/native evidence remains historical and is not repeated.
 
 **WECHAT-005** remains historical `REVIEW / CHANGES_REQUIRED`; its external
 blockers are superseded only where the WECHAT-006 mandate supplies specific
@@ -58,7 +60,8 @@ Non-goals include POS staff login, staff/device/role writes, sales/refund/void/p
 | M18 | Local cross-platform E2E and security closeout | M16–M17; Android/iOS apply engines | Real local Supabase mutation/event/readback, production apply tests, targeted security scan | Staging/device/provider external | DONE |
 | M19 | Four-repository GitHub integration | M16–M18; green local gates | Normal PR/CI/merge, post-merge verification, clean published heads | External activation only | DONE |
 | M20 | Staging activation and live cross-platform validation | M19; verified non-production environments; official apps/provider/devices | Staging schema/deploy, progressive flags, factual live identity/sync/Storage/sales evidence and closeout | Target is labelled Production/no backup; writer, apps, provider and devices absent | REVIEW / CHANGES_REQUIRED |
-| M21 | Shared public staging activation and live closeout | M19–M20; explicit staging designation and writer/deploy mandate | Manual restorable backup, current schema/Worker, official adapters, progressive E2E, normal GitHub integration and factual 54-field closeout | External WeChat registration and physical devices may bound live coverage | EXECUTION |
+| M21 | Shared public staging activation and live closeout | M19–M20; explicit staging designation and writer/deploy mandate | Manual restorable backup, current schema/Worker, official adapters, progressive E2E, normal GitHub integration and factual 54-field closeout | External WeChat registration and physical devices may bound live coverage | REVIEW / EXTERNAL_ACTION_HANDOFF_COMPLETE |
+| M22 | Assisted official registration and essential live staging E2E | M21; operator public config; real provider/apps/devices | Operator packet, progressive Auth, official DevTools, essential catalog/image/sales/sync proof, performance and factual closeout | Portal/provider approvals and measured polling defects | EXECUTION |
 
 ## Task sequence
 
@@ -86,6 +89,12 @@ deploy, Mini automated gates, Android audit/gates and iOS device-free provider
 gates are complete. Admin #86/#87 and iOS #7/#8 are merged normally; WMP-042
 is in REVIEW. Portal/DevTools/live E2E remain exact external work; all
 flags are OFF. The production/publication boundary remains unchanged.
+
+WECHAT-007 adds WMP-047…WMP-052 without repeating the stable WECHAT-006
+baseline. WMP-047 is active for operator-assisted application inventory;
+WMP-048…052 cover real provider activation, live Auth, official Mini runtime,
+essential live E2E, performance and normal GitHub closeout. Direct portal
+automation is not attempted, and missing OIDC data never produces an invented IdP.
 
 ## Completion criteria
 
