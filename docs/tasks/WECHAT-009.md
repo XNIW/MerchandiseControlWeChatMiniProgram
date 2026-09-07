@@ -27,4 +27,7 @@ mock/harness results never satisfy those gates. No self-approved DONE.
 
 Mini verify Node26.7.0 PASS74/74; Admin verify/foundation996 PASS+2skip,
 focused9/9 e UI48/48 PASS. Diff security review manuale senza nuovi P0/P1.
-PR/CI/merge normale in corso; nessuna attivazione, migration, deploy o DONE.
+Mini PR8 → `2e1c3fce162f2527aaf2f58dc5770e76e712e531`;
+Admin PR101 → `ffafd55e4f10044c0724596871d39117122160f1`;
+merge normali dopo CI verde. Admin CI pgTAP2627 PASS, Cloudflare build/smoke PASS.
+Closeout documentale separato; nessuna attivazione, migration staging, deploy o DONE.

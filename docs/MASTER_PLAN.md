@@ -107,3 +107,7 @@ The repository may become release-ready only after the canonical identity contra
 WECHAT-009: Mini74/74, Admin996+2skip/focused9/UI48 pass; no new P0/P1 in
 manual diff review. No live Auth/essential staging PASS, migration or deploy.
 See `docs/testing/WECHAT-009-REPORT.md` for the current acceptance matrix.
+
+WECHAT-009 integrazione applicativa: Mini PR8 / Admin PR101 merged normalmente
+dopo CI verde; pgTAP2627 e Cloudflare smoke PASS. Report unico aggiornato,
+stato REVIEW / EXTERNAL_ACTIVATION_REQUIRED; staging e produzione invariati.

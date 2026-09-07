@@ -1,7 +1,7 @@
 # WECHAT-009 — Report di esecuzione e accettazione
 
 Data: 2026-09-06/07. Stato: `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`.
-Risultato: correzioni indipendenti verificate; accettazione live non eseguita.
+Risultato: correzioni indipendenti verificate e integrate; accettazione live non eseguita.
 `WECHAT_AUTH_LIVE_E2E_PASS=NOT_RUN` e
 `WECHAT_ESSENTIAL_FUNCTIONS_STAGING_PASS=NOT_RUN`.
 Nessun task auto-approvato DONE.
@@ -110,6 +110,8 @@ GET catalogo = ceil(righe nella finestra caricata/50), per notifica rilevante;
 non cresce per singolo ID. Restano letture immagini batched da16 riferimenti;
 i test N+1 usano prodotti sintetici senza immagini. Nessun EXPLAIN o benchmark
 DB live eseguito: il numero interno di query SQL non è un risultato misurato.
+Lo status Auth staging pubblica pollingIntervalSeconds=10; è un metadato della
+versione distribuita, distinto dai timer Mini e dalla latenza end-to-end.
 Il Mini conserva catalogo/cache in memoria e watermark/outbox durevoli; non si
 asserisce una replica locale durevole dell'intero catalogo. Apply fallito non
 è riconosciuto come completato. Al foreground la vista viene ricaricata.
@@ -161,7 +163,10 @@ Le fixture deterministiche sono marcate nei test e non sono dati live.
   preesistente distinto dal risultato del diff, non un audit globale pulito.
 - Native suites: NOT_RUN, sorgenti native invariate. Live DevTools/UI/device:
   NOT_RUN, prerequisiti ufficiali assenti. Database pgTAP locale: NOT_RUN in
-  questa esecuzione, nessuna migration/RPC modificata; CI DB richiesta preservata.
+  questa esecuzione, nessuna migration/RPC modificata. CI PR Admin: pgTAP
+  **2.627 test / 48 file PASS** su database effimero, nessun apply allo staging.
+  Foundation CI985 PASS+13 skip (reference repository assenti nel runner e skip
+  canonici), UI48/48 PASS; il run locale con reference esegue996+2skip.
 - Deploy: NOT_RUN intenzionale. Flags OFF, nessuna sessione reale per smoke del
   nuovo gateway e staging141 vs repository143 migration. Un deploy di main
   allargherebbe il cambiamento a lavoro commerce successivo; nessun apply o
@@ -169,8 +174,34 @@ Le fixture deterministiche sono marcate nei test e non sono dati live.
 
 ## 7. Integrazione e stato finale
 
-Commit/PR/CI/main finali sono registrati nel closeout della task dopo normale
-integrazione. Worker resta 38272504-ca78-4bcb-8553-ae7463ae1e64; non viene
+Integrazione normale completata il 2026-09-07, senza force push o bypass:
+
+| Repository | Commit applicativo | PR / head verificata | Main locale = origin/main dopo merge applicativo |
+|---|---|---|---|
+| Mini | 5c744be6a45b123293a37b0d4c7100b33c296398 | [PR8](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/8), stessa head | 2e1c3fce162f2527aaf2f58dc5770e76e712e531 |
+| Admin | 704efde50baa4a7257ef11f5844573d0b3b0bf4c | [PR101](https://github.com/XNIW/merchandise-control-admin-web/pull/101), head5739452ccb761536a406d301bf17b6e4fae9cb49 include riferimenti governance | ffafd55e4f10044c0724596871d39117122160f1 |
+
+Mini [CI PR](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34137603673)
+e [CI main](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34137674497)
+PASS. Admin [CI PR](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34137645321)
+e [Cloudflare build/smoke PR](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34137645348)
+PASS sulla head5739452c. Deploy e TASK-094 staging E2E correttamente SKIPPED:
+richiedono un trigger dedicato; nessun gate disabilitato. La vecchia build PR
+704efde5 è stata cancellata perché superata dalla head5739452c, poi verificata
+integralmente. Admin main riallineato con fast-forward del checkout pulito;
+worktree di esecuzione conservato pulito sulla head5739452c.
+
+Android locale c21de310c0a717f481a79d938888cbb99e8f930c / remoto main
+d7c4953c4ed6bc2a33cc5dbfd009eb862f70feac; iOS locale
+c55e3a93449c4f432bf28f4d7b1f5ac1e5f9b502 / remoto main
+30d226d0fb9b8679a1dd034c6e82319645337f22. Ricontrollati dopo i merge:
+modifiche locali iniziali preservate, nessun riallineamento dei checkout dirty.
+
+Il closeout documentale Mini segue una PR separata da questa baseline; non cambia
+il codice applicativo. La consegna finale riporta la SHA successiva del report
+senza tentare di incorporare in un commit la propria SHA.
+
+Worker resta 38272504-ca78-4bcb-8553-ae7463ae1e64; non viene
 presentato come il nuovo main. Feature generali e linking restano OFF per default;
 endpoint status staging conferma tutte le quattro superfici false, nessun
 binding WECHAT e nessuna allowlist test attivata. Produzione invariata.
