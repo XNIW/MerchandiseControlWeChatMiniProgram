@@ -27,3 +27,5 @@ Append-only execution evidence. Never record credentials, OAuth codes, private e
 | 2026-09-06 | WECHAT-009 | Entered EXECUTION under explicit user mandate; Mini clean origin/main f305447; Admin current origin/main c18b3cc5 IDLE, isolated worktree; native dirty checkouts preserved | Prior packet reused; flags OFF; no migration/deploy/provider mutation |
 
 | 2026-09-07 | WECHAT-009 | Independent performance fixes and operator/bridge inventory handed to REVIEW | Mini74/74 pinned Node; Admin996+2skip, focused9, UI48; manual diff review no new P0/P1; staging141 migration/Worker38272504 unchanged, flagsOFF; report docs/testing/WECHAT-009-REPORT.md |
+
+| 2026-09-07T15:23:55Z | WECHAT-009 | Normal integration after green CI | Mini PR8→2e1c3fce, Admin PR101→ffafd55e; Verify/Cloudflare smoke PASS, CI pgTAP2627 PASS; main fast-forward, native dirty work preserved; separate report closeout, flags OFF, no staging deploy or DONE |
