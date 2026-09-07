@@ -48,6 +48,7 @@ export interface MerchandiseControlApp {
   syncCoordinator: MiniSyncCoordinator | null;
 }
 
+let appVisible = false;
 const platform = createWeChatPlatform();
 const sensitiveCaches = new SensitiveCacheCoordinator();
 const sessionStore = new SessionStore(platform);
@@ -78,6 +79,7 @@ App<MerchandiseControlApp>({
     this.clearShopContext();
   },
   clearShopContext() {
+    this.syncCoordinator?.stop();
     this.activeShop = null;
     this.pendingCatalogFilter = null;
     platform.removeStorage("mc.activeShopId");
@@ -134,15 +136,30 @@ App<MerchandiseControlApp>({
     if (sessionStore.load() === null) this.clearShopContext();
   },
   onShow() {
+    appVisible = true;
+    const shopId = this.activeShop?.shop_id;
+    const generation = this.sessionStore.generation;
     if (this.catalogClient && this.activeShop) {
       void this.outbox
         .flush(this.catalogClient, this.activeShop.shop_id)
-        .then(() => this.syncCoordinator?.syncNow(this.activeShop?.shop_id ?? ""))
+        .then((results) => {
+          if (
+            results.length > 0 &&
+            appVisible &&
+            shopId &&
+            this.activeShop?.shop_id === shopId &&
+            this.sessionStore.generation === generation
+          ) {
+            return this.syncCoordinator?.syncNow(shopId);
+          }
+          return undefined;
+        })
         .catch(() => undefined);
       this.syncCoordinator?.start(this.activeShop.shop_id);
     }
   },
   onHide() {
+    appVisible = false;
     this.syncCoordinator?.stop();
   },
   outbox,
@@ -155,13 +172,24 @@ App<MerchandiseControlApp>({
     this.activeShop = shop;
     platform.setStorage("mc.activeShopId", shop.shop_id);
     this.outbox.resumeAuthRequired(shop.shop_id);
+    const generation = this.sessionStore.generation;
     if (this.catalogClient) {
       void this.outbox
         .flush(this.catalogClient, shop.shop_id)
-        .then(() => this.syncCoordinator?.syncNow(shop.shop_id))
+        .then((results) => {
+          if (
+            results.length > 0 &&
+            appVisible &&
+            this.activeShop?.shop_id === shop.shop_id &&
+            this.sessionStore.generation === generation
+          ) {
+            return this.syncCoordinator?.syncNow(shop.shop_id);
+          }
+          return undefined;
+        })
         .catch(() => undefined);
     }
-    this.syncCoordinator?.start(shop.shop_id);
+    if (appVisible) this.syncCoordinator?.start(shop.shop_id);
   },
   setLocale(locale) {
     this.locale = locale;

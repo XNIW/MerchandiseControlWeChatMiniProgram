@@ -226,3 +226,133 @@ test("active polling starts at three seconds, backs off to thirty, and burst ent
     "one targeted product reload represents a burst",
   );
 });
+
+function deltaPage(id: string, maximum: string, hasMore: boolean) {
+  return {
+    statusCode: 200,
+    data: {
+      ok: true,
+      delta: {
+        shopId: SHOP_ID,
+        asOfEventMaxId: maximum,
+        hasMore,
+        nextAfterId: id,
+        rows: [
+          {
+            id,
+            domain: "catalog",
+            event_type: "catalog_changed",
+            source: "fixture",
+            changed_count: 1,
+            entity_ids: { product_ids: [PRODUCT_ID] },
+            created_at: "2026-09-06T12:00:00Z",
+            requires_full_recovery: false,
+          },
+        ],
+      },
+    },
+  };
+}
+
+test("paged sync resumes last durable watermark after apply failure and restart", async () => {
+  const { coordinator, platform, sessions, caches } = setup();
+  platform.queuedResponses.push(checkpoint("10", true));
+  await coordinator.syncNow(SHOP_ID);
+  let rejectSecond = true;
+  const applied: string[] = [];
+  const apply = (notification: MiniSyncNotification) => {
+    if (notification.kind !== "delta") return;
+    const id = notification.events[0]?.id ?? "";
+    if (id === "12" && rejectSecond) throw new Error("durable_apply_failed");
+    applied.push(id);
+  };
+  coordinator.subscribe(apply);
+  platform.queuedResponses.push(
+    checkpoint("12", false),
+    deltaPage("11", "12", true),
+    deltaPage("12", "12", false),
+  );
+  await expectReject(
+    () => coordinator.syncNow(SHOP_ID),
+    () => true,
+  );
+  const saved = () =>
+    JSON.parse(
+      String([...platform.storage.entries()].find(([k]) => k.includes("syncWatermark"))?.[1]),
+    );
+  assertEqual(saved().afterId, "11", "only completed first page persisted");
+  rejectSecond = false;
+  const restarted = new MiniSyncCoordinator(
+    new HttpClient(ORIGIN, platform),
+    sessions,
+    platform,
+    caches,
+  );
+  restarted.subscribe(apply);
+  platform.queuedResponses.push(checkpoint("12", false), deltaPage("12", "12", false));
+  await restarted.syncNow(SHOP_ID);
+  assertEqual(applied.join(","), "11,12", "retry resumes without replaying applied page");
+  assertEqual(saved().afterId, "12", "restart completes remaining page");
+  assert(
+    platform.requests
+      .filter((r) => r.url.includes("/sync/delta"))
+      .every((r) => r.url.includes("limit=5")),
+    "five-event request budget",
+  );
+});
+
+test("oversized sync envelope cannot advance persisted watermark", async () => {
+  const { coordinator, platform } = setup();
+  platform.queuedResponses.push(checkpoint("10", true));
+  await coordinator.syncNow(SHOP_ID);
+  const before = JSON.stringify([...platform.storage]);
+  const page = deltaPage("11", "11", false);
+  platform.queuedResponses.push(checkpoint("11", false), {
+    statusCode: 200,
+    data: { ...page.data, padding: "中".repeat(44_000) },
+  });
+  await expectReject(
+    () => coordinator.syncNow(SHOP_ID),
+    () => true,
+  );
+  assertEqual(
+    JSON.stringify([...platform.storage]),
+    before,
+    "over-budget response never applies or advances",
+  );
+});
+
+test("sync burst yields after ten pages and resumes without losing events", async () => {
+  const { coordinator, platform } = setup();
+  platform.queuedResponses.push(checkpoint("10", true));
+  await coordinator.syncNow(SHOP_ID);
+  platform.queuedResponses.push(checkpoint("22", false));
+  for (let id = 11; id <= 20; id++)
+    platform.queuedResponses.push(deltaPage(String(id), "22", true));
+  await coordinator.syncNow(SHOP_ID);
+  assertEqual(
+    platform.requests.filter((r) => r.url.includes("/delta")).length,
+    10,
+    "bounded burst",
+  );
+  platform.queuedResponses.push(
+    checkpoint("22", false),
+    deltaPage("21", "22", true),
+    deltaPage("22", "22", false),
+  );
+  await coordinator.syncNow(SHOP_ID);
+  const saved = JSON.parse(
+    String([...platform.storage.entries()].find(([key]) => key.includes("syncWatermark"))?.[1]),
+  );
+  assertEqual(saved.afterId, "22", "next cycle finishes remainder");
+});
+
+test("starting sync twice for the selected shop does not duplicate checkpoint or restart its timer", async () => {
+  const { coordinator, platform } = setup();
+  platform.queuedResponses.push(checkpoint("0", false));
+  coordinator.start(SHOP_ID);
+  await coordinator.syncNow(SHOP_ID);
+  coordinator.start(SHOP_ID);
+  assertEqual(platform.requests.length, 1, "coalesced foreground/shop activation");
+  coordinator.stop();
+});
