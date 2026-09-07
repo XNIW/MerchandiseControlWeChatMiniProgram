@@ -7,6 +7,17 @@ import {
 import type { MiniProgramPlatform, PlatformResponse } from "./platform";
 
 const responseByteBudget = 131_072;
+
+// The Mini runtime need not provide TextEncoder. Count Unicode scalar values,
+// including surrogate pairs, exactly as UTF-8 serialization does.
+export function utf8ByteLength(value: string): number {
+  let size = 0;
+  for (const character of value) {
+    const code = character.codePointAt(0) ?? 0;
+    size += code <= 0x7f ? 1 : code <= 0x7ff ? 2 : code <= 0xffff ? 3 : 4;
+  }
+  return size;
+}
 const requestIdentifierPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const knownErrors = new Set<AuthErrorCode>([
@@ -145,7 +156,7 @@ export class HttpClient {
     }
     let responseSize: number;
     try {
-      responseSize = JSON.stringify(response.data).length;
+      responseSize = utf8ByteLength(JSON.stringify(response.data));
     } catch {
       throw this.#requestError(options.errorDomain, "backend_temporary");
     }

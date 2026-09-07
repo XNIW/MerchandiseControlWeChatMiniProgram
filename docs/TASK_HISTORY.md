@@ -56,3 +56,7 @@ Append-only factual events.
 | 2026-08-14T04:20:00Z | WMP-050/WMP-052 | Independent Mini activation/performance corrections verified | Public build substitution, visible Sales polling, sync failure backoff and safe session-cache miss implemented; Mini verify 63/63; targeted security diff 5/5 with no reportable findings |
 | 2026-08-14T15:07:55Z | WMP-050 | Test-account OFF runtime defect reproduced and corrected on PR #6 | Official DevTools 2.01.2510290 / stable base library 3.17.0: 5/5 tabs now show one coherent disabled gate, 0 gateway/Storage requests, 0 compile errors; Mini verify 64/64 and targeted security diff 4/4 with no findings |
 | 2026-08-14T15:10:34Z | WMP-050 | OFF-gate correction integrated normally | PR #6 required `verify` PASS and merged as `256f44a2`; remote feature branch deleted; clean post-merge `npm run verify` PASS 64/64 and fresh DevTools reopen confirms the five-tab OFF gate |
+
+| 2026-09-06 | WECHAT-009 | Entered EXECUTION under explicit user mandate; Mini clean origin/main f305447; Admin current origin/main c18b3cc5 IDLE, isolated worktree; native dirty checkouts preserved | Prior packet reused; flags OFF; no migration/deploy/provider mutation |
+
+| 2026-09-07 | WECHAT-009 | Independent performance fixes and operator/bridge inventory handed to REVIEW | Mini74/74 pinned Node; Admin996+2skip, focused9, UI48; manual diff review no new P0/P1; staging141 migration/Worker38272504 unchanged, flagsOFF; report docs/testing/WECHAT-009-REPORT.md |

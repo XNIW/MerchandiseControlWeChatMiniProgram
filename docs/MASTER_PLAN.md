@@ -1,6 +1,10 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-**WECHAT-007** is in `EXECUTION` for assisted official registration and live
+**WECHAT-009** is in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` for real Auth prerequisite
+inventory, verified performance fixes and conditional staging acceptance. See
+`docs/tasks/WECHAT-009.md`. No live PASS or DONE is implied.
+
+Historical baseline: **WECHAT-007** was in `EXECUTION` for assisted official registration and live
 validation on the user-authorized `SHARED_PUBLIC_STAGING` target. `WMP-047` is
 the single active Mini lane with `OPERATOR_ACTION_REQUIRED —
 WECHAT_PORTAL_REGISTRATION_PACKET`; WMP-048…052 are ordered. FAST BASELINE and
@@ -99,3 +103,7 @@ automation is not attempted, and missing OIDC data never produces an invented Id
 ## Completion criteria
 
 The repository may become release-ready only after the canonical identity contract, authorized shop isolation, financial semantics, controlled catalog mutation permissions/concurrency/idempotency, audit/outbox/sync convergence, private image lifecycle, deterministic build/tests, security review and official WeChat live/DevTools checks are all evidenced. Missing external approval is reported explicitly; it is never replaced by fixture evidence. No task becomes `DONE` without explicit user/designated-reviewer approval.
+
+WECHAT-009: Mini74/74, Admin996+2skip/focused9/UI48 pass; no new P0/P1 in
+manual diff review. No live Auth/essential staging PASS, migration or deploy.
+See `docs/testing/WECHAT-009-REPORT.md` for the current acceptance matrix.

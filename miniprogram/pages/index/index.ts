@@ -2,7 +2,7 @@ import type { MerchandiseControlApp } from "../../app";
 import { runtimeConfig } from "../../config/runtime-config";
 import { AdaptiveRefreshController } from "../../lib/adaptive-refresh";
 import { AuthContractError, type AuthorizedShop } from "../../lib/contracts";
-import { shiftDate } from "../../lib/date-ranges";
+import { HomeSalesReader } from "../../lib/home-sales-reader";
 import { translationsFor } from "../../locales/index";
 
 type ViewState =
@@ -17,6 +17,15 @@ type ViewState =
   | "unauthorized"
   | "session_expired";
 const app = getApp<MerchandiseControlApp>();
+const homeReader = new HomeSalesReader();
+app.sensitiveCaches.register(homeReader, ["sales"]);
+interface HomeRuntime {
+  visible?: boolean;
+  generation?: number;
+}
+function runtime(page: unknown): HomeRuntime {
+  return page as HomeRuntime;
+}
 
 function money(currency: string, value: number): string {
   return `${currency} ${value.toLocaleString("zh-CN")}`;
@@ -42,17 +51,25 @@ Page({
   },
 
   onHide() {
+    runtime(this).visible = false;
+    runtime(this).generation = (runtime(this).generation ?? 0) + 1;
     this.stopAutomaticRefresh();
   },
   onPullDownRefresh() {
-    void this.refresh().finally(() => wx.stopPullDownRefresh());
+    void this.refresh(true)
+      .catch(() => undefined)
+      .finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
+    runtime(this).visible = true;
+    this.stopAutomaticRefresh();
     this.setData({ text: translationsFor(app.locale) });
     if (!app.featureReady) return;
     if (app.sessionStore.load() !== null) void this.bootstrap();
   },
   onUnload() {
+    this.onHide();
+    homeReader.clear();
     this.stopAutomaticRefresh();
   },
 
@@ -73,9 +90,17 @@ Page({
   },
   async bootstrap() {
     if (!app.salesClient) return;
+    const generation = runtime(this).generation;
+    const sessionGeneration = app.sessionStore.generation;
     this.setData({ viewState: "loading" as ViewState });
     try {
       const shops = await app.salesClient.authorizedShops();
+      if (
+        !runtime(this).visible ||
+        runtime(this).generation !== generation ||
+        app.sessionStore.generation !== sessionGeneration
+      )
+        return;
       const currentShop =
         shops.find((shop) => shop.shop_id === app.activeShop?.shop_id) ?? shops[0] ?? null;
       if (!currentShop) {
@@ -91,7 +116,12 @@ Page({
       await this.refresh();
       this.startAutomaticRefresh();
     } catch (error) {
-      this.applyError(error);
+      if (
+        runtime(this).visible === true &&
+        runtime(this).generation === generation &&
+        app.sessionStore.generation === sessionGeneration
+      )
+        this.applyError(error);
     }
   },
   async chooseShop(event: WechatMiniprogram.PickerChange) {
@@ -101,23 +131,27 @@ Page({
     this.setData({ currentShop: shop });
     await this.refresh();
   },
-  async refresh() {
+  async refresh(force = false) {
     const shop = this.data.currentShop;
-    if (!shop || !app.salesClient) return;
+    if (!app.featureReady || !shop || !app.salesClient || !runtime(this).visible) return;
+    const generation = runtime(this).generation;
+    const sessionGeneration = app.sessionStore.generation;
+    const isCurrent = () =>
+      runtime(this).visible === true &&
+      runtime(this).generation === generation &&
+      app.sessionStore.generation === sessionGeneration &&
+      app.activeShop?.shop_id === shop.shop_id;
+
     try {
-      const summary = await app.salesClient.dailySummary(shop.shop_id);
-      if (!summary) {
-        this.setData({
-          errorMessage: this.data.text.unauthorized,
-          viewState: "unauthorized" as ViewState,
-        });
-        return;
-      }
-      const previousDate = shiftDate(summary.business_date, -1);
-      const [previous, sales] = await Promise.all([
-        app.salesClient.dailySummary(shop.shop_id, previousDate),
-        app.salesClient.dailySalesPage(shop.shop_id, { date: summary.business_date, limit: 1 }),
-      ]);
+      const { summary, previous, sales } = await homeReader.read(
+        app.salesClient,
+        shop.shop_id,
+        String(sessionGeneration),
+        Date.now(),
+        force,
+        isCurrent,
+      );
+      if (!isCurrent()) return;
       const average =
         summary.sale_count > 0 ? Math.round(summary.net_revenue_clp / summary.sale_count) : 0;
       const difference =
@@ -137,7 +171,7 @@ Page({
         viewState: (summary.transaction_count === 0 ? "empty" : "ready") as ViewState,
       });
     } catch (error) {
-      this.applyError(error);
+      if (isCurrent()) this.applyError(error);
       throw error;
     }
   },
@@ -149,6 +183,7 @@ Page({
   },
   startAutomaticRefresh() {
     this.stopAutomaticRefresh();
+    if (!runtime(this).visible || !app.activeShop || app.sessionStore.load() === null) return;
     const controller = new AdaptiveRefreshController({
       baseDelayMilliseconds: runtimeConfig.autoRefreshMilliseconds,
       maximumDelayMilliseconds: runtimeConfig.autoRefreshMaximumMilliseconds,

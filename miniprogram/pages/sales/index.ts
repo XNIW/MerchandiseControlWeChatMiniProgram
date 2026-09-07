@@ -7,6 +7,13 @@ import { SessionBoundedCache } from "../../lib/sensitive-cache";
 import { translationsFor } from "../../locales/index";
 
 const app = getApp<MerchandiseControlApp>();
+interface SalesRuntime {
+  visible?: boolean;
+  lifecycle?: number;
+}
+function runtime(page: unknown): SalesRuntime {
+  return page as SalesRuntime;
+}
 const pageCache = new SessionBoundedCache<{
   days: readonly DailySalesSummary[];
   sales: readonly DailySale[];
@@ -60,19 +67,25 @@ Page({
     void this.refresh(true).finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
+    runtime(this).visible = true;
+    const lifecycle = (runtime(this).lifecycle ?? 0) + 1;
+    runtime(this).lifecycle = lifecycle;
     this.stopAutomaticRefresh();
     this.setData({ text: translationsFor(app.locale) });
     if (!app.featureReady) return;
     void this.refreshFilters().finally(async () => {
+      if (!runtime(this).visible || runtime(this).lifecycle !== lifecycle) return;
       await this.refresh(false);
       if (app.sessionStore.load() !== null && app.salesClient) this.startAutomaticRefresh();
     });
   },
   onHide() {
+    runtime(this).visible = false;
+    runtime(this).lifecycle = (runtime(this).lifecycle ?? 0) + 1;
     this.stopAutomaticRefresh();
   },
   onUnload() {
-    this.stopAutomaticRefresh();
+    this.onHide();
   },
   chooseDate(event: WechatMiniprogram.PickerChange) {
     const date = String(event.detail.value);
@@ -270,6 +283,7 @@ Page({
   },
   startAutomaticRefresh() {
     this.stopAutomaticRefresh();
+    if (!runtime(this).visible) return;
     const controller = new AdaptiveRefreshController({
       baseDelayMilliseconds: runtimeConfig.autoRefreshMilliseconds,
       maximumDelayMilliseconds: runtimeConfig.autoRefreshMaximumMilliseconds,

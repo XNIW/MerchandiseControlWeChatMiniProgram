@@ -107,6 +107,15 @@ test("sales page runs bounded refresh only while visible", async () => {
     assertEqual(page.refreshController, undefined, "hidden page stops automatic refresh");
 
     invoke(page, "onShow");
+    invoke(page, "onHide");
+    await settle();
+    assertEqual(
+      page.refreshController,
+      undefined,
+      "late initial load cannot restart hidden polling",
+    );
+
+    invoke(page, "onShow");
     await settle();
     assert(page.refreshController !== undefined, "returning to the page restarts refresh");
     invoke(page, "onUnload");

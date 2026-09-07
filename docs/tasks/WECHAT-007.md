@@ -1,6 +1,6 @@
 # WECHAT-007 — Assisted registration, shared-staging live activation and E2E
 
-- Status: `EXECUTION`
+- Status: `REVIEW / EXTERNAL_ACTION_CONTINUED_BY_WECHAT_009`
 - Classification: `ASSISTED_REGISTRATION_AND_SHARED_STAGING_ACTIVATION; PRODUCTION_AND_PUBLICATION_EXCLUDED`
 - Parent/epic: successor to `WECHAT-006`; prior evidence remains historical
 - Owner: Codex coordinates; the authorized operator owns portal/QR/2FA/legal/payment actions; each repository has one writer
@@ -93,3 +93,6 @@ action under the Computer Use policy. One consolidated handoff is used.
 Operator completes the value-only template and redacted portal screenshots,
 then replies exactly `Configurazione pubblica compilata`. Independent source,
 QA and performance inventory continues without enabling flags.
+
+2026-09-07: remaining external inventory continued in WECHAT-009 under the new
+user mandate; historical evidence retained, no DONE promotion.

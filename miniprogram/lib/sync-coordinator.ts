@@ -105,7 +105,7 @@ function parseEntityIds(value: unknown): Readonly<Record<string, readonly string
     if (
       !/^[a-z_]{1,40}$/.test(key) ||
       !Array.isArray(ids) ||
-      ids.length > 250 ||
+      ids.length > 1_000 ||
       ids.some((id) => typeof id !== "string" || !uuidPattern.test(id))
     ) {
       throw new AuthContractError("backend_temporary");
@@ -183,7 +183,7 @@ export class MiniSyncCoordinator {
   }
 
   start(shopId: string): void {
-    if (!uuidPattern.test(shopId)) return;
+    if (!uuidPattern.test(shopId) || this.#shopId === shopId) return;
     this.stop();
     this.#shopId = shopId;
     this.#pollDelayMilliseconds = basePollDelayMilliseconds;
@@ -303,7 +303,8 @@ export class MiniSyncCoordinator {
     }
 
     let afterId = watermark.afterId;
-    while (afterId !== checkpoint.eventMaxId) {
+    let remainingPages = 10;
+    while (afterId !== checkpoint.eventMaxId && remainingPages-- > 0) {
       const deltaResponse = await this.#http.get<{
         readonly delta: {
           readonly asOfEventMaxId: string;
@@ -318,7 +319,7 @@ export class MiniSyncCoordinator {
         {
           after_id: afterId,
           event_max_id: checkpoint.eventMaxId,
-          limit: 50,
+          limit: 5,
           scope_key: checkpoint.scopeKey,
           shop_id: shopId,
         },
@@ -339,6 +340,18 @@ export class MiniSyncCoordinator {
         }
         priorEventId = eventId;
       }
+      const next = delta.nextAfterId ?? checkpoint.eventMaxId;
+      if (
+        typeof delta.hasMore !== "boolean" ||
+        !cursorPattern.test(next) ||
+        BigInt(next) <= BigInt(afterId) ||
+        BigInt(next) > maximumEventId ||
+        (events.length > 0 && BigInt(next) < priorEventId) ||
+        (delta.hasMore && (events.length === 0 || next !== events[events.length - 1]?.id)) ||
+        (!delta.hasMore && next !== checkpoint.eventMaxId)
+      ) {
+        throw new AuthContractError("backend_temporary");
+      }
       if (events.some((event) => event.requiresFullRecovery)) {
         this.clearCurrentWatermark(shopId);
         await this.#notify({ kind: "reconcile", shopId });
@@ -352,15 +365,6 @@ export class MiniSyncCoordinator {
         this.#caches.invalidateDomains(domains);
         await this.#notify({ events, kind: "delta", shopId });
         this.#assertContext(context);
-      }
-      const next = delta.nextAfterId ?? checkpoint.eventMaxId;
-      if (
-        !cursorPattern.test(next) ||
-        BigInt(next) <= BigInt(afterId) ||
-        BigInt(next) > maximumEventId ||
-        (events.length > 0 && BigInt(next) < priorEventId)
-      ) {
-        throw new AuthContractError("backend_temporary");
       }
       afterId = next;
       watermark = { ...watermark, afterId, scopeKey: checkpoint.scopeKey };
