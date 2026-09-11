@@ -1,6 +1,6 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
-- Status: `EXECUTION`
+- Status: `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`
 - Owner: Codex, sole Mini writer; independent agents read/review only.
 - Opened: 2026-09-11
 - Source branch: `codex/wechat-010-mini-staging`; PR10 merged normally.
@@ -65,3 +65,22 @@ CA aggiuntivi: intent di mutazione non trasferibile dopo cambio sessione;
 cleanup delle sessioni temporanee e tardive; revoca con esito verificato;
 OFF predefinito e ON negato senza prerequisiti; review dei byte esatti e CI verde.
 Auth/DevTools/dispositivo live restano NOT_RUN finché non esiste la prova reale.
+
+
+## Closeout tecnico della continuazione
+
+Execution dei fix conclusa; review indipendenti `review_protocol` e
+`review_security` APPROVED sui commit Mini `364b44cb` e Admin `0190f526`, sul
+packet privato verificato e sulla release isolata `91f3d8e5`. Nessun finding aperto
+nel delta revisionato; l'approvazione non certifica provider o Auth live.
+Mini PR12 e Admin PR104 integrate normalmente dopo CI verde. Nuovo Worker staging
+`29d0c715-e3e7-4a23-b9e7-40ade3149414`, rollout100%, smoke OFF9/9, migration141
+identiche per versione/nome/statement count/hash. Flags e allowlist ancora assenti,
+defaultOFF. Nessuna fixture creata, nessuna modifica production/native/POS/Client.
+
+Handoff: `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`. Il codice autorizzato è
+integrato; accettazione globale BLOCKED e prove Auth/telefono NOT_RUN.
+Credenziale TEST sostitutiva supportata, qualifica protocollo/tenant OneID e
+riferimenti esatti al tester/shop condiviso sono dipendenze indipendenti.
+Privacy web-view BLOCKED nell'ambiente DevTools corrente; nessun PASS da GET.
+Dettagli, comandi, CI e stato effettivo nel report unico.

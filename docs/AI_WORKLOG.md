@@ -41,3 +41,12 @@ S2–S5 P2; fix limitati a session/account fencing, cleanup/revoke e readiness.
 Mini88/88, Admin focused29/foundation1006+2skip/UI48, verify PASS.
 ADR condizionato fondato su GoTrue v2.196.0 e fonti OneID; nessun provider
 qualificato o credenziale usata. Prove live NOT_RUN; report unico aggiornato.
+
+
+## 2026-09-11 — Integrazione tecnica WECHAT-010 conclusa
+Due reviewer distinti APPROVED su Mini364b44cb/Admin0190f526 e release91f3d8e;
+S1 P1 e S2–S5 P2 chiusi. MiniPR12→37857899, AdminPR104→57e60497, CI PR/main
+PASS, pgTAP2627. Worker staging29d0c715 al100%, HTTP OFF9/9 e registry141
+identica. Mini88/88 e cinque tab DevTools OFF verificate; privacy web-view
+BLOCKED dal controllo IDE, Auth/telefono NOT_RUN. Nessuna fixture o modifica
+production/native. REVIEW / EXTERNAL_ACTIVATION_REQUIRED, nessun DONE.

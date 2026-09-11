@@ -237,7 +237,7 @@ review mirata del fencing esistente, nessun analogo rebind confermato.
 | Modalità script privata OFF/allowlist/ON | PASS: 3 gruppi negativi/positivi; attivazione reale negata con exit1 perché manca readiness |
 | DevTools baseline domini/OFF | Evidence WECHAT-010 precedente; nessun nuovo PASS autenticato |
 | Telefono / Auth staging / funzioni autenticate | NOT_RUN: protocollo/credenziale/tester da qualificare |
-| Privacy web-view | NOT_RUN: GET pubblico precedente non certifica UI/business domain |
+| Privacy web-view | BLOCKED: tentativo UI DevTools non completato; nessuna prova business domain |
 | Latenza live p50/p95 e convergenza nativa | NOT_RUN: manca sessione WeChat autentica |
 
 Lo script privato conserva OFF predefinito e TLS/domains attivi. La modalità
@@ -267,3 +267,106 @@ esatto `setup-wechat-staging.sh --activate-readonly`, attualmente bloccato. Prim
 servono qualifica/review e configurazione server reale; poi verticale wx.login →
 receipt → shop → catalogo, letture, mutazioni/images solo test, sync/offline,
 Android/iOS separati e linking ultimo. Nessun PASS globale o promessa background.
+
+
+### Review indipendente e integrazione conclusa
+
+I due reviewer sono agenti distinti dal writer, non due letture della stessa
+sessione: `review_protocol` (protocollo, runtime/config, async/UI e regressioni) e
+`review_security` (Auth/replay, isolamento, revoca, RLS/Storage e release/rollback).
+Esito finale entrambi APPROVED per il delta tecnico seguente, senza qualifica live:
+
+| Oggetto revisionato | Revisione esatta |
+|---|---|
+| Mini | `364b44cb63e553e47a398acc7d71378260c83647` |
+| Admin e ADR-002 | `0190f52682de86714bb2e5fc0dd6410948355152` |
+| Release isolata Admin | `91f3d8e57f3c47740852974b73a5d66efc4189db` |
+| Script privato setup SHA256 | `0a2d868143f708ad912c4f76267139321e612269f47c4e2510fec4ae3859f6bf` |
+| Validator privato SHA256 | `7c92eb77ab24e8482ccf8c424cbfe7c9ad106b04ac7343c8cb8928627badfcef` |
+| Test validator SHA256 | `c717d1863574d8016554cb2407cf480765dfd8cd5a3894ab3d16f31967edf295` |
+
+S1–S5 chiusi; P0/P1 residui nel delta: zero. La prova riproducibile indipendente è
+`node /tmp/wechat-011-security-review.cjs <mini-root> <admin-root>`: baseline7
+fallimenti attesi, fix7/7 PASS (exit0). Le regressioni permanenti restano nei test
+versionati; lo script temporaneo è solo evidence locale. Riferimenti del fix alla
+revisione approvata: Mini `miniprogram/lib/catalog-mutation-client.ts:424` (S1),
+`miniprogram/lib/auth-client.ts:87` (S2); Admin
+`src/server/auth/wechat-mini-session.ts` (S3/S4) e
+`src/server/auth/wechat-config.ts` (S5). La review considera anche i contratti
+invariati attraversati, ma non ripete una scansione generale di tutti i repository.
+
+Execution dei sottotask tecnici: conclusa e integrata. Review dei fix: APPROVED.
+Review dell'accettazione globale: BLOCKED da prerequisiti esterni; non DONE.
+
+### CI, main e artefatto staging distinti
+
+- [Mini PR12](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/12),
+  merge normale `37857899637ebf3ec44a88c018406bf60fafced8`;
+  [CI PR](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34655762419)
+  e [CI main](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34656006752)
+  PASS sulla rispettiva SHA. Main locale/origin allineate pulite a tale merge
+  prima del solo closeout documentale.
+- [Admin PR104](https://github.com/XNIW/merchandise-control-admin-web/pull/104),
+  merge normale `57e6049714252f6a6c1af37ec3f69127f16de902`;
+  [CI PR](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34655768668),
+  [Cloudflare PR](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34655768662),
+  [CI main](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34656044040)
+  e [Cloudflare main](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34656044041)
+  PASS. Main locale/origin allineate pulite a tale merge prima del closeout docs.
+  pgTAP48 file/2627 test PASS. Foundation CI995 PASS+13skip, diversa dal locale
+  1006+2skip per assenza del riferimento Win7POS; nessun failure. TASK094 staging
+  import E2E e deploy automatici skipped: non necessari/rieseguiti in questa wave.
+- Job, step e annotation letti: soltanto warning preesistenti per runtime Node20
+  delle Actions; nessun bypass di CI/protezioni.
+- Branch `codex/wechat-010-auth-staging` conservato e pushato alla release
+  `91f3d8e57f3c47740852974b73a5d66efc4189db`, derivata dal sorgente staging
+  comprovato `def934021481d3a309a543b0d4ea186b3fa91733`. Quattro file selezionati
+  dal commit Admin approvato sono identici ai byte integrati su main, più il
+  manifest `docs/AUDITS/WECHAT-010-AUTH-RELEASE.md`. Nessun delta commerce,
+  migration, package o lockfile. Questo branch non va unito a main.
+- [Cloudflare release build-only](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34655880432)
+  PASS sulla release esatta. Localmente verify, Auth29/29, OpenNext build, avvio
+  Worker/smoke29/29 e dry-run PASS (exit0), prima del deploy.
+- Deploy staging con `npx --no-install wrangler deploy --env staging --keep-vars
+  --minify --autoconfig=false`, metadata source SHA e tag `wechat-010-auth-91f3d8e`:
+  exit0. Worker effettivo **`29d0c715-e3e7-4a23-b9e7-40ade3149414` al 100%**.
+  Metadata deployments/version ispezionati; rollback disponibile alla versione
+  precedente `c39ebe92-0fdf-4596-94a0-16bcd018ebab`, non necessario/non eseguito.
+
+### Verifica dopo il deploy e limiti runtime
+
+`node closure-staging-smoke.mjs` nel private audit: exit0, HTTP staging reale9/9.
+Privacy/deletion/status200, challenge/exchange/shops/catalog/sync/mutations503
+`provider_not_configured`, TLS verificato e nessun redirect. Input POST sintetici,
+nessun wx.login. Un primo probe aveva inviato `{}` al challenge e ricevuto400:
+FAIL del relativo harness, corretto con body conforme e rieseguito; nessun difetto
+applicativo o rollback. Non si trasforma il gate OFF in test Auth.
+
+`enabledSurfaces` e `readySurfaces` tutti false; activation disabled, linking e
+miniCatalogMutations false. Binding names/types identici al deployment precedente,
+nessun binding WECHAT presente, incluse le allowlist. Google/email invariati.
+Query registry dopo deploy:141 righe identiche a prima per versione, nome,
+statement count e MD5 statement; nessuna migration applicata. Le due migration
+commerce rimangono escluse. Nessuna fixture di questa esecuzione da pulire.
+
+Setup privato su Mini main integrata: exit0, verify88/88, bundle `dist` controllato
+con gateway/Storage/privacy pubblici corretti e flagOFF; `urlCheck=true` nella
+configurazione privata. DevTools Stable2.02.2608040/library3.17.0 sul progetto main:
+nuova navigazione delle cinque tab OFF verificata via UI/AX, zero errori, sette
+warning del runtime/preload/hot reload. Pannello Network senza richieste durante
+questo audit OFF. L'updater aveva mostrato `signature not match`; chiuso l'avviso,
+l'IDE installato era utilizzabile. Il successivo tentativo di apertura della
+privacy in web-view tramite console non è giunto a una pagina verificabile:
+controllo UI/clipboard instabile, infine `noWindowsAvailable`. Esito privacy
+BLOCKED; non si aggira il controllo né si attribuisce un PASS al precedente GET.
+Prima della readiness ON verificare nuovamente la web-view e i business domain
+nel runtime consentito. Telefono e flusso WeChat autenticato: NOT_RUN.
+
+Evidence concise privata: `closure-postdeploy-smoke.json`,
+`closure-postdeploy-worker.json`, `closure-postdeploy-deployments.json`,
+`closure-postdeploy-migrations.json`; log locali `closure-verify-final.log`,
+`closure-release-*.log`, `closure-deploy.log` e packet
+`closure-postmerge-setup.log`. Nessun log completo, identificatore privato,
+credenziale o artifact build versionato. Checkout nativi/POS/Client e produzione
+non modificati. Restano soltanto le dipendenze esterne elencate sopra e la prova
+runtime privacy; il closeout documentale non cambia la revisione distribuita.

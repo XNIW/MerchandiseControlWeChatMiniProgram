@@ -68,3 +68,12 @@ Append-only factual events.
 | 2026-09-11T21:46:05.334853+00:00 | WECHAT-010 | Source normally merged and isolated staging delivered; evidence closeout | MiniPR10→5289e10f, AdminPR102→67e360fc; exact isolateddef93402→Workerc39ebe92 at100%, HTTP9/9 and postmergeMini84/84 PASS; migrationregistry unchanged141, flagsOFF; liveNOT_RUN, REVIEW retained |
 
 | 2026-09-11 | WECHAT-010 | Mandato WECHAT-011 riutilizza il task; execution/fix e review indipendente | S1 P1 + S2–S5 P2 riprodotti e corretti; Mini88, Admin29/foundation1006+2skip/UI48; liveNOT_RUN |
+
+
+## 2026-09-11 — Integrazione tecnica WECHAT-010 conclusa
+Due reviewer distinti APPROVED su Mini364b44cb/Admin0190f526 e release91f3d8e;
+S1 P1 e S2–S5 P2 chiusi. MiniPR12→37857899, AdminPR104→57e60497, CI PR/main
+PASS, pgTAP2627. Worker staging29d0c715 al100%, HTTP OFF9/9 e registry141
+identica. Mini88/88 e cinque tab DevTools OFF verificate; privacy web-view
+BLOCKED dal controllo IDE, Auth/telefono NOT_RUN. Nessuna fixture o modifica
+production/native. REVIEW / EXTERNAL_ACTIVATION_REQUIRED, nessun DONE.
