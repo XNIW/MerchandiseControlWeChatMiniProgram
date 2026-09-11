@@ -64,3 +64,5 @@ Append-only factual events.
 | 2026-09-07T15:23:55Z | WECHAT-009 | Normal integration after green CI | Mini PR8→2e1c3fce, Admin PR101→ffafd55e; Verify/Cloudflare smoke PASS, CI pgTAP2627 PASS; main fast-forward, native dirty work preserved; separate report closeout, flags OFF, no staging deploy or DONE |
 
 | 2026-09-11T21:35:26.451225+00:00 | WECHAT-010 | Manual TEST domain evidence accepted; independent preparation handed to REVIEW | Mini84/84; DevTools domains/bypassOFF/five tabs and four public runtime probes200; security complete4/4 plus final delta approved; AppSecret rotation/vendor nonce remain external, Auth NOT_RUN |
+
+| 2026-09-11T21:46:05.334853+00:00 | WECHAT-010 | Source normally merged and isolated staging delivered; evidence closeout | MiniPR10→5289e10f, AdminPR102→67e360fc; exact isolateddef93402→Workerc39ebe92 at100%, HTTP9/9 and postmergeMini84/84 PASS; migrationregistry unchanged141, flagsOFF; liveNOT_RUN, REVIEW retained |
