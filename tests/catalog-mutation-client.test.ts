@@ -453,3 +453,114 @@ test("definitive denial ends an attempt and a reset creates fresh state", async 
   controller.reset();
   assertEqual(controller.state.lifecycle, "idle", "reset permits a new logical attempt");
 });
+
+function accountMutationContext() {
+  const platform = new FakePlatform();
+  const sessions = new SessionStore(platform, () => 1_000);
+  const save = (account: string) =>
+    sessions.save(
+      {
+        accountFingerprint: account.repeat(64),
+        expiresAt: 1_900,
+        expiresIn: 900,
+        sessionToken: account.repeat(43),
+        tokenType: "bearer",
+        user: { provider: "custom:wechat" },
+      },
+      deviceId,
+    );
+  save("a");
+  const client = new CatalogMutationClient(
+    new HttpClient("https://staging.example.com", platform),
+    sessions,
+  );
+  const events: string[] = [];
+  const controller = new CatalogMutationAttemptController(
+    client,
+    platform,
+    {
+      enqueue: () => {
+        events.push("enqueue");
+        return "entry";
+      },
+      recordFailure: () => events.push("failure"),
+      recordSending: () => events.push("sending"),
+      recordSuccess: () => events.push("success"),
+    },
+    () => events.push("published"),
+  );
+  return { platform, sessions, save, client, controller, events };
+}
+
+function held<Value>() {
+  let complete: (value: Value) => void = () => {};
+  const promise = new Promise<Value>((resolve) => {
+    complete = resolve;
+  });
+  return { complete, promise };
+}
+
+test("mutation intent cannot cross accounts while identifiers are being prepared", async () => {
+  const c = accountMutationContext();
+  const random = held<Uint8Array>();
+  c.platform.randomBytes = () => random.promise;
+  const pending = c.controller.start(productCreateInput());
+  c.sessions.clear();
+  c.save("b");
+  random.complete(Uint8Array.from({ length: 32 }, (_, i) => (i * 17 + 3) % 256));
+  await expectReject(
+    () => pending,
+    (error) => assertMutationError(error, "session_expired"),
+  );
+  assertEqual(c.platform.requests.length, 0, "no request under replacement session");
+  assertEqual(c.events.length, 0, "no old intent enters the replacement outbox");
+});
+
+test("retry retained across logout cannot submit as the replacement account", async () => {
+  const c = accountMutationContext();
+  await expectReject(
+    () => c.controller.start(productCreateInput()),
+    () => true,
+  );
+  assertEqual(c.controller.state.lifecycle, "retryable_error", "network failure remains retryable");
+  c.sessions.clear();
+  c.save("b");
+  const events = c.events.length;
+  await expectReject(
+    () => c.controller.retry(),
+    (error) => assertMutationError(error, "session_expired"),
+  );
+  assertEqual(c.platform.requests.length, 1, "no replay as B");
+  assertEqual(c.events.length, events, "replacement outbox untouched");
+});
+
+for (const outcome of ["success", "error"] as const) {
+  test(`late mutation ${outcome} cannot publish or update the replacement outbox`, async () => {
+    const c = accountMutationContext();
+    const entered = held<void>();
+    const response = held<import("../miniprogram/lib/platform").PlatformResponse<unknown>>();
+    c.platform.request = async <T>(
+      request: import("../miniprogram/lib/platform").PlatformRequest,
+    ) => {
+      c.platform.requests.push(request);
+      entered.complete();
+      return (await response.promise) as import("../miniprogram/lib/platform").PlatformResponse<T>;
+    };
+    const pending = c.controller.start(productCreateInput());
+    await entered.promise;
+    c.sessions.clear();
+    c.save("b");
+    const events = c.events.length;
+    response.complete(
+      outcome === "success"
+        ? successResponse(generatedIdentifiers.correlationId, generatedIdentifiers.idempotencyKey)
+        : { statusCode: 503, data: { code: "backend_temporary" } },
+    );
+    await expectReject(
+      () => pending,
+      (error) => assertMutationError(error, "session_expired"),
+    );
+    assertEqual(c.events.length, events, "no late callback or outbox write");
+    assertEqual(c.sessions.load()?.sessionToken, "b".repeat(43), "new session kept");
+  });
+}

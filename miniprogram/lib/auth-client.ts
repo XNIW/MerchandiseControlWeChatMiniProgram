@@ -78,8 +78,9 @@ export class WeChatAuthClient {
       throw new AuthContractError("code_missing");
     }
 
-    const handoff = await awaitCurrent(
-      this.#http.post<unknown>(
+    let handoff: unknown;
+    try {
+      handoff = await this.#http.post<unknown>(
         "/api/auth/wechat/exchange",
         {
           code,
@@ -92,13 +93,30 @@ export class WeChatAuthClient {
         },
         undefined,
         { deviceId },
-      ),
-    );
-    if (!isMiniSessionHandoff(handoff)) {
-      throw new AuthContractError("backend_temporary");
+      );
+      assertCurrent();
+      if (!isMiniSessionHandoff(handoff)) {
+        throw new AuthContractError("backend_temporary");
+      }
+      this.#sessions.save(handoff, deviceId);
+      return handoff;
+    } catch (error) {
+      // A cancelled exchange may still have issued a receipt on the server.
+      // Dispose of that receipt without ever installing it as the active account.
+      if (isMiniSessionHandoff(handoff)) {
+        const current = this.#sessions.load();
+        if (current?.sessionToken !== handoff.sessionToken || current.deviceId !== deviceId) {
+          void this.#http
+            .post("/api/auth/wechat/logout", undefined, {
+              deviceId,
+              sessionToken: handoff.sessionToken,
+            })
+            .catch(() => undefined);
+        }
+      }
+      assertCurrent();
+      throw error;
     }
-    this.#sessions.save(handoff, deviceId);
-    return handoff;
   }
 
   signOut(): void {

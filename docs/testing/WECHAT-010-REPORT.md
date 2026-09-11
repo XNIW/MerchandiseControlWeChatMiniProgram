@@ -183,3 +183,87 @@ audience/client authentication, key rotation, stable subject/AppID/OpenID/UnionI
 separation, callbacks/linking and TEST-account compatibility. No purchase or
 external message was sent. Linking remains last; Web/Android/iOS require their own
 real acceptance. Native dirty checkouts are outside this writer's scope.
+
+
+## Continuazione autorizzata dal mandato WECHAT-011 — 2026-09-11
+
+Si riutilizza WECHAT-010, senza promuovere a DONE l'accettazione incompleta.
+Baseline verificata: Mini `f45eafd838606cb25c8fd661b54a97b53139efce`, Admin
+`a932468a34cfb697cf6628e6b8f970f1d46e51bb`, checkout puliti e origin/main uguali,
+nessuna PR aperta. CI delle due main PASS; job/step letti, annotation soltanto
+warning preesistente runtime Node20 delle GitHub Actions. Worker iniziale ancora
+`c39ebe92-0fdf-4596-94a0-16bcd018ebab` 100%, metadata source `def93402`.
+GoTrue staging `/auth/v1/health` HTTP200: v2.196.0. Google/email risultano abilitati
+in `/auth/v1/settings`; nessuna loro configurazione è stata modificata.
+
+### Decisione protocollo
+
+Reviewer tecnico indipendente `review_protocol`: grant OneID Mini e code flow
+PKCE documentati, nonce nel grant Mini e handoff OIDC nel Mini TEST NON_VERIFICATO.
+Nessun vendor dichiarato incompatibile. ADR-002 separa requisiti indispensabili,
+realizzazione corrente e alternativa standard condizionata sul medesimo OneID.
+Supabase v2.196.0 non richiede nonce quando entrambi sono assenti, ma il gateway
+mantiene raw→SHA256→claim firmato: non si sfrutta tale comportamento per eludere
+il contratto. Nessun adapter o provider registrato con placeholder.
+
+### Finding riprodotti e fix
+
+Review sicurezza indipendente `review_security` sul baseline: CHANGES_REQUIRED.
+Sette riproduzioni negative (exit1) evidenziano cinque finding:
+
+| ID | Gravità | Difetto | Correzione e prova locale |
+|---|---|---|---|
+| S1 | P1 | Intent catalogo A inviato con B dopo random/retry; risultato tardivo guida altro stage | Snapshot generazione prima di await, guard enqueue/send/retry/risultati/errori; quattro regressioni permanenti, più repro con outbox reale |
+| S2 | P2 | Exchange dopo logout lascia receipt server vivo | Revoca best-effort del solo receipt abbandonato; test logout e login più recente |
+| S3 | P2 | Issue opaco fallito conserva sessione Supabase temporanea | Revoca canonica preventiva fail-closed; rollback hash opaco su risultato incerto; test errore/throw/malformed |
+| S4 | P2 | RPC revoke=false dichiarata revoked=true | Accettare solo booleano true; sette forme di risposta testate |
+| S5 | P2 | Status ready con solo Mini ON e allowlist invalide | Readiness effettiva per superficie, stato coerente, flag mutation/linking pubblici senza valori allowlist; test OFF/invalid/ON e Web indipendente |
+
+La revoca di rete dal client è best-effort: offline può fallire, il receipt ha TTL
+server 15 minuti e rollback della superficie nega comunque l'accesso. Non si
+promette annullamento retroattivo di mutazioni già accettate dal server. Immagini:
+review mirata del fencing esistente, nessun analogo rebind confermato.
+
+### Execution e matrice delle prove
+
+| Ambito | Risultato |
+|---|---|
+| Mini verify, typecheck, lint, secret scan, test, build | PASS: Node26.7.0, 88/88 test; nessuna dipendenza modificata |
+| Admin verify (lint/typecheck/security/build) | PASS; nessuna migration o dipendenza modificata |
+| Admin foundation | PASS: 1006 test, 2 skip preesistenti; riferimento Win7POS pulito usato solo in lettura |
+| Admin test Auth mirati | PASS: 29/29 |
+| Admin UI smoke locale | PASS: 48/48, server realmente avviato e test browser; non Auth WeChat |
+| Repro indipendenti dopo fix | PASS: 7/7, fixture locali; non provider staging |
+| Modalità script privata OFF/allowlist/ON | PASS: 3 gruppi negativi/positivi; attivazione reale negata con exit1 perché manca readiness |
+| DevTools baseline domini/OFF | Evidence WECHAT-010 precedente; nessun nuovo PASS autenticato |
+| Telefono / Auth staging / funzioni autenticate | NOT_RUN: protocollo/credenziale/tester da qualificare |
+| Privacy web-view | NOT_RUN: GET pubblico precedente non certifica UI/business domain |
+| Latenza live p50/p95 e convergenza nativa | NOT_RUN: manca sessione WeChat autentica |
+
+Lo script privato conserva OFF predefinito e TLS/domains attivi. La modalità
+`--activate-readonly` costruisce il client ON solo con attestazioni di review,
+provider, nuova credenziale, tester/shop, AppID e SHA coerenti, versione Worker
+corrente e status Mini realmente ready; mutazioni/linking/altre superfici OFF.
+Non crea attestazioni, non configura provider e non modifica flag server.
+
+### Dipendenze esterne e ripresa
+
+Credenziale: NON_RUOTATA, mai recuperata né usata. Ricerca ufficiale TEST senza
+procedura applicabile verificata; le API reset TCSAS/SuperApp non appartengono al
+TEST WeChat. Pagina operatore `https://developers.weixin.qq.com/sandbox`, campo
+AppSecret: richiedere supporto ufficiale TEST, senza inventare pulsanti. Nuovo
+valore solo nel campo nascosto del server store qualificato; se AppID cambia,
+rifare l'insieme coerente identità/domìni/provider/DevTools. Nessun portale visitato.
+
+Provider: nessun metadato tenant nei file autorizzati, nessuna exchange reale.
+Richiesta Tencent aggiornata nel packet privato: nonce specifico Mini oppure
+code-flow Mini TEST, domini/handoff, identità e test negativi riproducibili.
+Non inviata; nessun acquisto. Tester/shop: l'utente designa quelli già usati sulle
+altre piattaforme; configurazione univoca non trovata e browser Admin disponibile
+senza sessione. Richiesti riferimenti precisi; nessuna selezione arbitraria dal DB.
+
+Il packet `OPERATOR-ACTIONS.md` contiene input richiesti, prova attesa e comando
+esatto `setup-wechat-staging.sh --activate-readonly`, attualmente bloccato. Prima
+servono qualifica/review e configurazione server reale; poi verticale wx.login →
+receipt → shop → catalogo, letture, mutazioni/images solo test, sync/offline,
+Android/iOS separati e linking ultimo. Nessun PASS globale o promessa background.
