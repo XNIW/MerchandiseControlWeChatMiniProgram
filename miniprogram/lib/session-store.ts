@@ -1,7 +1,26 @@
-import type { MiniSessionHandoff } from "./contracts";
+import { AuthContractError, type MiniSessionHandoff } from "./contracts";
 import type { MiniProgramPlatform } from "./platform";
 
 const maximumRemainingLifetimeSeconds = 86_400;
+
+export function isMiniSessionHandoff(value: unknown): value is MiniSessionHandoff {
+  if (typeof value !== "object" || value === null) return false;
+  const handoff = value as Partial<MiniSessionHandoff>;
+  return (
+    handoff.tokenType === "bearer" &&
+    typeof handoff.sessionToken === "string" &&
+    /^[A-Za-z0-9_-]{43}$/.test(handoff.sessionToken) &&
+    typeof handoff.accountFingerprint === "string" &&
+    /^[0-9a-f]{64}$/.test(handoff.accountFingerprint) &&
+    typeof handoff.expiresAt === "number" &&
+    Number.isSafeInteger(handoff.expiresAt) &&
+    typeof handoff.expiresIn === "number" &&
+    Number.isSafeInteger(handoff.expiresIn) &&
+    handoff.expiresIn > 0 &&
+    handoff.expiresIn <= maximumRemainingLifetimeSeconds &&
+    handoff.user?.provider === "custom:wechat"
+  );
+}
 
 export interface ActiveSession {
   readonly accountFingerprint: string;
@@ -23,17 +42,16 @@ export class SessionStore {
   }
 
   save(handoff: MiniSessionHandoff, deviceId: string): void {
+    const now = this.#nowSeconds();
     if (
-      handoff.tokenType !== "bearer" ||
-      !/^[A-Za-z0-9_-]{43}$/.test(handoff.sessionToken) ||
-      !/^[0-9a-f]{64}$/.test(handoff.accountFingerprint) ||
+      !isMiniSessionHandoff(handoff) ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
         deviceId,
       ) ||
-      handoff.expiresAt <= this.#nowSeconds() ||
-      handoff.expiresAt - this.#nowSeconds() > maximumRemainingLifetimeSeconds
+      handoff.expiresAt <= now ||
+      handoff.expiresAt - now > maximumRemainingLifetimeSeconds
     ) {
-      throw new Error("session_invalid");
+      throw new AuthContractError("backend_temporary");
     }
     // Mini Program storage is not a secure enclave. Keep the bearer in memory
     // only; refresh and durable restoration require a later reviewed server
@@ -52,6 +70,7 @@ export class SessionStore {
     const candidate = this.#activeSession;
     if (
       candidate === null ||
+      !Number.isSafeInteger(candidate.expiresAt) ||
       !/^[A-Za-z0-9_-]{43}$/.test(candidate.sessionToken) ||
       !/^[0-9a-f]{64}$/.test(candidate.accountFingerprint) ||
       candidate.expiresAt <= this.#nowSeconds() ||
