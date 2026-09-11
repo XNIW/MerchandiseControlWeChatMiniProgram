@@ -1,6 +1,12 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-**WECHAT-010** prosegue in `EXECUTION` con il mandato di chiusura Auth WECHAT-011, riutilizzando il task esistente. La baseline sottostante resta storica.
+**WECHAT-010** resta in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` dopo la chiusura
+tecnica autorizzata dal mandato WECHAT-011: cinque finding corretti e approvati da
+due reviewer indipendenti; Mini PR12 e Admin PR104 integrate, CI verde; release
+isolata `91f3d8e5` distribuita come Worker `29d0c715` al 100%, smoke HTTPS OFF9/9.
+Mini88/88 e nuova UI DevTools OFF verificate; Auth reale resta NOT_RUN. Credenziale
+TEST, qualifica OneID e tester/shop designati restano prerequisiti distinti.
+Il report unico governa prove, limiti e ripresa. Nessun DONE globale.
 
 Baseline precedente: **WECHAT-010** era in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` for manually confirmed TEST-account domains,
 AppSecret rotation prerequisites, current staging/DevTools checks and bounded
