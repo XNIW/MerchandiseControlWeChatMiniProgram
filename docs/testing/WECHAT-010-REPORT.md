@@ -11,16 +11,16 @@ No DONE, production change, Mini upload/publication or real WeChat exchange.
 | 2. Test AppID/private config | Matches user evidence and the TEST account shown by DevTools. AppID only in ignored private configuration; shared project.config.json restored byte-for-byte to main after IDE import normalization. No official/production AppID inferred. |
 | 3. Exposed AppSecret | MINI_TEST_APPSECRET_ROTATION_REQUIRED. Never copied, used, logged, placed in env or inserted server-side. TEST-specific reset support/procedure remains unverified. |
 | 4. DevTools | 2.02.2608040, base library 3.17.0 (UI labels it rollout). Correct repository imported. Domain refresh matches manual evidence. Bypass checkbox OFF; five tabs consistently disabled and no network requests in OFF audit. Four subsequent public diagnostic wx.request probes return200. |
-| 5. Worker | Initial actual version38272504-ca78-4bcb-8553-ae7463ae1e64, 100%, source a787331a6e673b2daf93929b507aa18c6dc24e24 proven by deployment run32530174055. Final isolated delivery recorded below. |
+| 5. Worker | Current c39ebe92-0fdf-4596-94a0-16bcd018ebab at100%, deployed from isolated def934021481d3a309a543b0d4ea186b3fa91733. Postdeploy HTTP smoke9/9 PASS; all flags OFF. |
 | 6. Migrations | No WeChat migration needed. Remote141/local143; all seven WeChat migration identities/order/statement checksums match. Two missing migrations are commerce-only and were not applied. |
 | 7. Bridge decision | No vendor selected for activation. Tencent remains the first qualification candidate; Authing fallback also lacks documented nonce input for its specific Mini grant. No invented vendor adapter or alternate IdP. |
 | 8. Tencent qualified | TENCENT_ONEID_TECHNICALLY_QUALIFIED=NO: required protocol/tenant evidence missing, not a claim that vendor support is impossible. |
 | 9. Supabase provider | Platform custom OIDC/id-token capability documented; this project's custom:wechat configuration/live exchange NOT_VERIFIED. No real issuer/discovery/JWKS/client identity available. |
-| 10. Missing secrets/config | Rotated TEST AppSecret in the eventual qualified provider's server store; bridge client secret, technical hash salt and provider client credential. Real OIDC metadata and designated canonical tester/shop allowlists also required. No secret entered. |
+| 10. Missing secrets/config | New TEST AppSecret after supported rotation or account replacement, in the eventual qualified provider's server store; bridge client secret, technical hash salt and provider client credential. Real OIDC metadata and designated canonical tester/shop allowlists also required. No secret entered. |
 | 11. Final activation flags | Mini Auth0, catalog mutations0, linking0; general surface flagsOFF. No allowlist values or authenticated fixtures invented. |
 | 12. First Mini E2E | NOT_RUN. No real wx.login or exchange with compromised credentials. |
 | 13. Live functions | Home/catalog/sales/History authenticated reads, all mutations/images, cross-platform sync/offline/conflicts/revocation NOT_RUN. OFF UI/public network probes do not qualify them. |
-| 14. Fix/integration | Mini session/lifecycle/redirect fixes; Admin prerequisites on separate current-main branch. Normal PR/CI/merge and isolated staging details below. |
+| 14. Fix/integration | Mini PR10 normally merged as5289e10f; Admin PR102 normally merged as67e360fc. Reviewed isolated WeChat release deployed, followed by smoke. Exact commits/checks below. |
 | 15. External action | Two independent prerequisites remain: supported TEST-secret rotation/replacement, and vendor confirmation of the exact nonce-capable Mini/OIDC contract. A tenant purchase alone cannot resolve either proof gap. |
 
 `WECHAT_AUTH_LIVE_E2E_PASS=NOT_RUN`.
@@ -87,17 +87,20 @@ classified partial; its sealed artifact was not changed. Token usage unavailable
 
 ## Admin source, schema and deployment isolation
 
-Current Admin baseline ffafd55e4f10044c0724596871d39117122160f1 is clean/current
-main. Main differs from the deployed source by36 files/~6700 added lines including
-commerce. The deployment candidate starts from the proven deployed a787331a and
-selects only reviewed/merged WeChat009/010 sources; dependencies and migrations
-remain identical to the deployed baseline.
+Initial Admin main was ffafd55e4f10044c0724596871d39117122160f1, clean/current at
+intake. The previously deployed version38272504-ca78-4bcb-8553-ae7463ae1e64 was
+proven to originate from a787331a6e673b2daf93929b507aa18c6dc24e24 by deployment
+run32530174055. Main differed by36 files/~6700 added lines including commerce.
+The delivered release starts from that proven deployed source and selects only
+reviewed/merged WeChat009/010 sources; dependencies and migrations remain identical
+to the deployed baseline.
 
 Missing migration identities are `20260823023037_client_commerce_journey_v1` and
 `20260823150000_customer_after_sales_order_lines_v1`; the latter depends on the former.
 Neither supplies objects required by WeChat. All seven WeChat statement checksums
 match;16 older migration registry representation/content differences were recorded
-privately, never repaired from counts. Remote schema was not modified.
+privately, never repaired from counts. Remote schema was not modified. Postdeploy
+registry count remains141 and its complete digest is identical to predeploy.
 
 Admin preparation covers SHA256 OIDC nonce/raw Supabase nonce separation, canonical
 tester/profile and shop allowlists, receipt expiry/generation, and flag-aware write
@@ -107,7 +110,45 @@ capability projection. Allowlist env names are
 admission is checked at session issue/resolution; shop admission precedes data RPCs.
 No test identity/shop was selected or provisioned automatically.
 
-Integration/delivery update is appended after remote CI and staging smoke.
+## Normal integration and actual staging delivery
+
+- Mini source commit `216cba0fb9174ce18057b096215a1cbdbbdaedf8`:
+  [PR10](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/10),
+  [verify CI](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34650183086)
+  PASS; normal merge `5289e10fef31b59a2fae8d72458380de1f45f900` at21:38:38Z.
+  Primary main fast-forwarded cleanly; existing private setup script rerun after
+  merge: clean install, complete84/84 verify and configured runtime OFF PASS.
+- Admin source commit `496c4d1c85de4cb81244a268098eadf60ab9409c`:
+  [PR102](https://github.com/XNIW/merchandise-control-admin-web/pull/102), normal
+  merge `67e360fcbc5812b2bf8e5471ef17b2323d0f0fd2`; required CI/pgTAP/Cloudflare
+  PASS. Current-main verify, foundation1002 PASS+2 existing skips, focused59,
+  UI48 and local Worker smoke29 PASS. Complete security scan
+  `6aeeb9bd-93e4-4ef9-b791-10bfc4ec39d2` has no findings/deferred; final flag
+  parser consistency delta was independently approved separately.
+- Isolated release `def934021481d3a309a543b0d4ea186b3fa91733` on
+  `codex/wechat-010-staging-isolated`:14 selected files match merged Admin source
+  exactly, plus two release governance files. No commerce, package/lockfile or
+  migration change. [Release CI](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34650038825)
+  and [Cloudflare build-only](https://github.com/XNIW/merchandise-control-admin-web/actions/runs/34650041304)
+  PASS; automatic deploy jobs skipped. Local release verify, foundation994 PASS+2
+  existing skips, focused59, UI48, Worker smoke29, paging and dry-run PASS.
+- Staging-only Wrangler deployment preserved existing vars with `--keep-vars`;
+  current version `c39ebe92-0fdf-4596-94a0-16bcd018ebab`, created21:40:59Z,
+  100% rollout. Version metadata records the exact release SHA. Binding names/types
+  unchanged; no secret supplied/rotated. All six WeChat flags are unset/defaultOFF,
+  matching the public disabled status. A wrapper metadata parsing error occurred
+  before upload; retry disabled autoconfiguration and used the same built Worker.
+- Postdeploy at21:42:12Z: real HTTPS smoke9/9 PASS, no redirects, public
+  privacy/deletion/status200; challenge/exchange/shops/catalog/sync/mutations503
+  `provider_not_configured`. Synthetic OFF-gate input only, no wx.login or live
+  authenticated business test. Standard dispatched CI also executed its existing
+  TASK094 staging catalog-import fixture test successfully; it created/tombstoned
+  fixtures and cleanup reported all10 active counts zero. This is separate from
+  WeChat acceptance. No manual database write or migration apply occurred.
+
+Private exact-source, checksum, review and postdeploy evidence resides in
+`_codex-private/wechat-010-admin-audit/`. Documentation closeout changes no runtime
+source and does not change the deployed release SHA. Task status remains REVIEW.
 
 ## Exact bridge qualification and operator handoff
 
@@ -133,7 +174,8 @@ The [official TEST account guide](https://developers.weixin.qq.com/miniprogram/d
 does not establish a TEST AppSecret reset procedure. Obtain supported rotation or
 account replacement from the portal operator/Tencent; do not reuse the exposed
 value or assume the official production-account reset UI applies. Only after a
-real supported rotation and qualified server store may hidden secret input occur.
+supported rotation or account replacement and a qualified server store may hidden
+secret input occur.
 
 The private `OPERATOR-ACTIONS.md` contains a ready technical request for Tencent:
 identify the supported Mini nonce field/endpoint and signed claim, tenant metadata,
