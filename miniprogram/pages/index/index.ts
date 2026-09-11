@@ -22,6 +22,7 @@ app.sensitiveCaches.register(homeReader, ["sales"]);
 interface HomeRuntime {
   visible?: boolean;
   generation?: number;
+  loginAttempt?: number;
 }
 function runtime(page: unknown): HomeRuntime {
   return page as HomeRuntime;
@@ -62,10 +63,15 @@ Page({
   },
   onShow() {
     runtime(this).visible = true;
+    runtime(this).generation = (runtime(this).generation ?? 0) + 1;
     this.stopAutomaticRefresh();
     this.setData({ text: translationsFor(app.locale) });
     if (!app.featureReady) return;
-    if (app.sessionStore.load() !== null) void this.bootstrap();
+    if (app.sessionStore.load() !== null) {
+      void this.bootstrap();
+    } else {
+      this.clearSignedOutView();
+    }
   },
   onUnload() {
     this.onHide();
@@ -75,18 +81,49 @@ Page({
 
   async signIn() {
     if (!app.authClient || !app.salesClient) return;
+    const attempt = (runtime(this).loginAttempt ?? 0) + 1;
+    runtime(this).loginAttempt = attempt;
+    const generation = runtime(this).generation;
+    let sessionGeneration = app.sessionStore.generation;
+    const isCurrent = () =>
+      runtime(this).visible === true &&
+      runtime(this).generation === generation &&
+      runtime(this).loginAttempt === attempt;
     this.setData({ errorMessage: "", viewState: "loading" as ViewState });
     try {
-      await app.authClient.signIn();
+      const handoff = await app.authClient.signIn();
+      if (!isCurrent() || app.sessionStore.load()?.sessionToken !== handoff.sessionToken) return;
+      sessionGeneration = app.sessionStore.generation;
       await this.bootstrap();
     } catch (error) {
-      this.applyError(error);
+      if (isCurrent() && app.sessionStore.generation === sessionGeneration) this.applyError(error);
     }
   },
   async signOut() {
+    runtime(this).loginAttempt = (runtime(this).loginAttempt ?? 0) + 1;
     this.stopAutomaticRefresh();
     await app.requestSignOut();
-    this.setData({ currentShop: null, shops: [], viewState: "signed_out" as ViewState });
+    this.clearSignedOutView();
+  },
+  clearSignedOutView() {
+    this.stopAutomaticRefresh();
+    runtime(this).generation = (runtime(this).generation ?? 0) + 1;
+    homeReader.clear();
+    this.setData({
+      averageSale: "—",
+      comparison: "—",
+      currentShop: null,
+      errorMessage: "",
+      grossRevenue: "—",
+      lastUpdated: "—",
+      latestSale: "—",
+      netRevenue: "—",
+      refunds: "—",
+      saleCount: 0,
+      shops: [],
+      voidCount: 0,
+      viewState: "signed_out" as ViewState,
+    });
   },
   async bootstrap() {
     if (!app.salesClient) return;
@@ -171,7 +208,13 @@ Page({
         viewState: (summary.transaction_count === 0 ? "empty" : "ready") as ViewState,
       });
     } catch (error) {
-      if (isCurrent()) this.applyError(error);
+      if (
+        runtime(this).visible &&
+        runtime(this).generation === generation &&
+        app.sessionStore.load() === null
+      )
+        this.clearSignedOutView();
+      else if (isCurrent()) this.applyError(error);
       throw error;
     }
   },

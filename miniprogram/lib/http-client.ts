@@ -148,6 +148,7 @@ export class HttpClient {
         ...(data === undefined ? {} : { data }),
         headers,
         method,
+        redirect: "manual",
         timeoutMilliseconds: 8_000,
         url,
       });

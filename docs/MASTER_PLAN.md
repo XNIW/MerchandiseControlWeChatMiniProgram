@@ -1,5 +1,11 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+**WECHAT-010** is in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` for manually confirmed TEST-account domains,
+AppSecret rotation prerequisites, current staging/DevTools checks and bounded
+first-live preparation. Mini 84/84, DevTools domains/OFF audit and four public
+runtime probes pass; real Auth remains NOT_RUN. See `docs/tasks/WECHAT-010.md`
+and `docs/testing/WECHAT-010-REPORT.md`. Flags remain OFF.
+
 **WECHAT-009** is in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` for real Auth prerequisite
 inventory, verified performance fixes and conditional staging acceptance. See
 `docs/tasks/WECHAT-009.md`. No live PASS or DONE is implied.
