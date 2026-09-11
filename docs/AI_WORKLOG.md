@@ -33,3 +33,11 @@ Append-only execution evidence. Never record credentials, OAuth codes, private e
 | 2026-09-11T21:35:26.451225+00:00 | Codex | WECHAT-010 | Mini codex/wechat-010-mini-staging / 2732868cf8a246b37cca4ef617d6310900fd5a8d | Reused private inventory/build; fixed expiry, Auth and Home async/lifecycle fences, gateway redirect refusal; official DevTools TEST runtime/domain audit | Pinned Node26.7.0 clean install/full verify84/84, build, secret/diff checks PASS; complete security scan b423b95e plus approved final guard/test delta; public wx.request4/4 HTTP200 | FlagsOFF; no exposed secret used; live Auth/business E2E NOT_RUN; Admin separate writer/PR102 pending; REVIEW, no DONE |
 
 | 2026-09-11T21:46:05.334853+00:00 | Codex team | WECHAT-010 integration closeout | Mini / codex/wechat-010-integration-report /5289e10f; Admin owning isolated worktree | Record normal source merges, precise releaseCI/deploy/smoke, current privateinventory and remaining vendor/rotation prerequisites | MiniPR10 verifyCI34650183086 PASS; postmerge existing setup84/84/runtimeOFF PASS; AdminPR102 merge67e360fc, releaseCI34650038825/CF34650041304 PASS; Workerc39ebe92 at100%, public/OFFsmoke9/9 PASS | SixflagsOFF, migrationregistry unchanged141; standardCI TASK094 fixture test separate from WeChat acceptance; no manualDB/schema/production write; realAuth and essentialfunctionsNOT_RUN, REVIEW |
+
+
+## 2026-09-11 — WECHAT-010, continuazione mandato WECHAT-011
+Root unico writer, reviewer tecnico e sicurezza distinti. Riprodotti S1 P1 e
+S2–S5 P2; fix limitati a session/account fencing, cleanup/revoke e readiness.
+Mini88/88, Admin focused29/foundation1006+2skip/UI48, verify PASS.
+ADR condizionato fondato su GoTrue v2.196.0 e fonti OneID; nessun provider
+qualificato o credenziale usata. Prove live NOT_RUN; report unico aggiornato.

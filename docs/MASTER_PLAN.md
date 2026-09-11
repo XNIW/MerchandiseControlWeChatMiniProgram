@@ -1,6 +1,8 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-**WECHAT-010** is in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` for manually confirmed TEST-account domains,
+**WECHAT-010** prosegue in `EXECUTION` con il mandato di chiusura Auth WECHAT-011, riutilizzando il task esistente. La baseline sottostante resta storica.
+
+Baseline precedente: **WECHAT-010** era in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` for manually confirmed TEST-account domains,
 AppSecret rotation prerequisites, current staging/DevTools checks and bounded
 first-live preparation. Mini 84/84, DevTools domains/OFF audit and four public
 runtime probes pass; real Auth remains NOT_RUN. See `docs/tasks/WECHAT-010.md`

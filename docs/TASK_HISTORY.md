@@ -66,3 +66,5 @@ Append-only factual events.
 | 2026-09-11T21:35:26.451225+00:00 | WECHAT-010 | Manual TEST domain evidence accepted; independent preparation handed to REVIEW | Mini84/84; DevTools domains/bypassOFF/five tabs and four public runtime probes200; security complete4/4 plus final delta approved; AppSecret rotation/vendor nonce remain external, Auth NOT_RUN |
 
 | 2026-09-11T21:46:05.334853+00:00 | WECHAT-010 | Source normally merged and isolated staging delivered; evidence closeout | MiniPR10→5289e10f, AdminPR102→67e360fc; exact isolateddef93402→Workerc39ebe92 at100%, HTTP9/9 and postmergeMini84/84 PASS; migrationregistry unchanged141, flagsOFF; liveNOT_RUN, REVIEW retained |
+
+| 2026-09-11 | WECHAT-010 | Mandato WECHAT-011 riutilizza il task; execution/fix e review indipendente | S1 P1 + S2–S5 P2 riprodotti e corretti; Mini88, Admin29/foundation1006+2skip/UI48; liveNOT_RUN |

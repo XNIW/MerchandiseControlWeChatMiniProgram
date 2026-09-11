@@ -152,10 +152,19 @@ for (const boundary of ["device", "challenge", "login", "exchange"] as const) {
       (error) => error instanceof AuthContractError && error.code === "user_cancelled",
     );
     assertEqual(sessions.load(), null, "logout remains authoritative");
+    if (boundary === "exchange") {
+      const cleanup = platform.requests.at(-1);
+      assert(cleanup?.url.endsWith("/logout"), "abandoned receipt is revoked");
+      assertEqual(
+        cleanup?.headers?.Authorization,
+        `Bearer ${handoff.sessionToken}`,
+        "cleanup uses old receipt",
+      );
+    }
     assertEqual(
       platform.requests.length,
-      boundary === "device" ? 0 : boundary === "exchange" ? 2 : 1,
-      "cancelled attempt makes no subsequent request",
+      boundary === "device" ? 0 : boundary === "exchange" ? 3 : 1,
+      "only an already issued receipt needs a cleanup request",
     );
   });
 }
@@ -184,6 +193,13 @@ test("late login cannot replace the account from the newest successful login", a
     (error) => error instanceof AuthContractError && error.code === "user_cancelled",
   );
   assertEqual(sessions.load()?.accountFingerprint, latest.accountFingerprint, "new account kept");
+  const cleanup = platform.requests.at(-1);
+  assert(cleanup?.url.endsWith("/logout"), "old login receipt is revoked");
+  assertEqual(
+    cleanup?.headers?.Authorization,
+    `Bearer ${handoff.sessionToken}`,
+    "new session is never revoked",
+  );
 });
 
 test("obsolete exchange errors cannot invalidate the newest session", async () => {

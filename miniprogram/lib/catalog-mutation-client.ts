@@ -417,12 +417,24 @@ export class CatalogMutationClient {
     this.#sessions = sessions;
   }
 
+  get sessionGeneration(): number {
+    return this.#sessions.generation;
+  }
+
+  assertSessionGeneration(expected: number): void {
+    if (this.#sessions.load() === null || this.#sessions.generation !== expected) {
+      throw new CatalogMutationContractError("session_expired");
+    }
+  }
+
   async mutate(
     input: CatalogMutationInput,
     attemptIdentifiers: CatalogMutationAttemptIdentifiers,
+    sessionGeneration = this.#sessions.generation,
   ): Promise<CatalogMutationResult> {
     const prepared = prepareCatalogMutation(input);
     const identifiers = validateCatalogMutationAttemptIdentifiers(attemptIdentifiers);
+    this.assertSessionGeneration(sessionGeneration);
     const session = this.#sessions.load();
     if (session === null) throw new CatalogMutationContractError("session_expired");
 
@@ -436,6 +448,7 @@ export class CatalogMutationClient {
         idempotencyKey: identifiers.idempotencyKey,
       },
     );
+    this.assertSessionGeneration(sessionGeneration);
     return parseMutationResult(response, prepared, identifiers);
   }
 }
@@ -467,6 +480,7 @@ export class CatalogMutationAttemptController {
       }
     | undefined;
   readonly #onSucceeded: ((mutation: CatalogMutationResult) => void) | undefined;
+  #sessionGeneration: number | null = null;
   #outboxEntryId: string | null = null;
   #identifiers: CatalogMutationAttemptIdentifiers | null = null;
   #inFlight: Promise<CatalogMutationResult> | null = null;
@@ -502,6 +516,8 @@ export class CatalogMutationAttemptController {
     let canonicalInput: CatalogMutationInput;
     try {
       canonicalInput = inputFromPrepared(prepareCatalogMutation(input));
+      this.#sessionGeneration = this.#client.sessionGeneration;
+      this.#assertSession();
     } catch (error) {
       const normalized = normalizedMutationError(error);
       this.#state = { errorCode: normalized.code, lifecycle: "failed" };
@@ -532,6 +548,7 @@ export class CatalogMutationAttemptController {
   reset(): void {
     if (this.#inFlight !== null) throw new CatalogMutationContractError("invalid_state");
     this.#identifiers = null;
+    this.#sessionGeneration = null;
     this.#input = null;
     this.#outboxEntryId = null;
     this.#state = { lifecycle: "idle" };
@@ -540,6 +557,7 @@ export class CatalogMutationAttemptController {
   async #runInitial(input: CatalogMutationInput): Promise<CatalogMutationResult> {
     try {
       const identifiers = await createCatalogMutationAttemptIdentifiers(this.#platform);
+      this.#assertSession();
       this.#identifiers = identifiers;
       const durableInput =
         isCreateOperation(input.operation) && !("targetId" in input)
@@ -575,12 +593,18 @@ export class CatalogMutationAttemptController {
     input: CatalogMutationInput,
     identifiers: CatalogMutationAttemptIdentifiers,
   ): Promise<CatalogMutationResult> {
+    this.#assertSession();
     this.#state = {
       correlationId: identifiers.correlationId,
       lifecycle: "submitting",
     };
     if (this.#outboxEntryId) this.#outbox?.recordSending(this.#outboxEntryId);
-    const mutation = await this.#client.mutate(input, identifiers);
+    const mutation = await this.#client.mutate(
+      input,
+      identifiers,
+      this.#sessionGeneration as number,
+    );
+    this.#assertSession();
     if (this.#outboxEntryId) this.#outbox?.recordSuccess(this.#outboxEntryId);
     this.#onSucceeded?.(mutation);
     this.#state = {
@@ -591,7 +615,19 @@ export class CatalogMutationAttemptController {
     return mutation;
   }
 
+  #assertSession(): void {
+    if (this.#sessionGeneration === null) throw new CatalogMutationContractError("session_expired");
+    this.#client.assertSessionGeneration(this.#sessionGeneration);
+  }
+
   #fail(error: unknown): never {
+    try {
+      this.#assertSession();
+    } catch {
+      // The old controller must not update an outbox/cache owned by the new session.
+      this.#state = { errorCode: "session_expired", lifecycle: "failed" };
+      throw new CatalogMutationContractError("session_expired");
+    }
     const normalized = normalizedMutationError(error);
     if (this.#outboxEntryId) {
       this.#outbox?.recordFailure(this.#outboxEntryId, normalized.code);

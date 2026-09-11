@@ -1,6 +1,6 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
-- Status: `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`
+- Status: `EXECUTION`
 - Owner: Codex, sole Mini writer; independent agents read/review only.
 - Opened: 2026-09-11
 - Source branch: `codex/wechat-010-mini-staging`; PR10 merged normally.
@@ -44,3 +44,24 @@ integration and isolated Admin staging delivery are recorded in the report.
 Mini PR10 and Admin PR102 merged normally after green CI. The isolated Admin
 release def93402 is deployed as Worker c39ebe92 at100%; real OFF-state HTTP
 smoke9/9 PASS, all flags OFF. No WeChat migration needed/applied and no live Auth claim.
+
+## Emendamento utente WECHAT-011 — 2026-09-11
+
+Il mandato «Chiusura tecnica Auth» continua questo task, senza duplicare o chiudere
+l'accettazione incompleta. Autorizza in continuità planning, execution, review
+indipendente, fix, CI, merge normale e deploy del solo staging. Root è l'unico
+writer per repository; due reviewer read-only distinti verificano protocollo e
+sicurezza/integrazione. Restano esclusi produzione, pubblicazione, store, spesa,
+nuovo IdP e modifiche ai repository nativi/POS/Client.
+
+Delta autorizzato: qualificazione mirata dell'ADR-002 sulle API effettive;
+correzione dei difetti riproducibili di isolamento account e ciclo sessione;
+modalità privata esplicita per la futura build read-only ON dopo readiness.
+Il secret TEST esposto non viene recuperato/usato. L'utente designa gli account e
+shop già usati per Admin/Win7POS/Android/iOS: risolvere dalla configurazione
+corrente, senza scegliere la prima riga DB o impersonare account.
+
+CA aggiuntivi: intent di mutazione non trasferibile dopo cambio sessione;
+cleanup delle sessioni temporanee e tardive; revoca con esito verificato;
+OFF predefinito e ON negato senza prerequisiti; review dei byte esatti e CI verde.
+Auth/DevTools/dispositivo live restano NOT_RUN finché non esiste la prova reale.
