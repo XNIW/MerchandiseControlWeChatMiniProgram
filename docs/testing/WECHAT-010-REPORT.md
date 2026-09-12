@@ -1,7 +1,7 @@
 - **Tester/shop** — Prima: riferimenti non univoci. Azione nuova: Admin staging aperto in Safari, chiesto subito login personale sullo shop designato. Prova: UI senza sessione. Manca: accesso operatore, verifica canonica/membership e possibile enrollment WeChat; nessun lookup arbitrario.
 - **Privacy** — Prima: UI non verificabile. Azione nuova: route reale aperta e link Account reso pubblico. Prova: link visibile/cliccabile con Auth OFF, H5 rifiutata da WeChat, business domain unset e bypass domini/TLS OFF. Manca: dominio accettato e supporto TEST confermato; privacyWebView=BLOCKED.
 - **Nuova credenziale** — Prima: esposta, non ruotata. Azione nuova: richiesta unica reset/replacement con destinazione ufficiale e testo pronto nel packet0600. Prova: bozza NON INVIATA, nessun secret recuperato/usato. Invio approvato; manca handoff telefono, procedura TEST e sostituzione verificata nello store qualificato.
-- **Provider** — Prima: protocollo/tenant non qualificati. Azione nuova: richiesta OneID pronta per nonce oppure code-flow/S256, metadata, identità e test negativi. Prova: bozza NON INVIATA, nessun nuovo riferimento tenant. Invio approvato ed eseguito nella chat ufficiale; manca instradamento tecnico, risposta verificabile e integrazione Supabase reale.
+- **Provider** — Prima: protocollo/tenant non qualificati. Azione nuova: richiesta OneID approvata, inserita e inviata nella chat ufficiale visitatore. Prova: messaggio visibile, poi login obbligatorio; nessuna ricevuta/ticket o risposta tecnica. Manca: accesso Tencent Cloud esistente, instradamento tecnico, qualifica e integrazione Supabase reale.
 
 # WECHAT-010 — Ripresa operativa del 2026-09-12
 
@@ -22,9 +22,13 @@ antenati condizionati; baseline FAIL, fix PASS. Verify Node26.7.0/npm11.19.0:
 Reviewer distinto `privacy_review`: APPROVED, zero finding; mirato1/1 PASS
 (Node26.8.2 dichiarato separatamente). WXML revisionato SHA256
 `03bffee301b55b71022a4bc6b05c483bea58ae325a0f8fc178dad717e26e7e63`.
-S1–S5 precedenti non riaperti. Branch di integrazione normale:
-`codex/wechat-010-auth-closure`; PR/CI/merge effettivi sono tracciati su GitHub e
-nel closeout operativo del packet. Nessun deploy Worker necessario per il delta WXML.
+S1–S5 precedenti non riaperti. Commit applicativo `a99b09d1278cab59c1c9d9ed627e799c6c492885`,
+[PR14](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/14),
+[CI applicativa34696723288](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34696723288)
+PASS. Branch `codex/wechat-010-auth-closure`; anche il successivo aggiornamento
+documentale passa dalla CI della stessa PR prima del merge normale. Esito merge
+e main finali nel closeout operativo del packet. Nessun deploy Worker necessario
+per il delta WXML.
 
 DevTools osservato **2.02.2609102 Nightly**, library3.17.0: drift dalla precedente
 Stable, nessun upgrade eseguito qui. Progetto e AppID privato verificati;
@@ -60,10 +64,12 @@ Due testi completi nel packet0600, sostitutivi delle precedenti bozze non inviat
   d'incompatibilità. Nessun adapter speculativo o nuova comparazione fornitori.
 
 Entrambi gli invii approvati dall'utente. OneID: testo completo inviato una volta
-nella chat ufficiale visitatore; messaggio visibile, risposta automatica in corso,
-nessun ticket o specialista ancora attestato. WeChat: online support offre il QR
-del Mini Program ufficiale, senza campo messaggio desktop; handoff telefono
-richiesto, invio ancora non eseguito. TEST AppSecret solo nello store che esegue
+nella chat ufficiale visitatore; messaggio visibile, poi login obbligatorio.
+Nessuna ricevuta/ticket, presa in carico o risposta tecnica attestata; login pronto
+per l'operatore, senza creare account/tenant. WeChat: online support offre il QR
+del Mini Program ufficiale, senza campo messaggio desktop. L'operatore conferma
+chat aperta sul telefono; file con solo testo approvato predisposto per invio
+manuale, ancora da confermare. TEST AppSecret solo nello store che esegue
 code2session; destinazione assente, quindi non si chiede ancora il secret.
 Il wizard tty nascosto esistente riguarda le due credenziali Worker, non lo
 store AppSecret di OneID. Nessuna credenziale o readiness file creato.
