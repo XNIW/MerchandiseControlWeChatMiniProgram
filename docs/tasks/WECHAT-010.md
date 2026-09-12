@@ -84,3 +84,33 @@ Credenziale TEST sostitutiva supportata, qualifica protocollo/tenant OneID e
 riferimenti esatti al tester/shop condiviso sono dipendenze indipendenti.
 Privacy web-view BLOCKED nell'ambiente DevTools corrente; nessun PASS da GET.
 Dettagli, comandi, CI e stato effettivo nel report unico.
+
+
+## Ripresa operativa — 2026-09-12
+
+Il mandato continua WECHAT-010/TASK-159. Root unico writer Mini nel worktree
+esistente; nessun writer Admin necessario al momento. Auth rimane OFF.
+Riprodotto nel runtime: Account nasconde privacy prima del login; navigazione
+diretta della route reale raggiunge un rifiuto WeChat della pagina H5.
+Delta autorizzato: rendere il link privacy pubblico senza modificare contenuto,
+URL, web-view o gating dei dati account. Test, review indipendente e CI richiesti.
+
+
+## 2026-09-12 - WECHAT-010: privacy pubblica e residui operativi
+
+Admin staging aperto in Safari: login personale richiesto subito all'operatore,
+nessun selector/lookup arbitrario. Mini Account nasconde privacy quando AuthOFF:
+regressione strutturale baseline FAIL, fix sposta la sola row fuori dai gate.
+Il primo harness aggiuntivo tentava di mutare la config frozen: errore del test,
+scartato; nessun difetto runtime attribuito a tale errore. Verify pinned89/89 PASS
+(typecheck/lint/test/build/governance/secret scan), diffcheck PASS; reviewer
+indipendente privacy_review APPROVED, mirato1/1 PASS.
+Asset compilato revisionato caricato solo nel dist ignorato del progetto DevTools
+per QA: link pubblico visibile con AuthOFF, click apre pages/webview/index.
+H5 rifiutata; configurazione runtime mostra web-view domain unset e request
+Worker presente; urlChecktrue e bypassTLS/domains visivamente OFF. Nightly
+2.02.2609102 e library3.17.0 gia installati: drift dichiarato, nessun upgrade.
+Worker29d0c715100%/release91f3d8e invariati, registry141 stessa impronta.
+Due richieste ufficiali distinte pronte nel packet0600; nessun invio o secret.
+Execution del delta conclusa, review APPROVED, integrazione normale autorizzata.
+Review globale EXTERNAL_ACTIVATION_REQUIRED, Auth/E2E NOT_RUN, nessun DONE.
