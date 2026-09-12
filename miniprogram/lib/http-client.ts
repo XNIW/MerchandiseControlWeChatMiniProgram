@@ -26,6 +26,7 @@ const knownErrors = new Set<AuthErrorCode>([
   "code_expired",
   "code_invalid",
   "code_missing",
+  "enrollment_required",
   "identity_already_linked",
   "identity_conflict",
   "membership_missing",

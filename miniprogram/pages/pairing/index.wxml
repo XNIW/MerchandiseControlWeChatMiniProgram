@@ -1,0 +1,10 @@
+<view class="page">
+  <text class="title">{{text.title}}</text>
+  <text wx:if="{{!ready}}">{{text.disabled}}</text>
+  <block wx:elif="{{linked}}"><text>{{text.linked}}</text></block>
+  <block wx:else>
+    <block wx:if="{{!claimed}}"><text>{{text.instruction}}</text><input maxlength="43" placeholder="{{text.code}}" bindinput="enterCode" /><button loading="{{busy}}" disabled="{{busy}}" bindtap="claim">{{text.claim}}</button></block>
+    <block wx:else><text class="title">{{accountName}}</text><text>{{text.compare}}</text><text class="comparison" user-select="true">{{comparison}}</text><checkbox-group bindchange="changeConsent"><label><checkbox value="confirm" checked="{{consent}}" />{{text.consent}}</label></checkbox-group><button loading="{{busy}}" disabled="{{busy || !consent}}" bindtap="confirm">{{text.confirm}}</button></block>
+  </block>
+  <text wx:if="{{error}}" class="error">{{text.error}}</text><button bindtap="goBack">{{text.back}}</button>
+</view>

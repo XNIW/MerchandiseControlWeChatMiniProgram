@@ -64,6 +64,8 @@ export type TranslationKey =
   | "last7"
   | "latestSale"
   | "linkRequired"
+  | "enrollmentRequired"
+  | "openEnrollment"
   | "linked"
   | "loadMore"
   | "loading"
@@ -204,6 +206,9 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     linked: "Linked",
     loadMore: "Load more",
     loading: "Loading…",
+    enrollmentRequired:
+      "Link your WeChat identity to your existing personal account from Admin before signing in here.",
+    openEnrollment: "Link personal account",
     login: "Sign in with WeChat",
     month: "This month",
     miniProgram: "Mini Program",
@@ -368,6 +373,9 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     linked: "Vinculado",
     loadMore: "Cargar más",
     loading: "Cargando…",
+    enrollmentRequired:
+      "Vincula tu identidad WeChat a tu cuenta personal existente desde Admin antes de acceder aquí.",
+    openEnrollment: "Vincular cuenta personal",
     login: "Acceder con WeChat",
     month: "Este mes",
     miniProgram: "Mini Program",
@@ -534,6 +542,9 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     linked: "Collegato",
     loadMore: "Carica altro",
     loading: "Caricamento…",
+    enrollmentRequired:
+      "Collega da Admin la tua identità WeChat al tuo account personale esistente prima di accedere qui.",
+    openEnrollment: "Collega account personale",
     login: "Accedi con WeChat",
     month: "Mese corrente",
     miniProgram: "Mini Program",
@@ -697,6 +708,8 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     linked: "已关联",
     loadMore: "加载更多",
     loading: "正在加载…",
+    enrollmentRequired: "请先从 Admin 将你的微信身份关联到现有个人账户，再在此登录。",
+    openEnrollment: "关联个人账户",
     login: "使用微信登录",
     month: "本月",
     miniProgram: "小程序",

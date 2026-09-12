@@ -65,6 +65,15 @@ const enabled = process.env.WECHAT_AUTH_MINI_PROGRAM_ENABLED ?? "0";
 if (enabled !== "0" && enabled !== "1") {
   throw new Error("WECHAT_AUTH_MINI_PROGRAM_ENABLED must be 0 or 1");
 }
+const protocol = process.env.WECHAT_MINI_AUTH_PROTOCOL ?? "mini-id-token-nonce-v1";
+if (!["mini-id-token-nonce-v1", "wechat-mini-code2session-v1"].includes(protocol))
+  throw new Error("Invalid Mini protocol");
+const enrollment = process.env.WECHAT_MINI_ENROLLMENT_ENABLED ?? "0";
+if (
+  !["0", "1"].includes(enrollment) ||
+  (enrollment === "1" && protocol !== "wechat-mini-code2session-v1")
+)
+  throw new Error("Invalid Mini enrollment configuration");
 const gatewayBaseUrl = publicHttpsUrl(
   "WECHAT_AUTH_GATEWAY_BASE_URL",
   process.env.WECHAT_AUTH_GATEWAY_BASE_URL ?? process.env.WECHAT_MINIPROGRAM_REQUEST_DOMAIN ?? "",
@@ -86,6 +95,8 @@ const runtimeConfigPath = join(outputRoot, "config/runtime-config.js");
 let compiledRuntimeConfig = readFileSync(runtimeConfigPath, "utf8");
 for (const [placeholder, value] of [
   ["__MC_WECHAT_AUTH_ENABLED__", enabled],
+  ["__MC_WECHAT_AUTH_PROTOCOL__", protocol],
+  ["__MC_WECHAT_ENROLLMENT_ENABLED__", enrollment],
   ["__MC_WECHAT_GATEWAY_BASE_URL__", gatewayBaseUrl],
   ["__MC_WECHAT_PRIVACY_URL__", privacyUrl],
   ["__MC_WECHAT_STORAGE_BASE_URL__", storageBaseUrl],

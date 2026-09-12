@@ -70,7 +70,9 @@ const imageClient =
 
 App<MerchandiseControlApp>({
   activeShop: null,
-  authClient: http ? new WeChatAuthClient(http, platform, sessionStore) : null,
+  authClient: http
+    ? new WeChatAuthClient(http, platform, sessionStore, runtimeConfig.miniAuthProtocol)
+    : null,
   catalogClient,
   clearSessionContext() {
     this.syncCoordinator?.stop();

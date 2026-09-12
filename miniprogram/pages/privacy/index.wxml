@@ -1,0 +1,17 @@
+<view class="policy-page">
+  <picker range="{{localeLabels}}" value="{{localeIndex}}" bindchange="chooseLocale">
+    <view class="language">Language / 语言: {{localeLabels[localeIndex]}} ›</view>
+  </picker>
+  <text class="eyebrow" user-select="true">{{text.eyebrow}}</text>
+  <text class="title" role="heading" user-select="true">{{document.title}}</text>
+  <text class="description" user-select="true">{{document.description}}</text>
+  <text class="notice" user-select="true">{{text.notice}}</text>
+  <view wx:for="{{document.sections}}" wx:for-item="section" wx:key="title" class="section">
+    <text class="heading" role="heading" user-select="true">{{section.title}}</text>
+    <text wx:for="{{section.blocks}}" wx:for-item="paragraph" wx:key="text" class="paragraph" user-select="true">{{paragraph.kind === 'item' ? '• ' : ''}}{{paragraph.text}}</text>
+  </view>
+  <text class="version" user-select="true">{{text.versionLabel}}: {{contentVersion}}</text>
+  <button wx:if="{{kind === 'deletion' && canCopyProfile}}" bindtap="copyProfileLink">{{text.copyProfileLabel}}</button>
+  <button bindtap="showOtherDocument">{{kind === 'privacy' ? text.deletionLabel : text.privacyLabel}}</button>
+  <button bindtap="goBack">{{text.backLabel}}</button>
+</view>

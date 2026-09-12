@@ -1,0 +1,6 @@
+.page { padding: 32rpx; display: flex; flex-direction: column; gap: 32rpx; font-size: 32rpx; line-height: 1.6; }
+.title { font-size: 42rpx; font-weight: 700; }
+.comparison { font-size: 56rpx; letter-spacing: 8rpx; }
+input { border: 2rpx solid #627b74; border-radius: 8rpx; padding: 20rpx; height: 72rpx; }
+.error { color: #a22424; }
+button { width: 100%; }
