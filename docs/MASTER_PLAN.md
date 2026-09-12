@@ -1,5 +1,21 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+## 2026-09-12 - Explicit native privacy and direct Mini mandate
+
+WECHAT-010/TASK-159 continues in EXECUTION. The operator designates the existing
+private profile and TASK068E_260618231325 as pilot target; current canonical
+identity, active membership/shop and shop_owner role were rechecked read-only.
+This does not prove native clients use the same shop. No impersonation.
+Authorized: shared/versioned native privacy available without Auth; explicit
+Mini-only code2Session architecture revision, secure initial pairing to the
+existing profile, opaque sessions and restricted authorization, additive reviewed
+migrations if required. OneID remains paused. OIDC guarantees for other surfaces
+remain unchanged. Root sole writer in both existing isolated worktrees; at most
+two independent read-only reviewers. No production or activation before proof.
+Prior narrower scope is superseded only by this explicit amendment.
+
+Historical status follows; the amendment above is current.
+
 **WECHAT-010** resta in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`. Il nuovo link
 privacy pubblico e verificato in DevTools con Auth OFF, verify89/89 e review
 indipendente APPROVED; H5 rifiutata, business domain assente. Baseline dopo la chiusura

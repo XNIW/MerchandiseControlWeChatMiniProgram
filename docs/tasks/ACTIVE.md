@@ -1,13 +1,11 @@
 # Active task
 
-## WECHAT-010 — Test-account domains and first-live prerequisites
+## WECHAT-010 — Native privacy and direct Mini execution
 
 - Status: `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`
-- Application writer: nessuno; delta privacy pubblico verificato e approvato, integrazione normale autorizzata.
-- Esito codice: `APPROVED`, cinque finding chiusi; accettazione live: `BLOCKED`.
+- Root sole writer; two independent read-only reviewers.
 - Contract: [WECHAT-010](WECHAT-010.md)
-- Report: [WECHAT-010 execution and acceptance](../testing/WECHAT-010-REPORT.md)
-- General flags OFF; live acceptance not performed; no self-approved DONE.
-
-WECHAT-009 remains in REVIEW; its external inventory is continued by WECHAT-010. Historical
-WECHAT-008 execution remains in the same private operator packet.
+- Report: [Single execution and acceptance report](../testing/WECHAT-010-REPORT.md)
+- The user designated the existing private canonical profile and TASK068E_260618231325. No further target confirmation required.
+- Direct Mini implementation and native privacy delivered for final review; actual Tencent TEST credential/login and business E2E NOT_RUN.
+- OneID paused. Auth/enrollment/mutations OFF pending evidence. No self-approved DONE.

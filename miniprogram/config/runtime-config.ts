@@ -3,6 +3,8 @@ export interface RuntimeConfig {
   readonly autoRefreshMaximumMilliseconds: number;
   readonly gatewayBaseUrl: string;
   readonly privacyUrl: string;
+  readonly miniAuthProtocol?: string;
+  readonly miniEnrollmentEnabled?: boolean;
   readonly supabaseStorageBaseUrl: string;
   readonly weChatAuthEnabled: boolean;
 }
@@ -15,6 +17,8 @@ function injectedPublicValue(value: string, fallback: string): string {
 // from the approved build environment and leaves safe OFF defaults when absent.
 // AppID stays in ignored DevTools configuration. AppSecret never belongs here.
 export const runtimeConfig: RuntimeConfig = Object.freeze({
+  miniAuthProtocol: injectedPublicValue("__MC_WECHAT_AUTH_PROTOCOL__", "mini-id-token-nonce-v1"),
+  miniEnrollmentEnabled: injectedPublicValue("__MC_WECHAT_ENROLLMENT_ENABLED__", "0") === "1",
   autoRefreshMaximumMilliseconds: 30_000,
   autoRefreshMilliseconds: 3_000,
   gatewayBaseUrl: injectedPublicValue("__MC_WECHAT_GATEWAY_BASE_URL__", ""),

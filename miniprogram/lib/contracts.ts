@@ -9,6 +9,7 @@ export type AuthErrorCode =
   | "code_expired"
   | "code_invalid"
   | "code_missing"
+  | "enrollment_required"
   | "identity_already_linked"
   | "identity_conflict"
   | "membership_missing"
@@ -31,13 +32,14 @@ export interface WeChatChallenge {
 }
 
 export interface MiniSessionHandoff {
+  readonly protocol?: "mini-id-token-nonce-v1" | "wechat-mini-code2session-v1";
   readonly accountFingerprint: string;
   readonly expiresAt: number;
   readonly expiresIn: number;
   readonly sessionToken: string;
   readonly tokenType: "bearer";
   readonly user: {
-    readonly provider: "custom:wechat";
+    readonly provider: "custom:wechat" | "wechat-mini";
   };
 }
 
@@ -185,6 +187,8 @@ export interface SyncHistoryEntry {
 }
 
 export interface AccountProfile {
+  readonly mini_identity_provider?: "wechat-mini";
+  readonly mini_identity_linked?: boolean;
   readonly display_name: string;
   readonly profile_id: string;
   readonly profile_status: "active" | "disabled" | "review";

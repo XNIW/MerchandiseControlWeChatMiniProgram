@@ -130,3 +130,21 @@ Enrollment esplicito necessario; nessuna identita o associazione forzata.
 OneID sospeso per richiesta utente: numero cinese non disponibile. Nessun ticket
 confermato; WeChat chat telefonica aperta, invio approvato ancora da confermare.
 Nessun delta Admin/Worker/migration/flag; Auth/E2E NOT_RUN, nessun DONE.
+
+## 2026-09-12 - Explicit native privacy and direct Mini mandate
+
+WECHAT-010/TASK-159 continues in EXECUTION. The operator designates the existing
+private profile and TASK068E_260618231325 as pilot target; current canonical
+identity, active membership/shop and shop_owner role were rechecked read-only.
+This does not prove native clients use the same shop. No impersonation.
+Authorized: shared/versioned native privacy available without Auth; explicit
+Mini-only code2Session architecture revision, secure initial pairing to the
+existing profile, opaque sessions and restricted authorization, additive reviewed
+migrations if required. OneID remains paused. OIDC guarantees for other surfaces
+remain unchanged. Root sole writer in both existing isolated worktrees; at most
+two independent read-only reviewers. No production or activation before proof.
+Prior narrower scope is superseded only by this explicit amendment.
+
+## 2026-09-12 — Native privacy and Mini direct implementation
+
+User mandate supersedes OneID-only and H5-only dependencies for Mini. Existing designated pilot verified; no further shop choice. Shared native policy, explicit code2Session protocol, two-consent pairing, opaque sessions and session-derived business/Storage RPCs implemented. Root only writer, two reviewers approved the initial design; implementation findings corrected and exact final review pending. Mini 98+3 tests, Admin foundation1013 PASS/2 expected skips, component browser2 PASS, direct SQL53 PASS; isolated staging141 plus additive migration validated, no commerce migration. Worker-local HTTPS uses intercepted upstream, live credential/login NOT_RUN. OneID paused. REVIEW, no DONE. Canonical report lives in Mini docs/testing/WECHAT-010-REPORT.md.

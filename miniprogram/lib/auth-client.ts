@@ -1,6 +1,7 @@
 import { AuthContractError, type MiniSessionHandoff, type WeChatChallenge } from "./contracts";
 import { DeviceIdentifierStore } from "./device-identifier";
 import type { HttpClient } from "./http-client";
+import { directMiniProof, miniDirectProtocol } from "./mini-direct";
 import type { MiniProgramPlatform } from "./platform";
 import { isMiniSessionHandoff, type SessionStore } from "./session-store";
 
@@ -14,7 +15,12 @@ export class WeChatAuthClient {
   readonly #sessions: SessionStore;
   #attempt = 0;
 
-  constructor(http: HttpClient, platform: MiniProgramPlatform, sessions: SessionStore) {
+  constructor(
+    http: HttpClient,
+    platform: MiniProgramPlatform,
+    sessions: SessionStore,
+    readonly protocol = "mini-id-token-nonce-v1",
+  ) {
     this.#http = http;
     this.#platform = platform;
     this.#sessions = sessions;
@@ -40,62 +46,78 @@ export class WeChatAuthClient {
       }
     };
     const deviceId = await awaitCurrent(this.#deviceIdentifiers.getOrCreate());
-    const challengeResponse = await awaitCurrent(
-      this.#http.post<{
-        readonly challenge?: WeChatChallenge;
-        readonly ok: boolean;
-      } | null>("/api/auth/wechat/challenge", {
+    let exchangeBody: Record<string, unknown>;
+    let exchangePath: string;
+    if (this.protocol === miniDirectProtocol) {
+      exchangeBody = await directMiniProof(
+        this.#http,
+        this.#platform,
+        deviceId,
+        "login",
+        assertCurrent,
+      );
+      exchangePath = "/api/auth/wechat/mini/exchange";
+    } else if (this.protocol === "mini-id-token-nonce-v1") {
+      const challengeResponse = await awaitCurrent(
+        this.#http.post<{
+          readonly challenge?: WeChatChallenge;
+          readonly ok: boolean;
+        } | null>("/api/auth/wechat/challenge", {
+          deviceId,
+          mode: "login",
+          surface: "mini_program",
+        }),
+      );
+      const challenge = challengeResponse?.challenge;
+      if (
+        challengeResponse?.ok !== true ||
+        challenge == null ||
+        typeof challenge.correlationId !== "string" ||
+        !uuidPattern.test(challenge.correlationId) ||
+        typeof challenge.state !== "string" ||
+        !base64UrlPattern.test(challenge.state) ||
+        typeof challenge.nonce !== "string" ||
+        !base64UrlPattern.test(challenge.nonce) ||
+        !Number.isInteger(challenge.expiresInSeconds) ||
+        challenge.expiresInSeconds < 60 ||
+        challenge.expiresInSeconds > 600
+      ) {
+        throw new AuthContractError("state_invalid");
+      }
+
+      let code: string;
+      try {
+        code = await awaitCurrent(this.#platform.login(8_000));
+      } catch {
+        throw new AuthContractError("user_cancelled");
+      }
+      assertCurrent();
+      if (!/^[A-Za-z0-9_-]{1,512}$/.test(code)) {
+        throw new AuthContractError("code_missing");
+      }
+
+      exchangeBody = {
+        code,
+        correlationId: challenge.correlationId,
         deviceId,
         mode: "login",
+        nonce: challenge.nonce,
+        state: challenge.state,
         surface: "mini_program",
-      }),
-    );
-    const challenge = challengeResponse?.challenge;
-    if (
-      challengeResponse?.ok !== true ||
-      challenge == null ||
-      typeof challenge.correlationId !== "string" ||
-      !uuidPattern.test(challenge.correlationId) ||
-      typeof challenge.state !== "string" ||
-      !base64UrlPattern.test(challenge.state) ||
-      typeof challenge.nonce !== "string" ||
-      !base64UrlPattern.test(challenge.nonce) ||
-      !Number.isInteger(challenge.expiresInSeconds) ||
-      challenge.expiresInSeconds < 60 ||
-      challenge.expiresInSeconds > 600
-    ) {
-      throw new AuthContractError("state_invalid");
-    }
-
-    let code: string;
-    try {
-      code = await awaitCurrent(this.#platform.login(8_000));
-    } catch {
-      throw new AuthContractError("user_cancelled");
-    }
-    assertCurrent();
-    if (!/^[A-Za-z0-9_-]{1,512}$/.test(code)) {
-      throw new AuthContractError("code_missing");
+      };
+      exchangePath = "/api/auth/wechat/exchange";
+    } else {
+      throw new AuthContractError("provider_not_configured");
     }
 
     let handoff: unknown;
     try {
-      handoff = await this.#http.post<unknown>(
-        "/api/auth/wechat/exchange",
-        {
-          code,
-          correlationId: challenge.correlationId,
-          deviceId,
-          mode: "login",
-          nonce: challenge.nonce,
-          state: challenge.state,
-          surface: "mini_program",
-        },
-        undefined,
-        { deviceId },
-      );
+      handoff = await this.#http.post<unknown>(exchangePath, exchangeBody, undefined, { deviceId });
       assertCurrent();
-      if (!isMiniSessionHandoff(handoff)) {
+      if (
+        !isMiniSessionHandoff(handoff) ||
+        (handoff.protocol ?? "mini-id-token-nonce-v1") !== this.protocol
+      ) {
         throw new AuthContractError("backend_temporary");
       }
       this.#sessions.save(handoff, deviceId);

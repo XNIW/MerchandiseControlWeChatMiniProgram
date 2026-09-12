@@ -13,9 +13,10 @@
     "check:governance": "node scripts/check-governance.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "lint": "biome check .",
-    "test": "npm run build:test && node --test dist-test/tests/*.test.js",
+    "test": "npm run build:test && node --test dist-test/tests/*.test.js && node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "verify": "npm run check:governance && npm run check:secrets && npm run typecheck && npm run lint && npm test && npm run build"
+    "verify": "npm run check:governance && npm run check:privacy && npm run check:secrets && npm run typecheck && npm run lint && npm test && npm run build",
+    "check:privacy": "node scripts/sync-privacy.mjs --check"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.8",

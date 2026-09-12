@@ -86,3 +86,7 @@ Enrollment esplicito necessario; nessuna identita o associazione forzata.
 OneID sospeso per richiesta utente: numero cinese non disponibile. Nessun ticket
 confermato; WeChat chat telefonica aperta, invio approvato ancora da confermare.
 Nessun delta Admin/Worker/migration/flag; Auth/E2E NOT_RUN, nessun DONE.
+
+## 2026-09-12 — Native privacy and Mini direct implementation
+
+User mandate supersedes OneID-only and H5-only dependencies for Mini. Existing designated pilot verified; no further shop choice. Shared native policy, explicit code2Session protocol, two-consent pairing, opaque sessions and session-derived business/Storage RPCs implemented. Root only writer, two reviewers approved the initial design; implementation findings corrected and exact final review pending. Mini 98+3 tests, Admin foundation1013 PASS/2 expected skips, component browser2 PASS, direct SQL53 PASS; isolated staging141 plus additive migration validated, no commerce migration. Worker-local HTTPS uses intercepted upstream, live credential/login NOT_RUN. OneID paused. REVIEW, no DONE. Canonical report lives in Mini docs/testing/WECHAT-010-REPORT.md.

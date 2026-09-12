@@ -13,18 +13,35 @@
     "pages/categories/index",
     "pages/suppliers/index",
     "pages/history/index",
-    "pages/webview/index"
+    "pages/webview/index",
+    "pages/privacy/index",
+    "pages/pairing/index"
   ],
   "tabBar": {
     "color": "#648078",
     "selectedColor": "#0d5c46",
     "backgroundColor": "#ffffff",
     "list": [
-      { "pagePath": "pages/index/index", "text": "首页" },
-      { "pagePath": "pages/sales/index", "text": "销售" },
-      { "pagePath": "pages/database/index", "text": "数据库" },
-      { "pagePath": "pages/history/index", "text": "历史" },
-      { "pagePath": "pages/account/index", "text": "我的" }
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/sales/index",
+        "text": "销售"
+      },
+      {
+        "pagePath": "pages/database/index",
+        "text": "数据库"
+      },
+      {
+        "pagePath": "pages/history/index",
+        "text": "历史"
+      },
+      {
+        "pagePath": "pages/account/index",
+        "text": "我的"
+      }
     ]
   },
   "window": {

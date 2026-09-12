@@ -28,6 +28,7 @@ function isAccountRequestCurrent(context: AccountRequestContext): boolean {
 
 Page({
   data: {
+    enrollmentReady: runtimeConfig.miniEnrollmentEnabled === true,
     account: null as AccountProfile | null,
     currentShop: null as AuthorizedShop | null,
     featureReady: app.featureReady,
@@ -79,7 +80,12 @@ Page({
       this.setData({
         account,
         currentShop,
-        providersText: account?.providers.join(", ") || "—",
+        providersText:
+          (account
+            ? [...account.providers, ...(account.mini_identity_linked ? ["wechat-mini"] : [])].join(
+                ", ",
+              )
+            : "") || "—",
         shops,
       });
     } catch {
@@ -104,14 +110,11 @@ Page({
     app.setLocale(locale);
     this.setData({ localeIndex: Number(event.detail.value), text: translationsFor(locale) });
   },
+  openPairing() {
+    wx.navigateTo({ url: "/pages/pairing/index" });
+  },
   openPrivacy() {
-    if (runtimeConfig.privacyUrl.includes("example.invalid")) {
-      wx.showToast({ icon: "none", title: this.data.text.disabledTitle });
-      return;
-    }
-    wx.navigateTo({
-      url: `/pages/webview/index?url=${encodeURIComponent(runtimeConfig.privacyUrl)}`,
-    });
+    wx.navigateTo({ url: "/pages/privacy/index" });
   },
   async signOut() {
     accountRequestGeneration += 1;

@@ -18,7 +18,11 @@ export function isMiniSessionHandoff(value: unknown): value is MiniSessionHandof
     Number.isSafeInteger(handoff.expiresIn) &&
     handoff.expiresIn > 0 &&
     handoff.expiresIn <= maximumRemainingLifetimeSeconds &&
-    handoff.user?.provider === "custom:wechat"
+    ((handoff.protocol === "wechat-mini-code2session-v1" &&
+      handoff.user?.provider === "wechat-mini" &&
+      handoff.expiresIn <= 900) ||
+      ((handoff.protocol === undefined || handoff.protocol === "mini-id-token-nonce-v1") &&
+        handoff.user?.provider === "custom:wechat"))
   );
 }
 
@@ -49,6 +53,7 @@ export class SessionStore {
         deviceId,
       ) ||
       handoff.expiresAt <= now ||
+      (handoff.protocol === "wechat-mini-code2session-v1" && handoff.expiresAt - now > 900) ||
       handoff.expiresAt - now > maximumRemainingLifetimeSeconds
     ) {
       throw new AuthContractError("backend_temporary");

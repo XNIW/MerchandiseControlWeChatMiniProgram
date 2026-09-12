@@ -14,6 +14,7 @@ type ViewState =
   | "offline"
   | "error"
   | "link_required"
+  | "enrollment_required"
   | "unauthorized"
   | "session_expired";
 const app = getApp<MerchandiseControlApp>();
@@ -224,6 +225,9 @@ Page({
   openDatabase() {
     wx.switchTab({ url: "/pages/database/index" });
   },
+  openPairing() {
+    wx.navigateTo({ url: "/pages/pairing/index" });
+  },
   startAutomaticRefresh() {
     this.stopAutomaticRefresh();
     if (!runtime(this).visible || !app.activeShop || app.sessionStore.load() === null) return;
@@ -244,6 +248,13 @@ Page({
   applyError(error: unknown) {
     const code =
       error instanceof AuthContractError ? error.code : error instanceof Error ? error.message : "";
+    if (code === "enrollment_required") {
+      this.setData({
+        errorMessage: this.data.text.enrollmentRequired,
+        viewState: "enrollment_required" as ViewState,
+      });
+      return;
+    }
     if (code === "offline") {
       this.setData({ errorMessage: this.data.text.offline, viewState: "offline" as ViewState });
       return;
