@@ -97,3 +97,19 @@ Worker29d0c715100%/release91f3d8e invariati, registry141 stessa impronta.
 Due richieste ufficiali distinte pronte nel packet0600; nessun invio o secret.
 Execution del delta conclusa, review APPROVED, integrazione normale autorizzata.
 Review globale EXTERNAL_ACTIVATION_REQUIRED, Auth/E2E NOT_RUN, nessun DONE.
+
+
+## 2026-09-12 - Risultati successivi: sessione e integrazione
+
+PR14 integrata normalmente come9470909678347230e67cd638b80f13e9b05ff96a;
+CI head34696845184 e main34696886612 PASS. Main fast-forward, build staging OFF
+pinned, WXML compilato identico al sorgente revisionato. Smoke DevTools postmerge:
+link privacy Account visibile/cliccabile, route corretta, H5 ancora rifiutata.
+Nuova sessione personale Admin rilevata: ID da /account/profile e shop dalla UI;
+query read-only puntuale conferma profilo/shop/membership attivi, shop_owner,
+Google soltanto e zero custom:wechat. Allowlist candidate nel packet0600, non
+applicate; attesa conferma che lo shop visualizzato sia quello designato.
+Enrollment esplicito necessario; nessuna identita o associazione forzata.
+OneID sospeso per richiesta utente: numero cinese non disponibile. Nessun ticket
+confermato; WeChat chat telefonica aperta, invio approvato ancora da confermare.
+Nessun delta Admin/Worker/migration/flag; Auth/E2E NOT_RUN, nessun DONE.
