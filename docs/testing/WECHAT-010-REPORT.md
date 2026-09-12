@@ -1,7 +1,7 @@
-- **Tester/shop** — Prima: riferimenti non univoci. Azione nuova: Admin staging aperto in Safari, chiesto subito login personale sullo shop designato. Prova: UI senza sessione. Manca: accesso operatore, verifica canonica/membership e possibile enrollment WeChat; nessun lookup arbitrario.
+- **Tester/shop** — Prima: riferimenti non univoci/sessione assente. Azione nuova: rilevata sessione personale Admin; letti ID canonico dal profilo e shop selezionato, verifica SQL puntuale read-only. Prova: profilo/shop/membership attivi, ruolo shop_owner, sola identità Google e zero custom:wechat; valori allowlist preparati nel packet0600, non applicati. Manca: conferma che lo shop visualizzato sia quello designato e enrollment WeChat esplicito.
 - **Privacy** — Prima: UI non verificabile. Azione nuova: route reale aperta e link Account reso pubblico. Prova: link visibile/cliccabile con Auth OFF, H5 rifiutata da WeChat, business domain unset e bypass domini/TLS OFF. Manca: dominio accettato e supporto TEST confermato; privacyWebView=BLOCKED.
-- **Nuova credenziale** — Prima: esposta, non ruotata. Azione nuova: richiesta unica reset/replacement con destinazione ufficiale e testo pronto nel packet0600. Prova: bozza NON INVIATA, nessun secret recuperato/usato. Invio approvato; manca handoff telefono, procedura TEST e sostituzione verificata nello store qualificato.
-- **Provider** — Prima: protocollo/tenant non qualificati. Azione nuova: richiesta OneID approvata, inserita e inviata nella chat ufficiale visitatore. Prova: messaggio visibile, poi login obbligatorio; nessuna ricevuta/ticket o risposta tecnica. Manca: accesso Tencent Cloud esistente, instradamento tecnico, qualifica e integrazione Supabase reale.
+- **Nuova credenziale** — Prima: esposta, non ruotata. Azione nuova: richiesta unica reset/replacement approvata, testo nel packet0600 e chat ufficiale aperta sul telefono dall'utente. Prova: invio non confermato, nessun secret recuperato/usato. Manca: conferma invio, procedura TEST e sostituzione verificata nello store qualificato.
+- **Provider** — Prima: protocollo/tenant non qualificati. Azione nuova: richiesta approvata inserita nella chat visitatore, poi login obbligatorio. Prova: nessuna ricevuta/ticket o risposta tecnica; utente dispone la sospensione perché non ha un numero cinese. Manca: riapertura di questa azione da parte dell'utente, accesso supporto, qualifica e integrazione Supabase reale.
 
 # WECHAT-010 — Ripresa operativa del 2026-09-12
 
@@ -25,10 +25,16 @@ Reviewer distinto `privacy_review`: APPROVED, zero finding; mirato1/1 PASS
 S1–S5 precedenti non riaperti. Commit applicativo `a99b09d1278cab59c1c9d9ed627e799c6c492885`,
 [PR14](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/14),
 [CI applicativa34696723288](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34696723288)
-PASS. Branch `codex/wechat-010-auth-closure`; anche il successivo aggiornamento
-documentale passa dalla CI della stessa PR prima del merge normale. Esito merge
-e main finali nel closeout operativo del packet. Nessun deploy Worker necessario
-per il delta WXML.
+PASS. Head finale PR14 `8b15e67883f16ebada728f24104fb44e1bc33b6f`,
+[CI34696845184](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34696845184)
+PASS; merge normale `9470909678347230e67cd638b80f13e9b05ff96a` e
+[CI main34696886612](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/34696886612)
+PASS. Main aggiornato fast-forward e build staging OFF rigenerata con toolchain
+pinned. Dist WXML identico al sorgente revisionato; urlCheck=true, gateway/privacy
+staging corretti. Smoke postmerge: Account mostra il link, click apre la route
+reale e WeChat rifiuta ancora H5. Nessun deploy Worker necessario per il delta WXML.
+Il successivo closeout documenta i nuovi risultati di sessione/enrollment e lo
+stop OneID; non modifica runtime. SHA/CI finali nel packet e nella consegna.
 
 DevTools osservato **2.02.2609102 Nightly**, library3.17.0: drift dalla precedente
 Stable, nessun upgrade eseguito qui. Progetto e AppID privato verificati;
@@ -53,6 +59,18 @@ salvataggio operatore. Nessun file inventato, wildcard o dominio salvato alla ci
 
 ## Credenziale, provider e punto esatto di ripresa
 
+La sessione Admin è ora presente. `/account/profile` espone sul server l'ID
+dell'utente personale; lo shop già selezionato nella UI fornisce il selettore shop.
+Query read-only limitata a questi due UUID: canonical auth.users/profiles univoco,
+email confermata, non anonimo/banned/deleted, profilo active non disabled, shop
+active e membership active non suspended, ruolo shop_owner. `auth.identities`
+contiene Google e zero custom:wechat. Nessuna lettura di token/identity_data.
+Non è ancora attestato che questo shop sia quello comune alle altre piattaforme:
+chiesta conferma puntuale sul nome/codice mostrati, senza scegliere dal DB.
+`tester-shop-selection.json` conserva riferimenti/provenienza e i due valori
+allowlist candidati a0600, non caricati in env/server. Enrollment esplicito
+necessario secondo ADR-002; nessuna associazione OpenID forzata o identità creata.
+
 Due testi completi nel packet0600, sostitutivi delle precedenti bozze non inviate:
 
 - `WECHAT-TEST-SUPPORT-REQUEST.md` → [Tencent Customer Service](https://kf.qq.com/),
@@ -65,8 +83,11 @@ Due testi completi nel packet0600, sostitutivi delle precedenti bozze non inviat
 
 Entrambi gli invii approvati dall'utente. OneID: testo completo inviato una volta
 nella chat ufficiale visitatore; messaggio visibile, poi login obbligatorio.
-Nessuna ricevuta/ticket, presa in carico o risposta tecnica attestata; login pronto
-per l'operatore, senza creare account/tenant. WeChat: online support offre il QR
+Nessuna ricevuta/ticket, presa in carico o risposta tecnica attestata. L'utente
+ha chiesto di saltare per ora OneID perché non dispone del numero cinese richiesto
+per completare l'accesso: percorso sospeso, scheda temporanea chiusa, nessuna nuova
+registrazione o workaround. Riprendere solo quando riapre questa azione.
+WeChat: online support offre il QR
 del Mini Program ufficiale, senza campo messaggio desktop. L'operatore conferma
 chat aperta sul telefono; file con solo testo approvato predisposto per invio
 manuale, ancora da confermare. TEST AppSecret solo nello store che esegue
@@ -105,7 +126,9 @@ dalla chiave assente nella sonda, non da drift. Compatibilita provider/Supabase
 ancora NOT_RUN senza tenant/credenziale; nessun PASS dalla risposta commerciale.
 
 Nessuna fixture o sessione artificiale creata/da bonificare. Editing nel worktree
-esistente; solo dist ignorato usato per QA. Produzione, Google/email/staff e
+esistente; solo dist ignorato usato per QA e poi rigenerato da main integrato.
+Scheda temporanea profilo chiusa, shop originale preservato; supporto WeChat
+lasciato per l'handoff telefonico. Produzione, Google/email/staff e
 checkout nativi/POS/Client non modificati. Le azioni operatore restano nell'unico
 OPERATOR-ACTIONS.md; nessuna promessa di ripresa automatica.
 
