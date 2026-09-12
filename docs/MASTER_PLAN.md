@@ -1,6 +1,8 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-**WECHAT-010** resta in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED` dopo la chiusura
+**WECHAT-010** resta in `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`. Il nuovo link
+privacy pubblico e verificato in DevTools con Auth OFF, verify89/89 e review
+indipendente APPROVED; H5 rifiutata, business domain assente. Baseline dopo la chiusura
 tecnica autorizzata dal mandato WECHAT-011: cinque finding corretti e approvati da
 due reviewer indipendenti; Mini PR12 e Admin PR104 integrate, CI verde; release
 isolata `91f3d8e5` distribuita come Worker `29d0c715` al 100%, smoke HTTPS OFF9/9.

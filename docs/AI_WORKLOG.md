@@ -50,3 +50,23 @@ PASS, pgTAP2627. Worker staging29d0c715 al100%, HTTP OFF9/9 e registry141
 identica. Mini88/88 e cinque tab DevTools OFF verificate; privacy web-view
 BLOCKED dal controllo IDE, Auth/telefono NOT_RUN. Nessuna fixture o modifica
 production/native. REVIEW / EXTERNAL_ACTIVATION_REQUIRED, nessun DONE.
+
+
+## 2026-09-12 - WECHAT-010: privacy pubblica e residui operativi
+
+Admin staging aperto in Safari: login personale richiesto subito all'operatore,
+nessun selector/lookup arbitrario. Mini Account nasconde privacy quando AuthOFF:
+regressione strutturale baseline FAIL, fix sposta la sola row fuori dai gate.
+Il primo harness aggiuntivo tentava di mutare la config frozen: errore del test,
+scartato; nessun difetto runtime attribuito a tale errore. Verify pinned89/89 PASS
+(typecheck/lint/test/build/governance/secret scan), diffcheck PASS; reviewer
+indipendente privacy_review APPROVED, mirato1/1 PASS.
+Asset compilato revisionato caricato solo nel dist ignorato del progetto DevTools
+per QA: link pubblico visibile con AuthOFF, click apre pages/webview/index.
+H5 rifiutata; configurazione runtime mostra web-view domain unset e request
+Worker presente; urlChecktrue e bypassTLS/domains visivamente OFF. Nightly
+2.02.2609102 e library3.17.0 gia installati: drift dichiarato, nessun upgrade.
+Worker29d0c715100%/release91f3d8e invariati, registry141 stessa impronta.
+Due richieste ufficiali distinte pronte nel packet0600; nessun invio o secret.
+Execution del delta conclusa, review APPROVED, integrazione normale autorizzata.
+Review globale EXTERNAL_ACTIVATION_REQUIRED, Auth/E2E NOT_RUN, nessun DONE.
