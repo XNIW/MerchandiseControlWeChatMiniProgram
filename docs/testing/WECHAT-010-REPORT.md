@@ -99,8 +99,10 @@ tutte le superfici disabled/not ready, mutation/linking OFF. Nessun deploy,
 configurazione server, secret o flag modificato. Registry remoto141 identico per
 versione/nome/statement count/hash al precedente registro completo, digest
 `54feb848f85a40ee5d52c2cb60cabe48`; commerce escluse, nessuna migration applicata.
-Auth health senza project API key risponde401: v2.196.0 resta la misura storica,
-da riverificare prima dell'integrazione reale; nessun PASS dalla risposta commerciale.
+Health Auth verificato con la chiave pubblica staging gia configurata: HTTP200,
+GoTrue **v2.196.0**, stessa versione della baseline. Il precedente401 dipendeva
+dalla chiave assente nella sonda, non da drift. Compatibilita provider/Supabase
+ancora NOT_RUN senza tenant/credenziale; nessun PASS dalla risposta commerciale.
 
 Nessuna fixture o sessione artificiale creata/da bonificare. Editing nel worktree
 esistente; solo dist ignorato usato per QA. Produzione, Google/email/staff e
