@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { validateReadiness } from "../scripts/activation-readiness.mjs";
+import {
+  validateReadiness,
+  validateTestCredentialAuthorization,
+} from "../scripts/activation-readiness.mjs";
 
 const id = "00000000-0000-4000-8000-000000000010";
 const record = {
@@ -50,6 +53,118 @@ const context = {
     enabledSurfaces: { mini_program: true, web: false, android: false, ios: false },
   },
 };
+const testAuthorization = {
+  kind: "EXPOSED_TEST_CREDENTIAL_EXCEPTION",
+  userAuthorized: true,
+  mandateSha256: "e".repeat(64),
+  authorizedAt: 900,
+  appId: record.appId,
+  testerProfileIds: [id],
+  shopIds: [id],
+  gatewayOrigin:
+    "https://merchandise-control-admin-web-staging.merchandise-control-admin-web.workers.dev",
+  workerName: "merchandise-control-admin-web-staging",
+  supabaseProjectRef: "jpgoimipbothfgkokyvm",
+  credentialState: "EXISTING_PREVIOUSLY_EXPOSED",
+  rotation: "NOT_PERFORMED",
+  residualRisk: "ACCEPTED_FOR_TEST_ONLY",
+};
+const exceptionContext = {
+  ...context,
+  gatewayOrigin: testAuthorization.gatewayOrigin,
+  workerName: testAuthorization.workerName,
+  supabaseProjectRef: testAuthorization.supabaseProjectRef,
+  testCredentialMandateSha256: testAuthorization.mandateSha256,
+  testCredentialAuthorization: testAuthorization,
+};
+test("explicit TEST exception starts enrollment without fabricating rotation or exchange", () => {
+  const initial = {
+    ...record,
+    phase: "enrollment",
+    credential: "EXPOSED_TEST_AUTHORIZED_SERVER_ONLY",
+    testExchange: "NOT_RUN",
+    testExchangeEvidence: null,
+    enrollment: "NOT_RUN",
+    enrollmentEvidence: null,
+  };
+  const initialContext = {
+    ...exceptionContext,
+    phase: "enrollment",
+    status: {
+      ...context.status,
+      miniEnrollmentReady: true,
+      enabledSurfaces: { ...context.status.enabledSurfaces, mini_program: false },
+    },
+  };
+  assert.doesNotThrow(() => validateReadiness(initial, initialContext));
+  assert.equal(initial.credential, "EXPOSED_TEST_AUTHORIZED_SERVER_ONLY");
+  assert.equal(initial.testExchange, "NOT_RUN");
+  assert.equal(testAuthorization.rotation, "NOT_PERFORMED");
+  assert.throws(() =>
+    validateReadiness(initial, { ...initialContext, testCredentialAuthorization: undefined }),
+  );
+  assert.throws(() =>
+    validateReadiness(
+      { ...initial, credential: "EXPOSED_TEST_AUTHORIZED_AND_VERIFIED" },
+      initialContext,
+    ),
+  );
+  assert.throws(() => validateReadiness(initial, { ...initialContext, status: context.status }));
+});
+test("TEST exception cannot certify readonly before actual exchange and pairing", () => {
+  const verified = { ...record, credential: "EXPOSED_TEST_AUTHORIZED_AND_VERIFIED" };
+  assert.doesNotThrow(() => validateReadiness(verified, exceptionContext));
+  for (const delta of [
+    { credential: "EXPOSED_TEST_AUTHORIZED_SERVER_ONLY" },
+    { testExchange: "NOT_RUN" },
+    { testExchangeEvidence: null },
+    { enrollment: "NOT_RUN" },
+    { enrollmentEvidence: null },
+    { protocol: "mini-id-token-nonce-v1" },
+    { schemaVersion: 1 },
+  ])
+    assert.throws(() => validateReadiness({ ...verified, ...delta }, exceptionContext));
+});
+test("TEST exception fails closed on absent authority and any scope or risk mismatch", () => {
+  assert.doesNotThrow(() =>
+    validateTestCredentialAuthorization(testAuthorization, exceptionContext),
+  );
+  for (const delta of [
+    { userAuthorized: false },
+    { kind: "GENERAL_EXCEPTION" },
+    { mandateSha256: "f".repeat(64) },
+    { authorizedAt: 1001 },
+    { appId: "wx0000000000000002" },
+    { testerProfileIds: [] },
+    { shopIds: [] },
+    { shopIds: [id, id] },
+    { testerProfileIds: ["00000000-0000-4000-8000-000000000011"] },
+    { shopIds: ["00000000-0000-4000-8000-000000000011"] },
+    { gatewayOrigin: "https://production.example.test" },
+    { workerName: "merchandise-control-admin-web" },
+    { supabaseProjectRef: "production" },
+    { credentialState: "NEW" },
+    { rotation: "ROTATED" },
+    { residualRisk: "RESOLVED" },
+    { extraApproval: true },
+  ])
+    assert.throws(() =>
+      validateTestCredentialAuthorization({ ...testAuthorization, ...delta }, exceptionContext),
+    );
+  for (const delta of [
+    { testCredentialMandateSha256: undefined },
+    { gatewayOrigin: "https://production.example.test" },
+    { workerName: "merchandise-control-admin-web" },
+    { supabaseProjectRef: "production" },
+    { protocol: "mini-id-token-nonce-v1" },
+    { appId: "wx0000000000000002" },
+    { testerProfileIds: [id, "00000000-0000-4000-8000-000000000011"] },
+    { shopIds: [id, "00000000-0000-4000-8000-000000000011"] },
+  ])
+    assert.throws(() =>
+      validateTestCredentialAuthorization(testAuthorization, { ...exceptionContext, ...delta }),
+    );
+});
 test("native direct readiness requires current evidence, identity and protocol without mixed legacy claims", () => {
   assert.doesNotThrow(() => validateReadiness(record, context));
   for (const delta of [

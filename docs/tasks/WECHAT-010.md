@@ -1,5 +1,20 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
+## 2026-09-14 — Current TEST credential explicitly authorized
+
+The user's latest mandate supersedes the former rotation-before-testing rule only
+for the existing designated TEST AppID, staging Worker and singleton profile/shop.
+State: EXECUTION. Add an explicit exposed-credential authorization grant and distinct
+server-only/actually-verified readiness states. Keep rotation NOT_PERFORMED and risk
+ACCEPTED_FOR_TEST_ONLY, retain normal replacement and V1 OIDC gates, and reject absent
+authority or mismatched target, protocol, AppID and allowlists. No fake exchange PASS
+is required to enable first enrollment; readonly still requires real pairing/exchange.
+Protected input, actual Worker version/binding verification, independent delta review
+and normal checks/CI/integration are authorized. No new user approval is needed for
+this scoped decision; a missing physical secret entry remains a separate handoff.
+
+Historical scope below is superseded only where this explicit amendment applies.
+
 - Status: `REVIEW / EXTERNAL_ACTIVATION_REQUIRED`
 - Owner: Codex, sole Mini writer; independent agents read/review only.
 - Opened: 2026-09-11
