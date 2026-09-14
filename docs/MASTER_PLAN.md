@@ -1,5 +1,16 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+## 2026-09-14 — Explicit TEST credential exception
+
+WECHAT-010 continues in EXECUTION under the new user mandate. The existing exposed
+TEST AppSecret may be used only with the designated staging Worker/AppID and exact
+personal tester/shop. Rotation remains NOT_PERFORMED and residual risk is accepted
+for TEST only, not resolved or extended to production/public users. Add narrowly
+scoped readiness states and retain the ordinary replacement and legacy OIDC paths.
+Actual secret installation, Tencent exchange, pairing and business acceptance are
+separate evidence. Root remains the sole writer; two independent reviewers maximum.
+No application identity, TLS, authorization, session or storage invariants are relaxed.
+
 ## 2026-09-12 - Explicit native privacy and direct Mini mandate
 
 WECHAT-010/TASK-159 continues in EXECUTION. The operator designates the existing

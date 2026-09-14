@@ -31,6 +31,53 @@ function sameIds(a, b) {
   return ids(a) && ids(b) && a.length === b.length && a.every((id) => b.includes(id));
 }
 
+// One explicit TEST exception, supplied by the protected operator wrapper.
+// This is an activation prerequisite, not proof of rotation or Tencent validity.
+export function validateTestCredentialAuthorization(authorization, context) {
+  exact(authorization, [
+    "kind",
+    "userAuthorized",
+    "mandateSha256",
+    "authorizedAt",
+    "appId",
+    "testerProfileIds",
+    "shopIds",
+    "gatewayOrigin",
+    "workerName",
+    "supabaseProjectRef",
+    "credentialState",
+    "rotation",
+    "residualRisk",
+  ]);
+  if (
+    authorization.kind !== "EXPOSED_TEST_CREDENTIAL_EXCEPTION" ||
+    authorization.userAuthorized !== true ||
+    !hash.test(authorization.mandateSha256) ||
+    authorization.mandateSha256 !== context.testCredentialMandateSha256 ||
+    !Number.isSafeInteger(authorization.authorizedAt) ||
+    authorization.authorizedAt <= 0 ||
+    authorization.authorizedAt > context.now ||
+    context.protocol !== "wechat-mini-code2session-v1" ||
+    !/^wx[0-9a-f]{16}$/.test(authorization.appId) ||
+    authorization.appId !== context.appId ||
+    authorization.testerProfileIds?.length !== 1 ||
+    authorization.shopIds?.length !== 1 ||
+    !sameIds(authorization.testerProfileIds, context.testerProfileIds) ||
+    !sameIds(authorization.shopIds, context.shopIds) ||
+    authorization.gatewayOrigin !==
+      "https://merchandise-control-admin-web-staging.merchandise-control-admin-web.workers.dev" ||
+    authorization.gatewayOrigin !== context.gatewayOrigin ||
+    authorization.workerName !== "merchandise-control-admin-web-staging" ||
+    authorization.workerName !== context.workerName ||
+    authorization.supabaseProjectRef !== "jpgoimipbothfgkokyvm" ||
+    authorization.supabaseProjectRef !== context.supabaseProjectRef ||
+    authorization.credentialState !== "EXISTING_PREVIOUSLY_EXPOSED" ||
+    authorization.rotation !== "NOT_PERFORMED" ||
+    authorization.residualRisk !== "ACCEPTED_FOR_TEST_ONLY"
+  )
+    deny();
+}
+
 export function validateReadiness(record, context) {
   if (record?.schemaVersion === 1) return validateLegacy(record, context);
   exact(record, [
@@ -117,12 +164,20 @@ export function validateReadiness(record, context) {
     status.miniProtocol !== record.protocol
   )
     deny();
+  const testException = [
+    "EXPOSED_TEST_AUTHORIZED_SERVER_ONLY",
+    "EXPOSED_TEST_AUTHORIZED_AND_VERIFIED",
+  ].includes(record.credential);
+  if (testException)
+    validateTestCredentialAuthorization(context.testCredentialAuthorization, context);
   if (record.phase === "enrollment") {
     // A real TEST exchange is the result of enrollment verification, not a
     // fabricated prerequisite. This gate enables pairing only, never business.
     if (
       record.protocol !== "wechat-mini-code2session-v1" ||
-      record.credential !== "REPLACED_SERVER_ONLY" ||
+      !["REPLACED_SERVER_ONLY", "EXPOSED_TEST_AUTHORIZED_SERVER_ONLY"].includes(
+        record.credential,
+      ) ||
       record.testExchange !== "NOT_RUN" ||
       record.testExchangeEvidence !== null ||
       record.enrollment !== "NOT_RUN" ||
@@ -132,7 +187,9 @@ export function validateReadiness(record, context) {
     )
       deny();
   } else if (
-    record.credential !== "REPLACED_AND_VERIFIED" ||
+    !["REPLACED_AND_VERIFIED", "EXPOSED_TEST_AUTHORIZED_AND_VERIFIED"].includes(
+      record.credential,
+    ) ||
     record.testExchange !== "PASS" ||
     !evidence(record.testExchangeEvidence) ||
     record.enrollment !== "PASS" ||

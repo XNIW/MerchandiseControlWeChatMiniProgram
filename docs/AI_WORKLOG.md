@@ -90,3 +90,20 @@ Nessun delta Admin/Worker/migration/flag; Auth/E2E NOT_RUN, nessun DONE.
 ## 2026-09-12 — Native privacy and Mini direct implementation
 
 User mandate supersedes OneID-only and H5-only dependencies for Mini. Existing designated pilot verified; no further shop choice. Shared native policy, explicit code2Session protocol, two-consent pairing, opaque sessions and session-derived business/Storage RPCs implemented. Root only writer, two reviewers approved the initial design; implementation findings corrected and exact final review pending. Mini 98+3 tests, Admin foundation1013 PASS/2 expected skips, component browser2 PASS, direct SQL53 PASS; isolated staging141 plus additive migration validated, no commerce migration. Worker-local HTTPS uses intercepted upstream, live credential/login NOT_RUN. OneID paused. REVIEW, no DONE. Canonical report lives in Mini docs/testing/WECHAT-010-REPORT.md.
+
+
+## 2026-09-14 — TEST credential exception readiness
+
+The new user mandate authorizes the current exposed TEST credential within the
+designated staging/AppID/pilot scope, superseding the older rotation prerequisite
+for this test only. Added two V2 credential states and a closed-scope authorization
+validator; ordinary replacement and V1 OIDC gates remain unchanged. Targeted
+readiness tests6/6 PASS including no authority, wrong environment/AppID/allowlists,
+no fabricated rotation and no pre-enrollment exchange requirement. Full gates and
+independent exact-diff review follow. No credential acquired or activation performed
+by this source change. Root sole writer; no production, native/POS or DB changes.
+
+Full pinned Node26.7.0 verify PASS: governance/privacy parity/secret scan/typecheck/lint,
+98 TypeScript tests plus6 readiness tests (104 total), and build. No runtime
+privacy rerun or live Tencent claim. Independent readiness review APPROVED; only
+formatter layout changed after review, final hash confirmation requested.
