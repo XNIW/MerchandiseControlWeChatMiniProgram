@@ -66,6 +66,10 @@ export type TranslationKey =
   | "imageManagementUnavailable"
   | "imageOperationCancelled"
   | "imageUploadFailed"
+  | "imagePreview"
+  | "useImage"
+  | "imagePermissionDenied"
+  | "openPermissions"
   | "invalidCategory"
   | "invalidFilters"
   | "invalidNumber"
@@ -300,6 +304,10 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
       "Image management is unavailable until trusted storage is configured.",
     imageOperationCancelled: "Image selection was cancelled.",
     imageUploadFailed: "The image could not be uploaded. Try again.",
+    imagePreview: "Image preview",
+    useImage: "Use this image",
+    imagePermissionDenied: "Camera or photo access was denied. Check permissions, then try again.",
+    openPermissions: "Open permissions",
     invalidCategory: "Select a valid category.",
     invalidFilters: "Check the entity ID and date range (maximum 366 days).",
     invalidNumber: "Enter a non-negative number with at most three decimal places.",
@@ -479,6 +487,11 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
       "Las imágenes no están disponibles hasta configurar el almacenamiento de confianza.",
     imageOperationCancelled: "Se canceló la selección de imagen.",
     imageUploadFailed: "No se pudo subir la imagen. Inténtalo de nuevo.",
+    imagePreview: "Vista previa de imagen",
+    useImage: "Usar esta imagen",
+    imagePermissionDenied:
+      "Se denegó el acceso a cámara o fotos. Revisa los permisos y vuelve a intentarlo.",
+    openPermissions: "Abrir permisos",
     invalidCategory: "Selecciona una categoría válida.",
     invalidFilters: "Comprueba el ID y el intervalo de fechas (máximo 366 días).",
     invalidNumber: "Introduce un número no negativo con un máximo de tres decimales.",
@@ -661,6 +674,10 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
       "Le immagini non sono disponibili finché lo storage attendibile non è configurato.",
     imageOperationCancelled: "Selezione immagine annullata.",
     imageUploadFailed: "Impossibile caricare l’immagine. Riprova.",
+    imagePreview: "Anteprima immagine",
+    useImage: "Usa questa immagine",
+    imagePermissionDenied: "Accesso a fotocamera o foto negato. Controlla i permessi e riprova.",
+    openPermissions: "Apri permessi",
     invalidCategory: "Seleziona una categoria valida.",
     invalidFilters: "Controlla l’ID e l’intervallo di date (massimo 366 giorni).",
     invalidNumber: "Inserisci un numero non negativo con al massimo tre decimali.",
@@ -836,6 +853,10 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     imageManagementUnavailable: "可信存储配置完成前无法管理图片。",
     imageOperationCancelled: "已取消选择图片。",
     imageUploadFailed: "图片上传失败，请重试。",
+    imagePreview: "图片预览",
+    useImage: "使用此图片",
+    imagePermissionDenied: "相机或相册访问被拒绝。请检查权限后重试。",
+    openPermissions: "打开权限设置",
     invalidCategory: "请选择有效分类。",
     invalidFilters: "请检查项目 ID 和日期范围（最长 366 天）。",
     invalidNumber: "请输入非负数，最多三位小数。",

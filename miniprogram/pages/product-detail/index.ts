@@ -25,6 +25,9 @@ type PriceRow = PriceHistoryEntry & {
 };
 
 interface DetailRuntime {
+  previewEpoch?: number;
+  finishPreview?: ((confirmed: boolean) => void) | undefined;
+  imageRetryKey?: string | undefined;
   context?: string;
   mounted?: boolean;
   priceRefreshPending?: boolean;
@@ -58,6 +61,7 @@ function imageErrorMessage(error: unknown, text: ReturnType<typeof translationsF
     return text[mutationErrorTranslationKey(error.code)];
   }
   if (error instanceof ProductImageMutationError) {
+    if (error.code === "image_permission_denied") return text.imagePermissionDenied;
     if (error.code === "image_operation_cancelled") return text.imageOperationCancelled;
     if (error.code === "session_expired") return text.sessionExpired;
     return text.imageUploadFailed;
@@ -77,6 +81,9 @@ Page({
     errorMessage: "",
     imageBusy: false,
     imageUrl: "",
+    imagePreviewUrl: "",
+    imagePreviewThumb: "",
+    imagePermissionDenied: false,
     loading: true,
     mutating: false,
     prices: [] as readonly PriceRow[],
@@ -103,10 +110,13 @@ Page({
     void this.load();
   },
   onHide() {
+    runtime(this).previewEpoch = (runtime(this).previewEpoch ?? 0) + 1;
+    this.cancelImagePreview();
     runtime(this).unsubscribeSync?.();
     runtime(this).unsubscribeSync = undefined;
   },
   onUnload() {
+    this.cancelImagePreview();
     runtime(this).mounted = false;
     runtime(this).loadSequence = (runtime(this).loadSequence ?? 0) + 1;
     runtime(this).priceSequence = (runtime(this).priceSequence ?? 0) + 1;
@@ -132,10 +142,14 @@ Page({
     const holder = runtime(this);
     const context = `${app.sessionStore.generation}:${shop.shop_id}:${productId}`;
     if (holder.context !== context) {
+      this.cancelImagePreview();
+      holder.imageRetryKey = undefined;
       holder.context = context;
       holder.priceCursor = undefined;
       holder.priceSequence = (holder.priceSequence ?? 0) + 1;
       this.setData({
+        imageBusy: false,
+        imagePermissionDenied: false,
         prices: [],
         pricesMore: true,
         pricesLoading: false,
@@ -371,6 +385,7 @@ Page({
   },
   async replaceImage(event: WechatMiniprogram.BaseEvent) {
     const valid = actionContext(this);
+    const previewEpoch = runtime(this).previewEpoch;
     const source = event.currentTarget.dataset.source === "album" ? "album" : "camera";
     if (this.data.imageBusy || !this.data.canManageImages || !app.activeShop) return;
     if (!app.imageClient) {
@@ -385,20 +400,85 @@ Page({
       });
       if (!confirmation.confirm || !valid()) return;
     }
-    this.setData({ errorMessage: "", imageBusy: true });
+    this.setData({ errorMessage: "", imageBusy: true, imagePermissionDenied: false });
     try {
       await app.imageClient.selectAndReplace(
         app.activeShop.shop_id,
         runtime(this).productId,
         source,
+        async (preview) => {
+          if (!valid() || runtime(this).previewEpoch !== previewEpoch) return false;
+          this.setData({ imagePreviewUrl: preview.mainPath, imagePreviewThumb: preview.thumbPath });
+          const confirmed = await new Promise<boolean>((resolve) => {
+            runtime(this).finishPreview = resolve;
+          });
+          return confirmed && valid() && runtime(this).previewEpoch === previewEpoch;
+        },
       );
       if (!valid()) return;
       app.sensitiveCaches.invalidate();
       await this.load();
     } catch (error) {
-      if (valid()) this.setData({ errorMessage: imageErrorMessage(error, this.data.text) });
+      if (valid())
+        this.setData({
+          errorMessage: imageErrorMessage(error, this.data.text),
+          imagePermissionDenied:
+            error instanceof ProductImageMutationError && error.code === "image_permission_denied",
+        });
     } finally {
       if (valid()) this.setData({ imageBusy: false });
+    }
+  },
+  confirmImagePreview() {
+    const finish = runtime(this).finishPreview;
+    runtime(this).finishPreview = undefined;
+    this.setData({ imagePreviewUrl: "", imagePreviewThumb: "" });
+    finish?.(true);
+  },
+  cancelImagePreview() {
+    const finish = runtime(this).finishPreview;
+    runtime(this).finishPreview = undefined;
+    this.setData({ imagePreviewUrl: "", imagePreviewThumb: "" });
+    finish?.(false);
+  },
+  async imageFailed(event: WechatMiniprogram.BaseEvent) {
+    const product = this.data.product,
+      shop = app.activeShop;
+    const { version, url } = event.currentTarget.dataset;
+    if (
+      !product ||
+      !shop ||
+      !app.imageClient ||
+      version !== product.primary_image_version_id ||
+      url !== this.data.imageUrl
+    )
+      return;
+    const valid = actionContext(this),
+      holder = runtime(this),
+      sequence = holder.loadSequence;
+    const key = `${app.sessionStore.generation}:${shop.shop_id}:${product.product_id}:${version}`;
+    this.setData({ imageUrl: "" });
+    if (holder.imageRetryKey === key) return;
+    holder.imageRetryKey = key;
+    try {
+      const result = await app.imageClient.readUrls(shop.shop_id, [
+        { productId: product.product_id, versionId: version, variant: "main" },
+      ]);
+      if (
+        !valid() ||
+        holder.loadSequence !== sequence ||
+        this.data.product?.primary_image_version_id !== version
+      )
+        return;
+      const image = result.items.find(
+        (item) =>
+          item.productId === product.product_id &&
+          item.versionId === version &&
+          item.variant === "main",
+      );
+      if (image?.status === "ready") this.setData({ imageUrl: image.signedUrl });
+    } catch {
+      // Leave the placeholder after a failed bounded renewal.
     }
   },
   async removeImage() {

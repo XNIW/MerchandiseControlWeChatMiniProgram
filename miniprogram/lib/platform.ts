@@ -75,7 +75,9 @@ export function createWeChatPlatform(): MiniProgramPlatform {
               new Error(
                 result.errMsg.toLowerCase().includes("cancel")
                   ? "image_selection_cancelled"
-                  : "image_selection_failed",
+                  : /auth deny|authorize denied|permission denied/i.test(result.errMsg)
+                    ? "image_permission_denied"
+                    : "image_selection_failed",
               ),
             ),
           mediaType: ["image"],

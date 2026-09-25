@@ -1,5 +1,15 @@
 # Active task
 
+## 2026-09-25 — Residui immagini in REVIEW, accettazione BLOCKED_EXTERNAL
+
+Nuovo delta circoscritto: anteprima e permessi, tutte50miniature, rinnovo URL limitato,
+replay upload parziale/finalize incerto e revalidation temporanea. Root unico writer,
+due reviewer read-only;149test Mini e1030Admin PASS/2skip,41pgTAP immagini e concorrenza
+SQL isolata PASS. Review/integrazione nuove separate dalla baseline F01–F07. Stato
+corrente e matrice A–G nel [report canonico](../testing/WECHAT-010-REPORT.md). Input protetto AppSecret
+ancora assente; nessuna prova business/telefono e nessun DONE. Note precedenti storiche.
+
+
 > Stato operativo corrente2026-09-25: [report canonico](../testing/WECHAT-010-REPORT.md), matrice locale/DevTools/telefono separata. Il resto delle note datate precedenti è storico. Mandato TEST14settembre valido; rotazione NOT_PERFORMED/ACCEPTED_FOR_TEST_ONLY. Integrazione funzionale e release staging OFF completate; nessun DONE/live implicito.
 
 ## 2026-09-25 — Functional delta in REVIEW; authentic acceptance BLOCKED_EXTERNAL
