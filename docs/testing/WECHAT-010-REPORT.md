@@ -1,6 +1,49 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-Stato corrente: **FIX: challenge enrollment HTTP400 prima di Tencent**. Report operativo canonico, matrice locale/DevTools/telefono separata. Nessun DONE auto-approvato.
+Stato corrente: **fix del trasporto integrato e distribuito; ritest autentico in attesa dello sblocco Mac**. Report operativo canonico, matrice locale/DevTools/telefono separata. Nessun DONE auto-approvato.
+
+## Ricevuta fix Workers — 2026-09-25T20:49:14.938Z
+
+[Admin PR112](https://github.com/XNIW/merchandise-control-admin-web/pull/112) head
+9eae7f0b5eda469aa562efc6ddc4667eb9261729 integrata come
+db5bb83a8d54a99ae8637d3cc770af723cf00da3 dopo CI36187551352 e Cloudflare36187551530 PASS.
+Postmerge Admin CI36187934467 e Cloudflare36187934462 PASS; deploy automatici SKIPPED.
+[Mini PR23](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/23)
+head c086f63e409b793ef0abed77c64a0bc94dd0c6be, merge
+ba752859b1f59ab22a18866f79f9928079c6766d; CI36187551042 e postmerge36187613324 PASS.
+Le modifiche Mini sono solo documentali: applicazione/dist enrollment invariati.
+
+Il motore workerd1.20260811.1 rifiuta redirect:error prima della rete: riprodotto
+con gli helper TypeScript effettivi, configurazione/sessione e HTTP isolati.
+Il fix usa manual e conserva il rifiuto non-2xx. Entrambi i trasporti raggiungono
+una sola RPC per200/301/302/303/307/308 e non inviano nulla alla destinazione redirect.
+Baseline FAIL, fix24/24 mirati PASS; Admin verify Node22 e1031foundation PASS/2skip;
+Mini149PASS. Il primo foundation locale ha2ENOENT nel checkout Win7POS incompleto;
+il rerun usa il riferimento esistente in sola lettura, senza modifiche native.
+Review indipendente APPROVED, manifest codice/test
+cb6092178c0b66f52046c6fb1a7e5d83ed3a7c7503043c2188863224ee675521.
+Nessuna diagnostica pubblica aggiunta; nessuna modifica alle credenziali.
+
+Release selettiva a805d64044dec3b1304f5c52709f886580c48390 derivata dac55f88a3,
+solo wechat-mini-session.ts e catalog-mutation-gateway.ts. Build Cloudflare PASS,
+handler SHA2561549b82d5498b50f21e658b293ccbe804e0f52d7bf70dc1349aaa181e6dc5730
+vincolato nel helper revisionato SHA256
+da55e3d3072dfe130bc25c0390e1a4a27f6666f0c9a54fd8adf9c0c2069f931c.
+Worker **246797b4-75cf-4423-ae23-acf8e58d73d7** verificato100%; hash binding,
+configurazione runtime e settings preservati. Enrollment ON, altri6flag OFF,
+allowlist esatte, AppSecret presente non ancora verificato da Tencent, tracing OFF.
+Nessun DDL o deploy main intera. Smoke HTTP pubblico/read-only5/5 PASS: privacy,
+cancellazione, stato e diniego delle letture business. Non è prova di login autentico.
+
+Il vecchio pairing è scaduto; Admin tornato all'avvio mediante sola lettura stato.
+**BLOCKED_EXTERNAL, owner utente:** Mac bloccato durante il controllo DevTools;
+sblocco manuale richiesto. Dopo lo sblocco: nuovo trasferimento personale e Verify,
+poi confronto/approvazione Admin, seconda prova e consenso Mini nel loro ordine.
+Non ripetere installer, non trasferire codici in chat. Tencent/mapping/login/business
+ancora NON_VERIFICATI; telefono e tempi0campioni. Nessuna fixture business creata,
+nessun mapping artificiale e nessun cleanup di dati personali. Nessun DONE.
+
+Le sezioni successive descrivono i tentativi e lo stato storico precedente al fix.
 
 ## Enrollment TEST attivo — 2026-09-25T20:01:41.857Z
 

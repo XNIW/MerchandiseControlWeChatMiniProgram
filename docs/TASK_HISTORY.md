@@ -152,3 +152,5 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 | 2026-09-25 | WECHAT-010 | Due tentativi personali Mini falliti al challenge HTTP400 backend_temporary; Tencent non raggiunto | FIX tecnico Codex;18 test diagnostica sanificata PASS; nessuna richiesta aggiuntiva AppSecret o fixture business |
 
 | 2026-09-25 | WECHAT-010 | Causa riprodotta in workerd1.20260811.1: redirect:error rifiutato prima della rete; manual accetta la RPC e non segue3xx | Fix minimo nei due trasporti Admin; diagnostica pubblica provvisoria non integrata; nessuna prova Tencent ancora |
+
+| 2026-09-25T20:49:14.938Z | WECHAT-010 | PR112/23 integrate; fix Workers selettivo a805d640 distribuito come246797b4, binding/runtime/settings preservati; HTTP pubblico5/5PASS | Enrollment ON/6OFF; ritest autentico fermo sul Mac bloccato, sblocco richiesto; nessun business/telefono o DONE |
