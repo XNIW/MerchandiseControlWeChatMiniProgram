@@ -6,6 +6,7 @@ Legenda: VERIFIED_LOCAL = regressione automatica locale, mai live; IMPLEMENTED_U
 
 | Requisito | Schermata / azione | Client → endpoint/RPC | Permesso | Stato / test | DevTools | Telefono | Residuo |
 |---|---|---|---|---|---|---|---|
+| Compilazione/gate OFF | cinque tab, Account Retry | template WXML/runtime flags | nessuna auth | VERIFIED_LOCAL; fix compiler ufficiale | VERIFIED_LIVE OFF5/5,0 eccezioni; business escluso | NOT_RUN delta | nessuna attestazione business |
 | Pairing diretto | Account→pairing, due consensi | auth-client→auth/wechat/mini→pair/proof | personale + allowlist | EXTERNAL_ACTION_REQUIRED;55 pgTAP + component | NOT_RUN autentico | NOT_RUN | input protetto; consensi personali |
 | Login distinto/sessione/revoca | Home/Account | auth-client/session-store→direct_issue/session_resolve | mapping attivo/device/generation | VERIFIED_LOCAL | NOT_RUN | NOT_RUN | Tencent autentico |
 | Profilo/provider/shop | Account, selettore | sales-api→account/shops→account_profile/authorized_shops_v2 | membership attiva | VERIFIED_LOCAL | NOT_RUN | NOT_RUN | readback account designato |
@@ -37,3 +38,5 @@ Legenda: VERIFIED_LOCAL = regressione automatica locale, mai live; IMPLEMENTED_U
 | Excel/scanner camera/POS writes/admin | nessuna UI | nessun endpoint nuovo | escluso | OUT_OF_SCOPE | — | — | DEC-002/mandato |
 
 Le prove indipendenti dei reviewer approvano il delta locale OFF; non certificano l'intera matrice live. Il vecchio requisito di gateway WebSocket non si aggiunge al mandato: polling adattivo è il fallback documentato, senza SLA garantito.
+
+Runner privato:33 test locali dei guardrail e8 oracle SQL pianificati; approvazione indipendente. Adapter SDK UI e confronti su tabelle canoniche disponibili; azioni telefono/native/layout mantengono attestazioni operatore distinte. Tutte le celle business DevTools/telefono restano NOT_RUN. Smoke HTTP staging OFF12/12 e143migration/zero commerce sono verifiche infrastrutturali, non prove delle righe business.
