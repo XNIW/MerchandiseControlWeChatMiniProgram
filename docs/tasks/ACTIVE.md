@@ -1,14 +1,14 @@
 # Active task
 
-> Stato operativo corrente2026-09-25: [report canonico](../testing/WECHAT-010-REPORT.md), matrice locale/DevTools/telefono separata. Il resto delle note datate precedenti è storico. Mandato TEST14settembre valido; rotazione NOT_PERFORMED/ACCEPTED_FOR_TEST_ONLY. Integrazione funzionale OFF in corso; nessun DONE/live implicito.
+> Stato operativo corrente2026-09-25: [report canonico](../testing/WECHAT-010-REPORT.md), matrice locale/DevTools/telefono separata. Il resto delle note datate precedenti è storico. Mandato TEST14settembre valido; rotazione NOT_PERFORMED/ACCEPTED_FOR_TEST_ONLY. Integrazione funzionale e release staging OFF completate; nessun DONE/live implicito.
 
-## 2026-09-25 — Functional completion in EXECUTION
+## 2026-09-25 — Functional delta in REVIEW; authentic acceptance BLOCKED_EXTERNAL
 
-The current user mandate continues WECHAT-010. Root is the sole writer in the isolated functional-completion worktree; two read-only reviewers cover the exact delta. Scope: F01–F07, bounded business-path fixes and authentic TEST activation if material input is available. Current evidence will be consolidated in docs/testing/WECHAT-010-REPORT.md. Historical entries below are not current live acceptance. Flags remain OFF until each authorized activation gate is evidenced.
+F01–F07 fixes and selective OFF release are integrated; two independent read-only reviewers approved the application/runner deltas. Canonical report contains exact CI/source/Worker/migration receipts. External owner: user, protected TEST credential input via the already authorized installer, then personal pairing gestures. Binding absent; no authentic business/phone acceptance or DONE. Work still possible without that input is limited to already documented local checks and preparation, completed this session. Historical entries below are not current status.
 
 ## WECHAT-010 — Native privacy and direct Mini execution
 
-- Status: `EXECUTION` — user-authorized TEST credential exception and first-live continuation (2026-09-14)
+- Status: `BLOCKED_EXTERNAL` — authentic TEST acceptance requires protected credential input; integrated delta is in REVIEW (2026-09-25)
 - Root sole writer; two independent read-only reviewers.
 - Contract: [WECHAT-010](WECHAT-010.md)
 - Report: [Single execution and acceptance report](../testing/WECHAT-010-REPORT.md)
