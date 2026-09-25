@@ -146,3 +146,9 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 | 2026-09-25T18:44:00Z | WECHAT-010 | Prosecuzione residui: sei difetti immagini riprodotti/corretti, ulteriori rilievi review lifecycle/revalidation risolti | 149Mini,1030Admin,41pgTAP, concorrenza locale PASS; AppSecret assente, business/telefono NOT_RUN; REVIEW |
 | 2026-09-25T18:53:00Z | WECHAT-010 | PR20/109 integrate dopo CI; delta selettivo distribuito,144registry esatto,12HTTP OFF PASS | Worker6343d39c; AppSecret assente, Mac bloccato; runtime/telefono NOT_RUN; nessun DONE |
 | 2026-09-25T19:03:05.409Z | WECHAT-010 | Mac tornato accessibile: nuovo smoke DevTools UI/SDK OFF5/5 PASS | Buildf956680/app08cb400,0nuove eccezioni, no session/shop; primo errore SDKrawPath risolto attendendo pagina; businessNOT_RUN |
+
+| 2026-09-25T20:01:41.857Z | WECHAT-010 | Input protetto completato e binding verificato; enrollment server→client attivo, solo target TEST | Worker f1e2e3ce, altri6flag OFF; verify149PASS; DevTools pairing pronta senza sessione/shop;0mapping; login personale Admin completato; attesa trasferimento Mini; Tencent/business NOT_RUN |
+
+| 2026-09-25 | WECHAT-010 | Due tentativi personali Mini falliti al challenge HTTP400 backend_temporary; Tencent non raggiunto | FIX tecnico Codex;18 test diagnostica sanificata PASS; nessuna richiesta aggiuntiva AppSecret o fixture business |
+
+| 2026-09-25 | WECHAT-010 | Causa riprodotta in workerd1.20260811.1: redirect:error rifiutato prima della rete; manual accetta la RPC e non segue3xx | Fix minimo nei due trasporti Admin; diagnostica pubblica provvisoria non integrata; nessuna prova Tencent ancora |

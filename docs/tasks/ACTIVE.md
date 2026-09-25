@@ -1,5 +1,16 @@
 # Active task
 
+## Stato corrente — FIX del challenge enrollment
+
+AppSecret presente; enrollment server e client abilitato sul solo target già
+autorizzato. Worker f1e2e3ce-557b-42f4-9159-e796dc635c32, altri sei flag OFF.
+Build Mini149test PASS e schermata pairing ufficiale pronta, nessuna sessione/shop.
+Login Admin e due tentativi Mini eseguiti personalmente. Il challenge fallisce
+HTTP400 backend_temporary prima di Tencent: FIX tecnico in corso, owner Codex.
+Nessuna prova Tencent/mapping/sessione; business e telefono NOT_RUN.
+Input AppSecret completato: non richiederlo nuovamente. Nessun DONE.
+Stato e ricevute nel report canonico; le sezioni successive sono storiche.
+
 ## 2026-09-25 — Residui immagini in REVIEW, accettazione BLOCKED_EXTERNAL
 
 Nuovo delta circoscritto: anteprima e permessi, tutte50miniature, rinnovo URL limitato,
