@@ -9,7 +9,7 @@ Legenda: VERIFIED_LOCAL = regressione automatica locale, mai live; IMPLEMENTED_U
 | Requisito | Schermata / azione | Client → endpoint/RPC | Permesso | Stato / test | DevTools | Telefono | Residuo |
 |---|---|---|---|---|---|---|---|
 | Compilazione/gate OFF | cinque tab, Account Retry | template WXML/runtime flags | nessuna auth | VERIFIED_LOCAL; fix compiler ufficiale | VERIFIED_LIVE OFF5/5,0 eccezioni; business escluso | NOT_RUN delta | nessuna attestazione business |
-| Pairing diretto | Account→pairing, due consensi | auth-client→auth/wechat/mini→pair/proof | personale + allowlist | EXTERNAL_ACTION_REQUIRED;55 pgTAP + component | NOT_RUN autentico | NOT_RUN | input protetto; consensi personali |
+| Pairing diretto | Account→pairing, due consensi | auth-client→auth/wechat/mini→pair/proof | personale + allowlist | FIX;55 pgTAP + component | Due tentativi personali: challenge400 backend_temporary prima di Tencent | NOT_RUN | Diagnosi RPC; poi consensi personali |
 | Login distinto/sessione/revoca | Home/Account | auth-client/session-store→direct_issue/session_resolve | mapping attivo/device/generation | VERIFIED_LOCAL | NOT_RUN | NOT_RUN | Tencent autentico |
 | Profilo/provider/shop | Account, selettore | sales-api→account/shops→account_profile/authorized_shops_v2 | membership attiva | VERIFIED_LOCAL | NOT_RUN | NOT_RUN | readback account designato |
 | Privacy/cancellazione | Account link pubblico | contenuto incluso/versionato | nessuna auth | VERIFIED_LOCAL |47 prove storiche invarianti | apertura/scroll ZH storico limitato | nessun nuovo delta privacy |
