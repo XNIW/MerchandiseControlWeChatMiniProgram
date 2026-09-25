@@ -6,7 +6,8 @@ Nuovo delta circoscritto: anteprima e permessi, tutte50miniature, rinnovo URL li
 replay upload parziale/finalize incerto e revalidation temporanea. Root unico writer,
 due reviewer read-only;149test Mini e1030Admin PASS/2skip,41pgTAP immagini e concorrenza
 SQL isolata PASS. Review approvate, PR20/109 integrate e release staging selettiva verificata.
-Nuovo controllo UI DevTools attende sblocco Mac; nessun PASS della build precedente riusato. Stato
+Mac tornato accessibile: nuova build verificata DevTools OFF5/5, senza sessione/shop;
+nessuna accettazione business o telefono. Stato
 corrente e matrice A–G nel [report canonico](../testing/WECHAT-010-REPORT.md). Input protetto AppSecret
 ancora assente; nessuna prova business/telefono e nessun DONE. Note precedenti storiche.
 
