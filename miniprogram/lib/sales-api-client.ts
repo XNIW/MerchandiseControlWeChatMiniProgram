@@ -13,6 +13,7 @@ import type {
   Supplier,
   SyncHistoryEntry,
 } from "./contracts";
+import { AuthContractError } from "./contracts";
 import type { HttpClient } from "./http-client";
 import type { ActiveSession, SessionStore } from "./session-store";
 
@@ -103,7 +104,8 @@ export class SalesApiClient {
     if ((options.beforeAt === undefined) !== (options.beforeId === undefined)) {
       throw new Error("invalid_page_cursor");
     }
-    const date = options.date ?? new Date().toISOString().slice(0, 10);
+    const date = options.date ?? (await this.dailySummary(shopId))?.business_date;
+    if (!date) throw new AuthContractError("backend_temporary");
     const result = await this.#http.get<{ readonly ok: true; readonly sales: DailySale[] }>(
       "/api/mini-program/v1/sales",
       {
@@ -273,21 +275,55 @@ export class SalesApiClient {
     return result.prices;
   }
 
-  async categories(shopId: string, search?: string): Promise<readonly Category[]> {
+  async categories(
+    shopId: string,
+    search?: string,
+    options: { afterName?: string; afterId?: string; id?: string; limit?: number } = {},
+  ): Promise<readonly Category[]> {
     this.#validateShop(shopId);
+    if ((options.afterName === undefined) !== (options.afterId === undefined))
+      throw new Error("invalid_page_cursor");
+    if (options.afterId) this.#validateShop(options.afterId);
+    if (options.id) this.#validateShop(options.id);
+    const limit = options.limit ?? 100;
+    if (!Number.isInteger(limit) || limit < 1 || limit > 100) throw new Error("invalid_page_limit");
     const result = await this.#http.get<{ readonly categories: Category[]; readonly ok: true }>(
       "/api/mini-program/v1/categories",
-      { limit: 100, search, shop_id: shopId },
+      {
+        limit,
+        search,
+        shop_id: shopId,
+        after_name: options.afterName,
+        after_id: options.afterId,
+        id: options.id,
+      },
       this.#requireSession(),
     );
     return result.categories;
   }
 
-  async suppliers(shopId: string, search?: string): Promise<readonly Supplier[]> {
+  async suppliers(
+    shopId: string,
+    search?: string,
+    options: { afterName?: string; afterId?: string; id?: string; limit?: number } = {},
+  ): Promise<readonly Supplier[]> {
     this.#validateShop(shopId);
+    if ((options.afterName === undefined) !== (options.afterId === undefined))
+      throw new Error("invalid_page_cursor");
+    if (options.afterId) this.#validateShop(options.afterId);
+    if (options.id) this.#validateShop(options.id);
+    const limit = options.limit ?? 100;
+    if (!Number.isInteger(limit) || limit < 1 || limit > 100) throw new Error("invalid_page_limit");
     const result = await this.#http.get<{ readonly ok: true; readonly suppliers: Supplier[] }>(
       "/api/mini-program/v1/suppliers",
-      { limit: 100, search, shop_id: shopId },
+      {
+        limit,
+        search,
+        shop_id: shopId,
+        after_name: options.afterName,
+        after_id: options.afterId,
+        id: options.id,
+      },
       this.#requireSession(),
     );
     return result.suppliers;
@@ -336,6 +372,8 @@ export class SalesApiClient {
       readonly entityId?: string;
       readonly entityType?: CatalogEntityType;
       readonly fromAt?: string;
+      readonly fromDate?: string;
+      readonly toDate?: string;
       readonly limit?: number;
       readonly operation?: CatalogHistoryOperation;
       readonly toAt?: string;
@@ -360,6 +398,8 @@ export class SalesApiClient {
         entity_id: options.entityId,
         entity_type: options.entityType,
         from_at: options.fromAt,
+        from_date: options.fromDate,
+        to_date: options.toDate,
         limit,
         operation: options.operation,
         shop_id: shopId,

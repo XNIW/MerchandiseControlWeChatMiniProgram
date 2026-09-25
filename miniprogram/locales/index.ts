@@ -1,6 +1,17 @@
 export type LocaleKey = "en" | "es" | "it" | "zh-Hans";
 
 export type TranslationKey =
+  | "discount"
+  | "camera"
+  | "gallery"
+  | "retryExhausted"
+  | "recoverChanges"
+  | "requestTimeout"
+  | "rateLimited"
+  | "endOfList"
+  | "pendingChanges"
+  | "outboxDamaged"
+  | "discardOperationConfirm"
   | "account"
   | "accountSuspended"
   | "active"
@@ -204,6 +215,18 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     linkRequired:
       "This WeChat identity must be linked from an authenticated MerchandiseControl account.",
     linked: "Linked",
+    endOfList: "End of list",
+    pendingChanges: "Pending changes",
+    outboxDamaged: "Stored changes cannot be read. They have been preserved.",
+    discardOperationConfirm:
+      "Discard this pending operation and dependent steps? A request may already have reached the server. Check its result first.",
+    requestTimeout: "Request timed out. Retry.",
+    rateLimited: "Too many requests. Wait and retry.",
+    retryExhausted: "Automatic retries exhausted. Review the result before discarding.",
+    recoverChanges: "Recover validated stored operations? The original journal will be preserved.",
+    discount: "Discount",
+    camera: "Take photo",
+    gallery: "Choose from gallery",
     loadMore: "Load more",
     loading: "Loading…",
     enrollmentRequired:
@@ -371,6 +394,18 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     linkRequired:
       "Esta identidad WeChat debe vincularse desde una cuenta MerchandiseControl autenticada.",
     linked: "Vinculado",
+    endOfList: "Fin de la lista",
+    pendingChanges: "Cambios pendientes",
+    outboxDamaged: "No se pueden leer los cambios guardados. Se han conservado.",
+    discardOperationConfirm:
+      "¿Descartar esta operación y los pasos dependientes? Una solicitud puede haber llegado al servidor. Comprueba primero el resultado.",
+    requestTimeout: "La solicitud agotó el tiempo. Reintenta.",
+    rateLimited: "Demasiadas solicitudes. Espera y reintenta.",
+    retryExhausted: "Reintentos automáticos agotados. Revisa el resultado antes de descartar.",
+    recoverChanges: "¿Recuperar las operaciones válidas? Se conservará el registro original.",
+    discount: "Descuento",
+    camera: "Tomar foto",
+    gallery: "Elegir de galería",
     loadMore: "Cargar más",
     loading: "Cargando…",
     enrollmentRequired:
@@ -540,6 +575,19 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     linkRequired:
       "Questa identità WeChat deve essere collegata da un account MerchandiseControl autenticato.",
     linked: "Collegato",
+    endOfList: "Fine elenco",
+    pendingChanges: "Modifiche in attesa",
+    outboxDamaged: "Impossibile leggere le modifiche salvate. Sono state conservate.",
+    discardOperationConfirm:
+      "Eliminare questa operazione e le fasi dipendenti? Una richiesta potrebbe essere già arrivata al server. Verifica prima il risultato.",
+    requestTimeout: "Richiesta scaduta. Riprova.",
+    rateLimited: "Troppe richieste. Attendi e riprova.",
+    retryExhausted: "Tentativi automatici esauriti. Verifica il risultato prima di eliminare.",
+    recoverChanges:
+      "Recuperare le operazioni valide salvate? Il registro originale verrà conservato.",
+    discount: "Sconto",
+    camera: "Scatta foto",
+    gallery: "Scegli dalla galleria",
     loadMore: "Carica altro",
     loading: "Caricamento…",
     enrollmentRequired:
@@ -706,6 +754,17 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     latestSale: "最近一笔销售",
     linkRequired: "此微信身份必须从已登录的 MerchandiseControl 账户中完成关联。",
     linked: "已关联",
+    endOfList: "列表结束",
+    pendingChanges: "待处理更改",
+    outboxDamaged: "无法读取已保存的更改，原始数据已保留。",
+    discardOperationConfirm: "丢弃此操作及后续步骤？请求可能已到达服务器，请先核对结果。",
+    requestTimeout: "请求超时，请重试。",
+    rateLimited: "请求过于频繁，请稍后重试。",
+    retryExhausted: "自动重试已用尽，请核对结果后再丢弃。",
+    recoverChanges: "恢复有效的已保存操作？原始记录将被保留。",
+    discount: "折扣",
+    camera: "拍照",
+    gallery: "从相册选择",
     loadMore: "加载更多",
     loading: "正在加载…",
     enrollmentRequired: "请先从 Admin 将你的微信身份关联到现有个人账户，再在此登录。",

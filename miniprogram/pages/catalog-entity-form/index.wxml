@@ -4,6 +4,7 @@
   <view wx:if="{{!loading && formReady}}" class="form-card">
     <label class="field"><text>{{text.name}} *</text><input maxlength="160" value="{{name}}" bindinput="changeName"/></label>
     <view wx:if="{{current}}" class="meta-row"><text>{{text.productCount}}</text><text>{{current.productCount}}</text></view>
+    <view wx:if="{{current}}"><input maxlength="80" value="{{replacementSearch}}" bindinput="searchReplacements" placeholder="{{text.search}}"/><button bindtap="findReplacements">{{text.search}}</button><button wx:if="{{replacementMore}}" bindtap="moreReplacements">{{text.loadMore}}</button></view>
     <label wx:if="{{current && current.productCount > 0}}" class="field"><text>{{text.chooseReplacement}} *</text><picker range="{{replacements}}" range-key="name" value="{{replacementIndex}}" bindchange="chooseReplacement"><view class="picker-value">{{replacementId ? replacements[replacementIndex].name : text.chooseReplacement}}</view></picker></label>
     <button class="primary" loading="{{saving}}" disabled="{{saving}}" bindtap="save">{{saving ? text.saving : text.save}}</button>
     <button wx:if="{{current}}" class="danger" disabled="{{saving}}" bindtap="archive">{{text.archive}}</button>

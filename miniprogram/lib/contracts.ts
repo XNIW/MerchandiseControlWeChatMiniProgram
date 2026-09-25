@@ -4,6 +4,9 @@ export type SessionState = "signed_out" | "exchanging" | "active" | "expired" | 
 export type LinkState = "not_linked" | "linked" | "conflict" | "link_required";
 
 export type AuthErrorCode =
+  | "timeout"
+  | "permission_denied"
+  | "shop_suspended"
   | "account_suspended"
   | "backend_temporary"
   | "code_expired"
@@ -358,7 +361,7 @@ export type CatalogMutationAttemptState =
     }
   | {
       readonly correlationId: string;
-      readonly errorCode: "backend_temporary" | "offline" | "retryable_error";
+      readonly errorCode: "backend_temporary" | "offline" | "retryable_error" | "rate_limited";
       readonly lifecycle: "retryable_error";
     }
   | {

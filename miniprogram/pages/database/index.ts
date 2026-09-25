@@ -1,12 +1,16 @@
 import type { MerchandiseControlApp } from "../../app";
+import { formatCatalogNumber } from "../../lib/catalog-numbers";
 import type { CatalogProduct } from "../../lib/contracts";
 import { ProductImageCache } from "../../lib/product-image-cache";
 import type { ProductImageReadResult } from "../../lib/product-image-mutation-client";
 import type { MiniSyncNotification } from "../../lib/sync-coordinator";
 import { translationsFor } from "../../locales/index";
-import { hasCatalogCapability } from "../catalog-management";
+import { hasCatalogCapability, readErrorTranslationKey } from "../catalog-management";
 
-type ProductRow = CatalogProduct & { readonly thumbnail_url: string | null };
+type ProductRow = CatalogProduct & {
+  readonly price_text: string;
+  readonly thumbnail_url: string | null;
+};
 const app = getApp<MerchandiseControlApp>();
 const imageCache = new ProductImageCache(20, app.sessionStore);
 app.sensitiveCaches.register(imageCache, ["catalog", "prices"]);
@@ -191,6 +195,7 @@ Page({
       }
       const rows: ProductRow[] = products.map((product) => ({
         ...product,
+        price_text: formatCatalogNumber(product.retail_price),
         thumbnail_url: cachedThumbnail(shop.shop_id, product),
       }));
       const missing = rows.filter((item) => item.primary_image_version_id && !item.thumbnail_url);
@@ -246,14 +251,14 @@ Page({
           ? hydrated
           : [...this.data.products, ...hydrated.filter((item) => !ids.has(item.product_id))],
       });
-    } catch {
+    } catch (error) {
       if (
         pageRuntime(this).sequence !== sequence ||
         app.sensitiveCaches.generation !== cacheGeneration
       ) {
         return;
       }
-      this.setData({ errorMessage: this.data.text.offline });
+      this.setData({ errorMessage: this.data.text[readErrorTranslationKey(error)] });
       if (preserveWindow) throw new Error("catalog_refresh_failed");
     } finally {
       if (pageRuntime(this).sequence === sequence) {

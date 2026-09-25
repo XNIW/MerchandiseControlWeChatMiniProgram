@@ -1,15 +1,21 @@
 import type { MerchandiseControlApp } from "../../app";
 import { runtimeConfig } from "../../config/runtime-config";
 import { AdaptiveRefreshController } from "../../lib/adaptive-refresh";
+import { formatCatalogNumber } from "../../lib/catalog-numbers";
 import type { DailySale, DailySalesSummary, SalesFilterEntity } from "../../lib/contracts";
 import { resolveSalesRange, type SalesRangeKey, shiftDate } from "../../lib/date-ranges";
 import { SessionBoundedCache } from "../../lib/sensitive-cache";
 import { translationsFor } from "../../locales/index";
+import { readErrorTranslationKey } from "../catalog-management";
 
 const app = getApp<MerchandiseControlApp>();
 interface SalesRuntime {
   visible?: boolean;
   lifecycle?: number;
+  businessDate?: string;
+  dateShop?: string;
+  businessSequence?: number;
+  filterSequence?: number;
 }
 function runtime(page: unknown): SalesRuntime {
   return page as SalesRuntime;
@@ -20,9 +26,6 @@ const pageCache = new SessionBoundedCache<{
 }>(4, app.sessionStore);
 app.sensitiveCaches.register(pageCache, ["sales"]);
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
-}
 function total(
   days: readonly DailySalesSummary[],
   field: "gross_sales_clp" | "net_revenue_clp" | "refunds_clp",
@@ -32,13 +35,17 @@ function total(
 
 Page({
   data: {
-    anchorDate: today(),
-    days: [] as readonly DailySalesSummary[],
+    anchorDate: "",
+    days: [] as readonly (DailySalesSummary & {
+      grossText: string;
+      netText: string;
+      refundsText: string;
+    })[],
     deviceIndex: 0,
     deviceOptions: [] as readonly SalesFilterEntity[],
     errorMessage: "",
     featureReady: app.featureReady,
-    from: today(),
+    from: "",
     gross: "—",
     kindIndex: 0,
     kinds: ["", "sale", "refund", "void"],
@@ -50,14 +57,14 @@ Page({
     refunds: "—",
     saleNumber: "",
     saleCount: 0,
-    sales: [] as readonly DailySale[],
+    sales: [] as readonly (DailySale & { netText: string })[],
     staffIndex: 0,
     staffOptions: [] as readonly SalesFilterEntity[],
     statusIndex: 0,
     statuses: ["", "accepted", "duplicate", "conflict", "rejected"],
     text: translationsFor(app.locale),
     timeZone: "",
-    to: today(),
+    to: "",
   },
   onPullDownRefresh() {
     if (!app.featureReady) {
@@ -81,6 +88,11 @@ Page({
   },
   onHide() {
     runtime(this).visible = false;
+    const holder = this as unknown as { requestSequence?: number; searchTimer?: number };
+    holder.requestSequence = (holder.requestSequence ?? 0) + 1;
+    runtime(this).businessSequence = (runtime(this).businessSequence ?? 0) + 1;
+    runtime(this).filterSequence = (runtime(this).filterSequence ?? 0) + 1;
+    if (holder.searchTimer !== undefined) clearTimeout(holder.searchTimer);
     runtime(this).lifecycle = (runtime(this).lifecycle ?? 0) + 1;
     this.stopAutomaticRefresh();
   },
@@ -159,17 +171,57 @@ Page({
     if (shop) app.selectShop(shop);
     return shop;
   },
+  async resolveBusinessDate() {
+    const shop = app.activeShop,
+      api = app.salesClient;
+    if (!shop || !api) return;
+    const generation = app.sessionStore.generation;
+    const sequence = (runtime(this).businessSequence ?? 0) + 1;
+    runtime(this).businessSequence = sequence;
+    const anchor = this.data.anchorDate;
+    const summary = await api.dailySummary(shop.shop_id);
+    if (
+      app.activeShop?.shop_id !== shop.shop_id ||
+      generation !== app.sessionStore.generation ||
+      runtime(this).businessSequence !== sequence
+    )
+      return;
+    if (!summary) throw new Error("missing_business_day");
+    const holder = runtime(this);
+    if (
+      !this.data.anchorDate ||
+      holder.dateShop !== shop.shop_id ||
+      (this.data.anchorDate === anchor && this.data.anchorDate === holder.businessDate)
+    ) {
+      this.setData({
+        anchorDate: summary.business_date,
+        ...resolveSalesRange(summary.business_date, this.data.range),
+      });
+    }
+    holder.businessDate = summary.business_date;
+    holder.dateShop = shop.shop_id;
+  },
   async refreshFilters() {
+    const sequence = (runtime(this).filterSequence ?? 0) + 1;
+    runtime(this).filterSequence = sequence;
     const shop = await this.ensureShop();
     if (!shop || !app.salesClient) return;
     const cacheGeneration = app.sensitiveCaches.generation;
     try {
+      await this.resolveBusinessDate();
+      if (
+        runtime(this).filterSequence !== sequence ||
+        app.activeShop?.shop_id !== shop.shop_id ||
+        app.sensitiveCaches.generation !== cacheGeneration
+      )
+        return;
       const filters = await app.salesClient.salesFilterOptions(
         shop.shop_id,
         this.data.from,
         this.data.to,
       );
       if (
+        runtime(this).filterSequence !== sequence ||
         app.sensitiveCaches.generation !== cacheGeneration ||
         app.sessionStore.load() === null ||
         app.activeShop?.shop_id !== shop.shop_id
@@ -189,7 +241,12 @@ Page({
           : [],
       });
     } catch {
-      if (app.sensitiveCaches.generation !== cacheGeneration) return;
+      if (
+        app.sensitiveCaches.generation !== cacheGeneration ||
+        runtime(this).filterSequence !== sequence ||
+        app.activeShop?.shop_id !== shop.shop_id
+      )
+        return;
       this.setData({ deviceOptions: [], paymentMethods: [""], staffOptions: [] });
     }
   },
@@ -205,6 +262,31 @@ Page({
       return false;
     }
     const cacheGeneration = app.sensitiveCaches.generation;
+    try {
+      await this.resolveBusinessDate();
+    } catch (error) {
+      if (
+        app.activeShop?.shop_id !== shop.shop_id ||
+        app.sensitiveCaches.generation !== cacheGeneration ||
+        (this as unknown as { requestSequence: number }).requestSequence !== sequence
+      )
+        return false;
+      this.setData({
+        errorMessage: this.data.text[readErrorTranslationKey(error)],
+        gross: "—",
+        net: "—",
+        refunds: "—",
+        days: [],
+        sales: [],
+      });
+      return false;
+    }
+    if (
+      (this as unknown as { requestSequence: number }).requestSequence !== sequence ||
+      app.activeShop?.shop_id !== shop.shop_id ||
+      app.sensitiveCaches.generation !== cacheGeneration
+    )
+      return false;
     const cacheKey = [
       shop.shop_id,
       shop.role_key,
@@ -266,14 +348,21 @@ Page({
       pageCache.set(cacheKey, { days, sales });
       this.applyResult(days, sales, shop.currency_code);
       return true;
-    } catch {
+    } catch (error) {
       if (
         (this as unknown as { requestSequence: number }).requestSequence !== sequence ||
         app.sensitiveCaches.generation !== cacheGeneration
       ) {
         return false;
       }
-      this.setData({ errorMessage: this.data.text.offline });
+      this.setData({
+        errorMessage: this.data.text[readErrorTranslationKey(error)],
+        gross: "—",
+        net: "—",
+        refunds: "—",
+        days: [],
+        sales: [],
+      });
       return false;
     } finally {
       if ((this as unknown as { requestSequence: number }).requestSequence === sequence) {
@@ -301,14 +390,30 @@ Page({
     delete holder.refreshController;
   },
   applyResult(days: readonly DailySalesSummary[], sales: readonly DailySale[], currency: string) {
-    const format = (value: number) => `${currency} ${value.toLocaleString("zh-CN")}`;
+    if (days.length === 0) {
+      this.setData({
+        errorMessage: this.data.text.retryableError,
+        gross: "—",
+        net: "—",
+        refunds: "—",
+        sales: [],
+        days: [],
+      });
+      return;
+    }
+    const format = (value: number) => `${currency} ${formatCatalogNumber(value)}`;
     this.setData({
-      days,
+      days: days.map((day) => ({
+        ...day,
+        grossText: formatCatalogNumber(day.gross_sales_clp),
+        netText: formatCatalogNumber(day.net_revenue_clp),
+        refundsText: formatCatalogNumber(day.refunds_clp),
+      })),
       gross: format(total(days, "gross_sales_clp")),
       net: format(total(days, "net_revenue_clp")),
       refunds: format(total(days, "refunds_clp")),
       saleCount: days.reduce((sum, day) => sum + day.sale_count, 0),
-      sales,
+      sales: sales.map((sale) => ({ ...sale, netText: formatCatalogNumber(sale.net_amount_clp) })),
       timeZone: app.activeShop?.time_zone ?? "",
     });
   },
@@ -317,40 +422,61 @@ Page({
     const last = this.data.sales[this.data.sales.length - 1];
     if (!shop || !last || !app.salesClient || app.sessionStore.load() === null) return;
     const cacheGeneration = app.sensitiveCaches.generation;
-    const next = await app.salesClient.salesPage(shop.shop_id, {
-      beforeAt: last.occurred_at,
-      beforeId: last.pos_sale_id,
-      from: this.data.from,
-      ...(this.data.kinds[this.data.kindIndex]
-        ? { kind: this.data.kinds[this.data.kindIndex] }
-        : {}),
-      limit: 50,
-      ...(this.data.paymentMethods[this.data.paymentIndex]
-        ? { paymentMethod: this.data.paymentMethods[this.data.paymentIndex] }
-        : {}),
-      ...(this.data.saleNumber ? { saleNumber: this.data.saleNumber } : {}),
-      ...(this.data.staffOptions[this.data.staffIndex]?.id
-        ? { staffId: this.data.staffOptions[this.data.staffIndex]?.id ?? "" }
-        : {}),
-      ...(this.data.statuses[this.data.statusIndex]
-        ? { status: this.data.statuses[this.data.statusIndex] }
-        : {}),
-      ...(this.data.deviceOptions[this.data.deviceIndex]?.id
-        ? { deviceId: this.data.deviceOptions[this.data.deviceIndex]?.id ?? "" }
-        : {}),
-      to: this.data.to,
-    });
-    if (
-      app.sensitiveCaches.generation !== cacheGeneration ||
-      app.sessionStore.load() === null ||
-      app.activeShop?.shop_id !== shop.shop_id
-    ) {
-      return;
+    const sequence = (this as unknown as { requestSequence?: number }).requestSequence;
+    if (this.data.loading) return;
+    this.setData({ loading: true });
+    try {
+      const next = await app.salesClient.salesPage(shop.shop_id, {
+        beforeAt: last.occurred_at,
+        beforeId: last.pos_sale_id,
+        from: this.data.from,
+        ...(this.data.kinds[this.data.kindIndex]
+          ? { kind: this.data.kinds[this.data.kindIndex] }
+          : {}),
+        limit: 50,
+        ...(this.data.paymentMethods[this.data.paymentIndex]
+          ? { paymentMethod: this.data.paymentMethods[this.data.paymentIndex] }
+          : {}),
+        ...(this.data.saleNumber ? { saleNumber: this.data.saleNumber } : {}),
+        ...(this.data.staffOptions[this.data.staffIndex]?.id
+          ? { staffId: this.data.staffOptions[this.data.staffIndex]?.id ?? "" }
+          : {}),
+        ...(this.data.statuses[this.data.statusIndex]
+          ? { status: this.data.statuses[this.data.statusIndex] }
+          : {}),
+        ...(this.data.deviceOptions[this.data.deviceIndex]?.id
+          ? { deviceId: this.data.deviceOptions[this.data.deviceIndex]?.id ?? "" }
+          : {}),
+        to: this.data.to,
+      });
+      if (
+        app.sensitiveCaches.generation !== cacheGeneration ||
+        app.sessionStore.load() === null ||
+        app.activeShop?.shop_id !== shop.shop_id
+      ) {
+        return;
+      }
+      if ((this as unknown as { requestSequence?: number }).requestSequence !== sequence) return;
+      const ids = new Set(this.data.sales.map((sale) => sale.pos_sale_id));
+      this.setData({
+        sales: [
+          ...this.data.sales,
+          ...next
+            .filter((sale) => !ids.has(sale.pos_sale_id))
+            .map((sale) => ({ ...sale, netText: formatCatalogNumber(sale.net_amount_clp) })),
+        ],
+      });
+    } catch (error) {
+      if (
+        app.activeShop?.shop_id === shop.shop_id &&
+        app.sensitiveCaches.generation === cacheGeneration &&
+        (this as unknown as { requestSequence?: number }).requestSequence === sequence
+      )
+        this.setData({ errorMessage: this.data.text[readErrorTranslationKey(error)] });
+    } finally {
+      if ((this as unknown as { requestSequence?: number }).requestSequence === sequence)
+        this.setData({ loading: false });
     }
-    const ids = new Set(this.data.sales.map((sale) => sale.pos_sale_id));
-    this.setData({
-      sales: [...this.data.sales, ...next.filter((sale) => !ids.has(sale.pos_sale_id))],
-    });
   },
   openDetail(event: WechatMiniprogram.BaseEvent) {
     wx.navigateTo({

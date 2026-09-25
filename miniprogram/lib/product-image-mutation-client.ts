@@ -332,7 +332,11 @@ export class ProductImageMutationClient {
     });
   }
 
-  selectAndReplace(shopId: string, productId: string): Promise<ProductImageMutationResult> {
+  selectAndReplace(
+    shopId: string,
+    productId: string,
+    source: "camera" | "album" = "camera",
+  ): Promise<ProductImageMutationResult> {
     const validatedShopId = assertUuid(shopId);
     const validatedProductId = assertUuid(productId);
     const session = this.#sessionSnapshot();
@@ -340,11 +344,13 @@ export class ProductImageMutationClient {
     const active = this.#replaceInFlight.get(targetKey);
     if (active?.sessionGeneration === session.generation) return active.promise;
     if (active !== undefined) this.#replaceInFlight.delete(targetKey);
-    const request = this.#selectAndReplace(validatedShopId, validatedProductId).finally(() => {
-      if (this.#replaceInFlight.get(targetKey)?.promise === request) {
-        this.#replaceInFlight.delete(targetKey);
-      }
-    });
+    const request = this.#selectAndReplace(validatedShopId, validatedProductId, source).finally(
+      () => {
+        if (this.#replaceInFlight.get(targetKey)?.promise === request) {
+          this.#replaceInFlight.delete(targetKey);
+        }
+      },
+    );
     this.#replaceInFlight.set(targetKey, {
       promise: request,
       sessionGeneration: session.generation,
@@ -355,6 +361,7 @@ export class ProductImageMutationClient {
   async #selectAndReplace(
     validatedShopId: string,
     validatedProductId: string,
+    source: "camera" | "album",
   ): Promise<ProductImageMutationResult> {
     const session = this.#sessionSnapshot();
     const targetKey = `${validatedShopId}:${validatedProductId}`;
@@ -373,7 +380,7 @@ export class ProductImageMutationClient {
       if (attempt !== undefined) this.#retainedIntentAttempts.set(targetKey, attempt);
     }
     if (attempt === undefined) {
-      const prepared = await this.#prepareSelectedImage();
+      const prepared = await this.#prepareSelectedImage(source);
       this.#assertSession(session);
       const identifiers = await createCatalogMutationAttemptIdentifiers(this.#platform);
       this.#assertSession(session);
@@ -778,10 +785,10 @@ export class ProductImageMutationClient {
     );
   }
 
-  async #prepareSelectedImage() {
+  async #prepareSelectedImage(source: "camera" | "album") {
     let selected: Awaited<ReturnType<MiniProgramPlatform["chooseImage"]>>;
     try {
-      selected = await this.#platform.chooseImage();
+      selected = await this.#platform.chooseImage(source);
     } catch (error) {
       if (error instanceof Error && error.message === "image_selection_cancelled") {
         fail("image_operation_cancelled");

@@ -185,7 +185,16 @@ function validatedProductPayload(value: unknown): CatalogProductMutationPayload 
   const purchasePrice = optionalCatalogNumber(value, "purchasePrice");
   const retailPrice = optionalCatalogNumber(value, "retailPrice");
   const secondProductName = optionalString(value, "secondProductName", 240);
-  const stockQuantity = optionalCatalogNumber(value, "stockQuantity");
+  const stockQuantity = value.stockQuantity;
+  if (
+    stockQuantity !== undefined &&
+    stockQuantity !== null &&
+    (typeof stockQuantity !== "number" ||
+      !Number.isFinite(stockQuantity) ||
+      stockQuantity < 0 ||
+      stockQuantity > 1_000_000_000_000)
+  )
+    validationFailure();
   const supplierId = optionalUuid(value, "supplierId");
 
   return {
@@ -461,8 +470,13 @@ function normalizedMutationError(error: unknown): CatalogMutationContractError {
 
 function isAmbiguousMutationError(
   code: CatalogMutationErrorCode,
-): code is "backend_temporary" | "offline" | "retryable_error" {
-  return code === "backend_temporary" || code === "offline" || code === "retryable_error";
+): code is "backend_temporary" | "offline" | "retryable_error" | "rate_limited" {
+  return (
+    code === "backend_temporary" ||
+    code === "offline" ||
+    code === "retryable_error" ||
+    code === "rate_limited"
+  );
 }
 
 export class CatalogMutationAttemptController {
@@ -470,6 +484,12 @@ export class CatalogMutationAttemptController {
   readonly #platform: MiniProgramPlatform;
   readonly #outbox:
     | {
+        submit?(
+          client: CatalogMutationClient,
+          input: CatalogMutationInput,
+          identifiers: CatalogMutationAttemptIdentifiers,
+          generation: number,
+        ): Promise<CatalogMutationResult>;
         enqueue(
           input: CatalogMutationInput,
           identifiers: CatalogMutationAttemptIdentifiers,
@@ -491,6 +511,12 @@ export class CatalogMutationAttemptController {
     client: CatalogMutationClient,
     platform: MiniProgramPlatform,
     outbox?: {
+      submit?(
+        client: CatalogMutationClient,
+        input: CatalogMutationInput,
+        identifiers: CatalogMutationAttemptIdentifiers,
+        generation: number,
+      ): Promise<CatalogMutationResult>;
       enqueue(input: CatalogMutationInput, identifiers: CatalogMutationAttemptIdentifiers): string;
       recordFailure(entryId: string, code: CatalogMutationErrorCode): void;
       recordSending(entryId: string): void;
@@ -502,6 +528,10 @@ export class CatalogMutationAttemptController {
     this.#outbox = outbox;
     this.#onSucceeded = onSucceeded;
     this.#platform = platform;
+  }
+
+  get operationId(): string | null {
+    return this.#outboxEntryId;
   }
 
   get state(): CatalogMutationAttemptState {
@@ -598,14 +628,21 @@ export class CatalogMutationAttemptController {
       correlationId: identifiers.correlationId,
       lifecycle: "submitting",
     };
-    if (this.#outboxEntryId) this.#outbox?.recordSending(this.#outboxEntryId);
-    const mutation = await this.#client.mutate(
-      input,
-      identifiers,
-      this.#sessionGeneration as number,
-    );
+    if (this.#outbox && !this.#outboxEntryId)
+      this.#outboxEntryId = this.#outbox.enqueue(input, identifiers);
+    if (this.#outboxEntryId && !this.#outbox?.submit)
+      this.#outbox?.recordSending(this.#outboxEntryId);
+    const mutation = this.#outbox?.submit
+      ? await this.#outbox.submit(
+          this.#client,
+          input,
+          identifiers,
+          this.#sessionGeneration as number,
+        )
+      : await this.#client.mutate(input, identifiers, this.#sessionGeneration as number);
     this.#assertSession();
-    if (this.#outboxEntryId) this.#outbox?.recordSuccess(this.#outboxEntryId);
+    if (this.#outboxEntryId && !this.#outbox?.submit)
+      this.#outbox?.recordSuccess(this.#outboxEntryId);
     this.#onSucceeded?.(mutation);
     this.#state = {
       correlationId: identifiers.correlationId,
@@ -629,7 +666,7 @@ export class CatalogMutationAttemptController {
       throw new CatalogMutationContractError("session_expired");
     }
     const normalized = normalizedMutationError(error);
-    if (this.#outboxEntryId) {
+    if (this.#outboxEntryId && !this.#outbox?.submit) {
       this.#outbox?.recordFailure(this.#outboxEntryId, normalized.code);
     }
     const identifiers = this.#identifiers;

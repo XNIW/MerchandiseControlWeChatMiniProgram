@@ -6,11 +6,13 @@
     <label class="field"><text>{{text.itemNumber}}</text><input maxlength="120" value="{{itemNumber}}" bindinput="changeItemNumber"/></label>
     <label class="field"><text>{{text.productName}} *</text><input maxlength="240" value="{{productName}}" bindinput="changeProductName"/></label>
     <label class="field"><text>{{text.secondProductName}}</text><input maxlength="240" value="{{secondProductName}}" bindinput="changeSecondProductName"/></label>
+    <view class="field"><input maxlength="80" value="{{categorySearch}}" data-type="category" bindinput="searchRelations" placeholder="{{text.search}}"/><button size="mini" data-type="category" bindtap="findRelations" disabled="{{relationsLoading}}">{{text.search}}</button><button wx:if="{{categoryMore}}" size="mini" data-type="category" bindtap="moreRelations" disabled="{{relationsLoading}}">{{text.loadMore}}</button></view>
     <label class="field"><text>{{text.category}}</text><picker range="{{categoryOptions}}" range-key="label" value="{{categoryIndex}}" bindchange="chooseCategory"><view class="picker-value">{{categoryOptions[categoryIndex].label || text.none}}</view></picker></label>
+    <view class="field"><input maxlength="80" value="{{supplierSearch}}" data-type="supplier" bindinput="searchRelations" placeholder="{{text.search}}"/><button size="mini" data-type="supplier" bindtap="findRelations" disabled="{{relationsLoading}}">{{text.search}}</button><button wx:if="{{supplierMore}}" size="mini" data-type="supplier" bindtap="moreRelations" disabled="{{relationsLoading}}">{{text.loadMore}}</button></view>
     <label class="field"><text>{{text.supplier}}</text><picker range="{{supplierOptions}}" range-key="label" value="{{supplierIndex}}" bindchange="chooseSupplier"><view class="picker-value">{{supplierOptions[supplierIndex].label || text.none}}</view></picker></label>
-    <label class="field"><text>{{text.purchasePrice}} · {{currencyCode}}</text><input type="digit" disabled="{{!canChangePrices}}" value="{{purchasePrice}}" bindinput="changePurchasePrice"/></label>
-    <label class="field"><text>{{text.retailPrice}} · {{currencyCode}}</text><input type="digit" disabled="{{!canChangePrices}}" value="{{retailPrice}}" bindinput="changeRetailPrice"/></label>
-    <label class="field"><text>{{text.stock}}</text><input type="digit" value="{{stockQuantity}}" bindinput="changeStockQuantity"/></label>
+    <label class="field"><text>{{text.purchasePrice}} · {{currencyCode}}</text><input type="text" disabled="{{!canChangePrices}}" value="{{purchasePrice}}" bindinput="changePurchasePrice"/></label>
+    <label class="field"><text>{{text.retailPrice}} · {{currencyCode}}</text><input type="text" disabled="{{!canChangePrices}}" value="{{retailPrice}}" bindinput="changeRetailPrice"/></label>
+    <label class="field"><text>{{text.stock}}</text><input type="text" value="{{stockQuantity}}" bindinput="changeStockQuantity"/></label>
     <button class="primary save" loading="{{saving}}" disabled="{{saving}}" bindtap="save">{{saving ? text.saving : text.save}}</button>
   </view>
   <view wx:if="{{errorMessage && !formReady}}" class="error-card"><button bindtap="retryLoad">{{text.retry}}</button></view>

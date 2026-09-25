@@ -87,7 +87,7 @@ test("product form emits explicit nullable relationships and a single bounded in
   assertEqual(result.payload.barcode, "1234567890123", "barcode identity is trimmed like Android");
   assertEqual(result.payload.supplierId, null, "None explicitly clears supplier");
   assertEqual(result.payload.stockQuantity, null, "empty nullable stock is explicit");
-  assertEqual(result.payload.purchasePrice, 1.125, "initial purchase price retained once");
+  assertEqual(result.payload.purchasePrice, 1125, "initial purchase price retained once");
   assertEqual(result.payload.retailPrice, 2, "initial retail price retained once");
   assertEqual(mutationErrorTranslationKey("stale_version"), "conflictMessage", "CAS conflict copy");
   assertEqual(mutationErrorTranslationKey("offline"), "offline", "offline form copy");
@@ -105,13 +105,13 @@ test("product form emits explicit nullable relationships and a single bounded in
   assertEqual(createPlan.stages[0]?.kind, "create", "initial prices remain in product_create");
 });
 
-test("product form uses the canonical price ceiling", () => {
+test("product form uses the whole CLP price ceiling", () => {
   const maximum = validateProductForm({
     barcode: "MAX-PRICE",
     categoryId: "",
     itemNumber: "",
     productName: "Maximum",
-    purchasePrice: "999999999999.999",
+    purchasePrice: "999.999.999.999",
     retailPrice: "",
     secondProductName: "",
     stockQuantity: "",

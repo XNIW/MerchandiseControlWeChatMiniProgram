@@ -1,6 +1,7 @@
 import type { MerchandiseControlApp } from "../../app";
 import { runtimeConfig } from "../../config/runtime-config";
 import { AdaptiveRefreshController } from "../../lib/adaptive-refresh";
+import { formatCatalogNumber } from "../../lib/catalog-numbers";
 import { AuthContractError, type AuthorizedShop } from "../../lib/contracts";
 import { HomeSalesReader } from "../../lib/home-sales-reader";
 import { translationsFor } from "../../locales/index";
@@ -30,7 +31,7 @@ function runtime(page: unknown): HomeRuntime {
 }
 
 function money(currency: string, value: number): string {
-  return `${currency} ${value.toLocaleString("zh-CN")}`;
+  return `${currency} ${formatCatalogNumber(value)}`;
 }
 
 Page({

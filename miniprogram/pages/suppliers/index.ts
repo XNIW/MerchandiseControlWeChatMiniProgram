@@ -2,12 +2,15 @@ import type { MerchandiseControlApp } from "../../app";
 import type { Supplier } from "../../lib/contracts";
 import { type MiniSyncNotification, miniSyncEntityIds } from "../../lib/sync-coordinator";
 import { translationsFor } from "../../locales/index";
-import { hasCatalogCapability } from "../catalog-management";
+import { hasCatalogCapability, readErrorTranslationKey } from "../catalog-management";
 
 const app = getApp<MerchandiseControlApp>();
 
 interface SupplierRuntime {
   sequence?: number;
+  pendingRefresh?: boolean;
+  context?: string;
+  appliedSearch?: string;
   unsubscribeSync: (() => boolean) | undefined;
 }
 
@@ -21,6 +24,7 @@ Page({
     errorMessage: "",
     items: [] as readonly Supplier[],
     loading: true,
+    hasMore: true,
     search: "",
     text: translationsFor(app.locale),
   },
@@ -35,13 +39,14 @@ Page({
     runtime(this).unsubscribeSync = app.syncCoordinator?.subscribe((notification) =>
       this.applySync(notification),
     );
-    void this.load();
+    void this.load(false, true);
   },
   onHide() {
     runtime(this).unsubscribeSync?.();
     runtime(this).unsubscribeSync = undefined;
   },
   onUnload() {
+    runtime(this).sequence = (runtime(this).sequence ?? 0) + 1;
     runtime(this).unsubscribeSync?.();
     runtime(this).unsubscribeSync = undefined;
   },
@@ -51,7 +56,8 @@ Page({
       (notification.kind === "reconcile" ||
         miniSyncEntityIds(notification, "supplier_ids", 1).length > 0)
     ) {
-      await this.load();
+      if (this.data.loading) runtime(this).pendingRefresh = true;
+      else await this.load(false, true);
     }
   },
   search(event: WechatMiniprogram.Input) {
@@ -60,31 +66,85 @@ Page({
     if (holder.timer !== undefined) clearTimeout(holder.timer);
     holder.timer = setTimeout(() => void this.load(), 350);
   },
-  async load() {
+  async load(append = false, preserveWindow = false) {
+    if (append && (this.data.loading || !this.data.hasMore)) return;
     const shop = app.activeShop;
     if (!shop || !app.salesClient) return;
+    const context = `${app.sessionStore.generation}:${shop.shop_id}`;
+    if (runtime(this).context !== context) {
+      runtime(this).context = context;
+      preserveWindow = false;
+      append = false;
+      this.setData({ items: [], search: "" });
+    }
+    const search = preserveWindow
+      ? (runtime(this).appliedSearch ?? this.data.search)
+      : this.data.search;
+    if (append && search !== runtime(this).appliedSearch) append = false;
+    const windowSize = preserveWindow ? this.data.items.length : 0;
     const sequence = (runtime(this).sequence ?? 0) + 1;
     runtime(this).sequence = sequence;
     const sessionGeneration = app.sessionStore.generation;
     const cacheGeneration = app.sensitiveCaches.generation;
     this.setData({ loading: true });
     try {
-      const items = await app.salesClient.suppliers(shop.shop_id, this.data.search || undefined);
+      const last = append ? this.data.items[this.data.items.length - 1] : undefined;
+      let page = await app.salesClient.suppliers(
+        shop.shop_id,
+        search || undefined,
+        last ? { afterName: last.supplier_name, afterId: last.supplier_id } : {},
+      );
+      const refreshed = [...page];
+      while (preserveWindow && refreshed.length < windowSize && page.length === 100) {
+        if (
+          runtime(this).sequence !== sequence ||
+          app.sessionStore.generation !== sessionGeneration ||
+          app.activeShop?.shop_id !== shop.shop_id
+        )
+          return;
+        const cursor = page[page.length - 1];
+        if (!cursor) break;
+        page = await app.salesClient.suppliers(shop.shop_id, search || undefined, {
+          afterName: cursor.supplier_name,
+          afterId: cursor.supplier_id,
+        });
+        refreshed.push(...page);
+      }
+      const items = append
+        ? [
+            ...this.data.items,
+            ...page.filter((p) => !this.data.items.some((i) => i.supplier_id === p.supplier_id)),
+          ]
+        : refreshed;
       if (
         runtime(this).sequence === sequence &&
         app.sessionStore.generation === sessionGeneration &&
         app.sensitiveCaches.generation === cacheGeneration &&
         app.activeShop?.shop_id === shop.shop_id
       ) {
-        this.setData({ errorMessage: "", items });
+        runtime(this).appliedSearch = search;
+        this.setData({ errorMessage: "", items, hasMore: page.length === 100 });
       }
-    } catch {
-      if (runtime(this).sequence === sequence) {
-        this.setData({ errorMessage: this.data.text.offline });
+    } catch (error) {
+      if (
+        runtime(this).sequence === sequence &&
+        app.sessionStore.generation === sessionGeneration &&
+        app.activeShop?.shop_id === shop.shop_id
+      ) {
+        this.setData({ errorMessage: this.data.text[readErrorTranslationKey(error)] });
       }
     } finally {
-      if (runtime(this).sequence === sequence) this.setData({ loading: false });
+      if (runtime(this).sequence === sequence) {
+        this.setData({ loading: false });
+        if (runtime(this).pendingRefresh) {
+          runtime(this).pendingRefresh = false;
+          void this.load(false, true);
+        }
+      }
     }
+  },
+  loadMore() {
+    void this.load(true);
   },
   create() {
     if (!this.data.canManage) return;

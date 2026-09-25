@@ -291,3 +291,87 @@ test("expired authentication pauses durable work until the same account explicit
   await outbox.flush(client, SHOP_ID);
   assertEqual(outbox.pendingForCurrentShop(SHOP_ID).length, 0, "resumed queue applies once");
 });
+
+test("F04 corrupt journal is preserved and cannot be overwritten", () => {
+  const platform = new FakePlatform();
+  const sessions = new SessionStore(platform, () => 1_000);
+  saveSession(sessions, FINGERPRINT_A, TOKEN_A);
+  const box = new DurableCatalogOutbox(platform, sessions);
+  box.enqueue(updateInput(), IDS[0]);
+  const key = `mc.catalogOutbox.v2.${FINGERPRINT_A}.${SHOP_ID}`;
+  const corrupted = String(platform.storage.get(key)).slice(0, -1);
+  platform.storage.set(key, corrupted);
+  let rejected = false;
+  try {
+    box.enqueue(categoryInput(), IDS[1]);
+  } catch {
+    rejected = true;
+  }
+  assertEqual(rejected, true, "corrupt journal rejects writes");
+  assertEqual(platform.storage.get(key), corrupted, "original bytes retained");
+});
+
+test("F04 separate shop flushes cannot consume the other shop wakeup", async () => {
+  const platform = new FakePlatform();
+  const sessions = new SessionStore(platform, () => 1_000);
+  saveSession(sessions, FINGERPRINT_A, TOKEN_A);
+  const box = new DurableCatalogOutbox(platform, sessions);
+  const shopB = "10000000-0000-4000-8000-000000000005";
+  box.enqueue(updateInput(), IDS[0]);
+  box.enqueue({ ...categoryInput(), shopId: shopB }, IDS[1]);
+  const client = new CatalogMutationClient(new HttpClient(ORIGIN, platform), sessions);
+  platform.queuedResponses.push(new Error("offline"), new Error("offline"));
+  await Promise.all([box.flush(client, SHOP_ID), box.flush(client, shopB)]);
+  assertEqual(platform.requests.length, 2, "both shop drains attempted");
+});
+
+test("F05 complete base and both prices survive restart, response loss and revision chaining", async () => {
+  const platform = new FakePlatform();
+  const sessions = new SessionStore(platform, () => 1000);
+  saveSession(sessions, FINGERPRINT_A, TOKEN_A);
+  let now = 10000;
+  const box = new DurableCatalogOutbox(platform, sessions, () => now);
+  const price = (priceType: "PURCHASE" | "RETAIL", price: number): CatalogMutationInput => ({
+    operation: "product_price_update",
+    shopId: SHOP_ID,
+    targetId: PRODUCT_ID,
+    expectedUpdatedAt: "2026-08-13T10:00:00Z",
+    payload: { priceType, price },
+  });
+  box.enqueueSequence(
+    [updateInput(), price("PURCHASE", 1234), price("RETAIL", 47100)],
+    IDS.slice(0, 3),
+  );
+  assertEqual(box.pendingForCurrentShop(SHOP_ID).length, 3, "entire intention durable before send");
+  const client = new CatalogMutationClient(new HttpClient(ORIGIN, platform), sessions);
+  platform.queuedResponses.push(
+    success(PRODUCT_ID, IDS[0].correlationId, "2026-08-13T10:01:00Z"),
+    new Error("lost_response"),
+  );
+  await box.flush(client, SHOP_ID);
+  assertEqual(box.pendingForCurrentShop(SHOP_ID).length, 2, "unapplied intention retained");
+  const purchaseRequest = platform.requests[1];
+  now = 30000;
+  const restarted = new DurableCatalogOutbox(platform, sessions, () => now);
+  platform.queuedResponses.push(
+    success(PRODUCT_ID, IDS[1].correlationId, "2026-08-13T10:02:00Z"),
+    success(PRODUCT_ID, IDS[2].correlationId, "2026-08-13T10:03:00Z"),
+  );
+  await restarted.flush(client, SHOP_ID);
+  assertEqual(
+    JSON.stringify(platform.requests[2]?.data),
+    JSON.stringify(purchaseRequest?.data),
+    "ambiguous body immutable",
+  );
+  assertEqual(
+    platform.requests[2]?.headers?.["Idempotency-Key"],
+    purchaseRequest?.headers?.["Idempotency-Key"],
+    "same key after restart",
+  );
+  assertEqual(
+    (platform.requests[3]?.data as { expectedUpdatedAt: string } | undefined)?.expectedUpdatedAt,
+    "2026-08-13T10:02:00Z",
+    "next price uses prior receipt revision",
+  );
+  assertEqual(restarted.pendingForCurrentShop(SHOP_ID).length, 0, "both price phases converge");
+});

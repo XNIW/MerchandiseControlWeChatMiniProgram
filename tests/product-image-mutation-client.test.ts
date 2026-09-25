@@ -921,6 +921,7 @@ test("WeChat adapter uses the exact bounded official image and raw PUT options",
   try {
     const platform = createWeChatPlatform();
     await platform.chooseImage();
+    await platform.chooseImage("album");
     await platform.compressImage({
       compressedHeight: 1200,
       compressedWidth: 1600,
@@ -947,7 +948,12 @@ test("WeChat adapter uses the exact bounded official image and raw PUT options",
   assertEqual(choose?.count, 1, "one image");
   assertEqual(JSON.stringify(choose?.mediaType), '["image"]', "image-only picker");
   assertEqual(JSON.stringify(choose?.sizeType), '["original"]', "original source preflight");
-  assertEqual(JSON.stringify(choose?.sourceType), '["album","camera"]', "album and camera sources");
+  assertEqual(JSON.stringify(choose?.sourceType), '["camera"]', "camera primary action");
+  assertEqual(
+    JSON.stringify(calls.filter((call) => call.api === "chooseMedia")[1]?.sourceType),
+    '["album"]',
+    "separate album action",
+  );
   const compression = calls.find((call) => call.api === "compressImage");
   assertEqual(compression?.compressedWidth, 1600, "official resize width");
   assertEqual(compression?.quality, 82, "official percentage quality");

@@ -48,11 +48,12 @@ export interface PlatformFileInfo {
 }
 
 export interface MiniProgramPlatform {
-  chooseImage(): Promise<PlatformSelectedImage>;
+  chooseImage(source?: "camera" | "album"): Promise<PlatformSelectedImage>;
   compressImage(request: PlatformImageCompression): Promise<string>;
   getFileInfo(filePath: string): Promise<PlatformFileInfo>;
   getImageInfo(filePath: string): Promise<PlatformImageInfo>;
   getStorage(key: string): unknown;
+  getStorageKeys?(): readonly string[];
   login(timeoutMilliseconds: number): Promise<string>;
   randomBytes(length: number): Promise<Uint8Array>;
   readFile(filePath: string): Promise<ArrayBuffer>;
@@ -65,7 +66,7 @@ export interface MiniProgramPlatform {
 
 export function createWeChatPlatform(): MiniProgramPlatform {
   return {
-    chooseImage: () =>
+    chooseImage: (source = "camera") =>
       new Promise((resolve, reject) => {
         wx.chooseMedia({
           count: 1,
@@ -79,7 +80,7 @@ export function createWeChatPlatform(): MiniProgramPlatform {
             ),
           mediaType: ["image"],
           sizeType: ["original"],
-          sourceType: ["album", "camera"],
+          sourceType: [source],
           success: (result) => {
             const file = result.tempFiles[0];
             if (file?.fileType !== "image") {
@@ -131,6 +132,7 @@ export function createWeChatPlatform(): MiniProgramPlatform {
         });
       }),
     getStorage: (key) => wx.getStorageSync(key),
+    getStorageKeys: () => wx.getStorageInfoSync().keys,
     login: (timeoutMilliseconds) =>
       new Promise((resolve, reject) => {
         wx.login({
@@ -175,7 +177,10 @@ export function createWeChatPlatform(): MiniProgramPlatform {
             : {
                 data: request.data as ArrayBuffer | string | WechatMiniprogram.IAnyObject,
               }),
-          fail: () => reject(new Error("request_failed")),
+          fail: (result) =>
+            reject(
+              new Error(/timeout/i.test(result.errMsg) ? "request_timeout" : "request_failed"),
+            ),
           ...(request.headers === undefined
             ? {}
             : { header: request.headers as WechatMiniprogram.IAnyObject }),

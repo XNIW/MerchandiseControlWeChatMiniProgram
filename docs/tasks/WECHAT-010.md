@@ -1,5 +1,11 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
+> Stato operativo corrente2026-09-25: [report canonico](../testing/WECHAT-010-REPORT.md), matrice locale/DevTools/telefono separata. Il resto delle note datate precedenti è storico. Mandato TEST14settembre valido; rotazione NOT_PERFORMED/ACCEPTED_FOR_TEST_ONLY. Integrazione funzionale OFF in corso; nessun DONE/live implicito.
+
+## 2026-09-25 — Functional completion in EXECUTION
+
+The current user mandate continues WECHAT-010. Root is the sole writer in the isolated functional-completion worktree; two read-only reviewers cover the exact delta. Scope: F01–F07, bounded business-path fixes and authentic TEST activation if material input is available. Current evidence will be consolidated in docs/testing/WECHAT-010-REPORT.md. Historical entries below are not current live acceptance. Flags remain OFF until each authorized activation gate is evidenced.
+
 ## 2026-09-14 — Current TEST credential explicitly authorized
 
 The user's latest mandate supersedes the former rotation-before-testing rule only

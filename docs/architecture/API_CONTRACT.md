@@ -1,16 +1,29 @@
 # Admin gateway consumer contract
 
-Contract version: `supabase-custom-oidc-bridge-v1`. Owner: Admin Web.
+## 2026-09-25 compatible functional read delta
 
-## Authentication
+Mini numbers are canonical JSON numbers, never localized strings. New CLP edits use whole integers; quantity edits use comma decimals (max3) and dotted grouping. Existing canonical fractional prices/stock remain unchanged if untouched; Admin precision is not reduced.
 
-`POST /api/auth/wechat/challenge` accepts `surface=mini_program`, `mode=login`, and a random installation UUID. It returns server-generated one-time state/nonce, a correlation UUID, and a 60–600 second TTL. `wx.login` then obtains a temporary code. `POST /api/auth/wechat/exchange` sends that code and the exact challenge fields. The Admin boundary alone performs code2Session/bridge exchange and the official Supabase custom OIDC ID-token grant.
+Categories/suppliers keep limit≤100 and keyset `after_name` + `after_id`. Optional `id` requests the exact active relation inside the authorized `shop_id`; the response remains the same array DTO. Current product association ID/name is retained outside loaded pages.
 
-The client never receives OpenID, UnionID, AppSecret, `session_key`, bridge credentials, signing keys, or service role. It rejects any handoff whose provider is not exactly `custom:wechat`. Its access bearer is memory-only and bounded; the returned refresh token is not persisted. Durable refresh remains intentionally unimplemented until a reviewed server rotation contract exists.
+Catalog History accepts `from_date` / `to_date` calendar dates, converted by the server using the shop's catalog timezone. `to_date` includes the full day through next local midnight minus1µs. Existing instant parameters remain compatible; mixing dates/instants, impossible dates, reversed/ranges>366days are rejected. Mini uses calendar dates. Read denial JSON is mapped to typed errors for missing membership, shop suspension, permission denial; own valid session resolution distinguishes account suspension without disclosing it to an invalid token/device.
+
+Product Save persists the entire ordered plan before dispatch and chains each expected revision from the prior actual receipt. This is recoverable orchestration, not atomic visibility across separate operations. Retry identity/payload are immutable; explicit discard cancels all remaining phases. Completion requires the last-phase receipt, never merely an empty journal.
+
+
+Contract version: `wechat-mini-code2session-v1`. Owner: Admin Web.
+
+## Current authentication
+
+The Mini uses the direct Tencent code2Session protocol through the Admin boundary. Personal enrollment binds an independently verified Admin identity to two authentic Mini proofs and personal consents; it never creates a canonical identity from a client-authored identifier. Enrollment and business login have separate gates. A distinct business login exchanges a fresh `wx.login` proof for a short opaque Mini session.
+
+The server alone receives AppSecret and `session_key`. The client receives neither a general Supabase bearer nor a refresh token. Its opaque session stays in memory and is bound server-side to the canonical personal profile, installation, expiry and authentication generation. Server resolution and each shop-scoped call recheck authorization. OneID is not a dependency of this protocol.
+
+The former `supabase-custom-oidc-bridge-v1` Mini flow is historical (WECHAT-001); its provider handoff and refresh-token descriptions do not apply to the current direct Mini contract. Other product surfaces retain their own authentication contracts.
 
 ## Read-only sales
 
-All reads send the supported Supabase bearer to Admin gateway routes:
+All reads send the opaque Mini session to fixed Admin gateway routes:
 
 - `GET /api/mini-program/v1/shops`
 - `GET /api/mini-program/v1/sales/summary?shop_id=&date=`
@@ -19,7 +32,7 @@ All reads send the supported Supabase bearer to Admin gateway routes:
 - `GET /api/mini-program/v1/sales/range?shop_id=&from=&to=`
 - `GET /api/mini-program/v1/sales/filters?shop_id=&from=&to=`
 
-The client supplies `shop_id`, but never treats it as authorization. The RPC verifies `auth.uid()`, active profile, active shop, active membership, and a personal read role on every call. Pages are keyset-paginated with maximum 100 rows and ranges are bounded to 365 days. Staff/device fields and filters require owner/manager membership. “Net revenue” is ledger revenue, not a bank or cash balance.
+The client supplies `shop_id`, but never treats it as authorization. The service-only wrapper derives the actor from the resolved Mini session and verifies active profile, active shop, active membership, and a personal read role on every call. Pages are keyset-paginated with maximum 100 rows and ranges are bounded to 365 days. Staff/device fields and filters require owner/manager membership. “Net revenue” is ledger revenue, not a bank or cash balance.
 
 ## Catalog, history and account
 
@@ -32,15 +45,15 @@ The client supplies `shop_id`, but never treats it as authorization. The RPC ver
 - `GET /api/mini-program/v1/history`
 - `POST /api/mini-program/v1/product-images/read-urls`
 
-Catalog/entity pages are limited to 100 and use stable keyset cursors. The image resolver accepts at most 16 version references, checks bearer/profile/shop/membership/permission server-side, and returns short-lived signed variants from the existing private bucket. Catalog RPCs expose version identifiers, never raw Storage paths.
+Catalog/entity pages are limited to 100 and use stable keyset cursors. The image resolver accepts at most 16 version references, checks opaque session/profile/shop/membership/permission server-side, and returns short-lived signed variants from the existing private bucket. Catalog RPCs expose version identifiers, never raw Storage paths.
 
 Errors are sanitized typed codes. `membership_missing`, suspended/revoked session, cross-shop denial, identity conflict, malformed/replayed state, and provider confusion fail closed.
 
 ## Controlled catalog mutations (WECHAT-003)
 
-`POST /api/mini-program/v1/catalog/mutations` is the only supported Mini catalog-mutation adapter. It accepts a closed operation union, a bounded typed payload, the real `updated_at` concurrency token for every non-create operation, and UUID `Idempotency-Key`/`X-Correlation-ID` headers. The Admin boundary verifies the bearer with its isolated publishable Auth client, derives the canonical personal profile server-side, and invokes the service-role-only `wechat_catalog_mutate_v1` orchestration RPC without forwarding the caller bearer to that RPC. The Mini Program never intentionally calls Supabase mutation sinks directly.
+`POST /api/mini-program/v1/catalog/mutations` is the only supported Mini catalog-mutation adapter. It accepts a closed operation union, a bounded typed payload, the real `updated_at` concurrency token for every non-create operation, and UUID `Idempotency-Key`/`X-Correlation-ID` headers. The Admin boundary resolves the opaque session, derives the canonical personal profile server-side, and invokes only the service-role catalog wrapper and `wechat_catalog_mutate_v1` orchestration RPC. No caller bearer is forwarded to a database mutation sink. The Mini Program never intentionally calls Supabase mutation sinks directly.
 
-This is not yet a globally enforced sole-write property: an ordinary WeChat Supabase bearer can still reach legacy/table same-shop catalog write sinks outside this controlled lane, bypassing its feature flag and policy envelope. All Mini catalog-write flags therefore remain OFF until the Admin/Supabase owners coordinate RLS, grants or scoped-token claims so those alternate sinks are unreachable to the WeChat bearer.
+Historical WECHAT-003 review identified a bypass through general Supabase bearers. WECHAT-004 replaced the Mini bearer with an opaque session and fixed service-only wrappers; that historical finding is not the current activation gate. Flags remain OFF until the applicable external activation and authentic validation steps pass.
 
 Supported families are product create/update/archive/restore/current-price update, category create/update/archive/restore with transactional replacement, and supplier equivalents. Product relation changes travel through product update. Same key plus same canonical request replays the stored result; the same key with a different request is a conflict. Viewer, platform-admin-without-membership, inactive profile/shop/member, stale revision and cross-shop targets fail closed.
 
