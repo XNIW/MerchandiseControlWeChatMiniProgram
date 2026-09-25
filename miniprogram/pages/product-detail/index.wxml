@@ -1,8 +1,15 @@
 <view class="page">
   <text wx:if="{{loading}}" class="muted">{{text.loading}}</text>
   <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
+  <button wx:if="{{imagePermissionDenied}}" open-type="openSetting">{{text.openPermissions}}</button>
+  <view wx:if="{{imagePreviewUrl}}" class="image-preview">
+    <text class="section-title">{{text.imagePreview}}</text>
+    <image class="hero-image" src="{{imagePreviewUrl}}" mode="aspectFit"/>
+    <image class="preview-thumb" src="{{imagePreviewThumb}}" mode="aspectFit"/>
+    <view class="action-row"><button bindtap="cancelImagePreview">{{text.cancel}}</button><button class="primary" bindtap="confirmImagePreview">{{text.useImage}}</button></view>
+  </view>
   <view wx:if="{{!loading && product}}">
-    <image wx:if="{{imageUrl}}" class="hero-image" src="{{imageUrl}}" mode="aspectFit" lazy-load/>
+    <image wx:if="{{imageUrl}}" class="hero-image" src="{{imageUrl}}" mode="aspectFit" lazy-load data-version="{{product.primary_image_version_id}}" data-url="{{imageUrl}}" binderror="imageFailed"/>
     <view wx:else class="hero-placeholder">{{text.imageUnavailable}}</view>
     <view wx:if="{{canManageImages}}" class="action-row">
       <button size="mini" loading="{{imageBusy}}" disabled="{{imageBusy}}" data-source="camera" bindtap="replaceImage">{{text.camera}}</button>

@@ -2,6 +2,8 @@
 
 2026-09-25. Fonte di stato: [report canonico](testing/WECHAT-010-REPORT.md). Il confronto nativo e le classificazioni precedenti sono [storici](testing/archive/PARITY_MATRIX-before-20260925.md). I contratti Admin sono canonici; Android/iOS non sono stati modificati né certificati live in questa esecuzione.
 
+Il report canonico contiene inoltre la matrice sintetica completa A–G e le prove nuove sui sei residui immagini. Stato D: anteprima/permessi,50miniature, rinnovo limitato e replay incerto VERIFIED_LOCAL; autenticazione, comportamento nativo e telefono NOT_RUN.
+
 Legenda: VERIFIED_LOCAL = regressione automatica locale, mai live; IMPLEMENTED_UNVERIFIED = codice raggiungibile ma prova reale mancante; EXTERNAL_ACTION_REQUIRED = dipendenza materiale/personale; OUT_OF_SCOPE = esclusione esplicita. DevTools e telefono indicati separatamente. Endpoint relativi alla base Admin `/api/mini-program/v1`, salvo auth/image.
 
 | Requisito | Schermata / azione | Client → endpoint/RPC | Permesso | Stato / test | DevTools | Telefono | Residuo |

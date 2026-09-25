@@ -17,6 +17,9 @@ app.sensitiveCaches.register(imageCache, ["catalog", "prices"]);
 
 interface DatabaseRuntime {
   sequence?: number;
+  mounted?: boolean;
+  imageEpoch?: number;
+  imageRetries?: Set<string>;
   unsubscribeSync: (() => boolean) | undefined;
 }
 
@@ -63,6 +66,7 @@ Page({
     void this.refresh(true).finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
+    pageRuntime(this).mounted = true;
     const text = translationsFor(app.locale);
     this.setData({
       canCreate: hasCatalogCapability(app.activeShop, "can_write_products"),
@@ -83,6 +87,9 @@ Page({
     pageRuntime(this).unsubscribeSync = undefined;
   },
   onUnload() {
+    pageRuntime(this).mounted = false;
+    pageRuntime(this).sequence = (pageRuntime(this).sequence ?? 0) + 1;
+    pageRuntime(this).imageEpoch = (pageRuntime(this).imageEpoch ?? 0) + 1;
     pageRuntime(this).unsubscribeSync?.();
     pageRuntime(this).unsubscribeSync = undefined;
   },
@@ -135,6 +142,10 @@ Page({
     return shop;
   },
   async refresh(reset: boolean, preserveWindow = false) {
+    if (reset) {
+      pageRuntime(this).imageRetries = new Set();
+      pageRuntime(this).imageEpoch = (pageRuntime(this).imageEpoch ?? 0) + 1;
+    }
     const sequence = (pageRuntime(this).sequence ?? 0) + 1;
     pageRuntime(this).sequence = sequence;
     const shop = await this.ensureShop();
@@ -199,6 +210,7 @@ Page({
         thumbnail_url: cachedThumbnail(shop.shop_id, product),
       }));
       const missing = rows.filter((item) => item.primary_image_version_id && !item.thumbnail_url);
+      const visibleUrls = new Map<string, string>();
       for (let offset = 0; app.imageClient && offset < missing.length; offset += 16) {
         const batch = missing.slice(offset, offset + 16);
         let imageResult: ProductImageReadResult;
@@ -218,6 +230,12 @@ Page({
             ),
           );
         } catch {
+          if (
+            pageRuntime(this).sequence !== sequence ||
+            app.sensitiveCaches.generation !== cacheGeneration ||
+            app.activeShop?.shop_id !== shop.shop_id
+          )
+            return;
           this.setData({ errorMessage: this.data.text.imageManagementUnavailable });
           break;
         }
@@ -230,12 +248,17 @@ Page({
           return;
         }
         for (const image of imageResult.items) {
-          if (image.status === "ready") imageCache.set(shop.shop_id, image);
+          if (image.status === "ready") {
+            imageCache.set(shop.shop_id, image);
+            visibleUrls.set(`${image.productId}:${image.versionId}`, image.signedUrl);
+          }
         }
       }
       const hydrated = rows.map((item) => ({
         ...item,
-        thumbnail_url: cachedThumbnail(shop.shop_id, item),
+        thumbnail_url:
+          visibleUrls.get(`${item.product_id}:${item.primary_image_version_id}`) ??
+          item.thumbnail_url,
       }));
       if (
         pageRuntime(this).sequence !== sequence ||
@@ -264,6 +287,58 @@ Page({
       if (pageRuntime(this).sequence === sequence) {
         this.setData({ loading: false });
       }
+    }
+  },
+  async imageFailed(event: WechatMiniprogram.BaseEvent) {
+    const { id, version, url } = event.currentTarget.dataset;
+    const row = this.data.products.find(
+      (item) =>
+        item.product_id === id &&
+        item.primary_image_version_id === version &&
+        item.thumbnail_url === url,
+    );
+    const shop = app.activeShop;
+    if (!row || !shop || !app.imageClient || app.sessionStore.load() === null) return;
+    const holder = pageRuntime(this),
+      imageEpoch = holder.imageEpoch,
+      generation = app.sessionStore.generation,
+      cacheGeneration = app.sensitiveCaches.generation;
+    holder.imageRetries ??= new Set();
+    const retries = holder.imageRetries;
+    const key = `${generation}:${shop.shop_id}:${id}:${version}`;
+    this.setData({
+      products: this.data.products.map((item) =>
+        item === row ? { ...item, thumbnail_url: null } : item,
+      ),
+    });
+    if (retries.has(key)) return;
+    retries.add(key);
+    try {
+      const result = await app.imageClient.readUrls(shop.shop_id, [
+        { productId: row.product_id, versionId: version, variant: "thumb" },
+      ]);
+      if (
+        holder.mounted === false ||
+        holder.imageEpoch !== imageEpoch ||
+        app.sessionStore.generation !== generation ||
+        app.sensitiveCaches.generation !== cacheGeneration ||
+        app.activeShop?.shop_id !== shop.shop_id
+      )
+        return;
+      const image = result.items.find(
+        (item) => item.productId === id && item.versionId === version && item.variant === "thumb",
+      );
+      if (image?.status !== "ready") return;
+      imageCache.set(shop.shop_id, image);
+      this.setData({
+        products: this.data.products.map((item) =>
+          item.product_id === id && item.primary_image_version_id === version
+            ? { ...item, thumbnail_url: image.signedUrl }
+            : item,
+        ),
+      });
+    } catch {
+      // Keep the placeholder after one bounded renewal; refresh/onShow allows retry.
     }
   },
   loadMore() {

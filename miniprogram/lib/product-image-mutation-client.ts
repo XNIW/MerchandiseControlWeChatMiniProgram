@@ -30,6 +30,7 @@ export type ProductImageMutationErrorCode =
   | "backend_contract_invalid"
   | "image_invalid"
   | "image_operation_cancelled"
+  | "image_permission_denied"
   | "image_output_budget_exceeded"
   | "image_too_large"
   | "image_upload_failed"
@@ -50,6 +51,11 @@ export class ProductImageMutationError extends Error {
 export interface ProductImageMutationClientOrigins {
   readonly adminBaseUrl: string;
   readonly supabaseStorageBaseUrl: string;
+}
+
+export interface ProductImagePreview {
+  readonly mainPath: string;
+  readonly thumbPath: string;
 }
 
 export interface ProductImageMetadata {
@@ -336,6 +342,7 @@ export class ProductImageMutationClient {
     shopId: string,
     productId: string,
     source: "camera" | "album" = "camera",
+    confirmPrepared?: (preview: ProductImagePreview) => Promise<boolean>,
   ): Promise<ProductImageMutationResult> {
     const validatedShopId = assertUuid(shopId);
     const validatedProductId = assertUuid(productId);
@@ -344,13 +351,16 @@ export class ProductImageMutationClient {
     const active = this.#replaceInFlight.get(targetKey);
     if (active?.sessionGeneration === session.generation) return active.promise;
     if (active !== undefined) this.#replaceInFlight.delete(targetKey);
-    const request = this.#selectAndReplace(validatedShopId, validatedProductId, source).finally(
-      () => {
-        if (this.#replaceInFlight.get(targetKey)?.promise === request) {
-          this.#replaceInFlight.delete(targetKey);
-        }
-      },
-    );
+    const request = this.#selectAndReplace(
+      validatedShopId,
+      validatedProductId,
+      source,
+      confirmPrepared,
+    ).finally(() => {
+      if (this.#replaceInFlight.get(targetKey)?.promise === request) {
+        this.#replaceInFlight.delete(targetKey);
+      }
+    });
     this.#replaceInFlight.set(targetKey, {
       promise: request,
       sessionGeneration: session.generation,
@@ -362,6 +372,7 @@ export class ProductImageMutationClient {
     validatedShopId: string,
     validatedProductId: string,
     source: "camera" | "album",
+    confirmPrepared?: (preview: ProductImagePreview) => Promise<boolean>,
   ): Promise<ProductImageMutationResult> {
     const session = this.#sessionSnapshot();
     const targetKey = `${validatedShopId}:${validatedProductId}`;
@@ -381,6 +392,15 @@ export class ProductImageMutationClient {
     }
     if (attempt === undefined) {
       const prepared = await this.#prepareSelectedImage(source);
+      this.#assertSession(session);
+      if (
+        confirmPrepared &&
+        !(await confirmPrepared({
+          mainPath: prepared.main.filePath,
+          thumbPath: prepared.thumb.filePath,
+        }))
+      )
+        fail("image_operation_cancelled");
       this.#assertSession(session);
       const identifiers = await createCatalogMutationAttemptIdentifiers(this.#platform);
       this.#assertSession(session);
@@ -419,8 +439,10 @@ export class ProductImageMutationClient {
         return { status: "noop", versionId: intent.versionId };
       }
 
-      await this.#upload(intent.mainUploadUrl, attempt.main.bytes, session);
-      await this.#upload(intent.thumbUploadUrl, attempt.thumb.bytes, session);
+      if (intent.mainUploadUrl !== null)
+        await this.#upload(intent.mainUploadUrl, attempt.main.bytes, session);
+      if (intent.thumbUploadUrl !== null)
+        await this.#upload(intent.thumbUploadUrl, attempt.thumb.bytes, session);
       const result = await this.#finalize(
         validatedShopId,
         validatedProductId,
@@ -432,8 +454,20 @@ export class ProductImageMutationClient {
     } catch (error) {
       const retryable =
         (error instanceof CatalogMutationContractError &&
-          ["backend_temporary", "offline", "retryable_error"].includes(error.code)) ||
-        (error instanceof ProductImageMutationError && error.code === "image_upload_failed");
+          [
+            "backend_temporary",
+            "offline",
+            "retryable_error",
+            "rate_limited",
+            "session_expired",
+          ].includes(error.code)) ||
+        (error instanceof ProductImageMutationError &&
+          [
+            "image_upload_failed",
+            "session_expired",
+            "backend_contract_invalid",
+            "signed_url_invalid",
+          ].includes(error.code));
       if (!retryable) {
         await this.#deleteRetainedAttempt(targetKey, validatedShopId, validatedProductId, attempt);
       }
@@ -793,6 +827,8 @@ export class ProductImageMutationClient {
       if (error instanceof Error && error.message === "image_selection_cancelled") {
         fail("image_operation_cancelled");
       }
+      if (error instanceof Error && error.message === "image_permission_denied")
+        fail("image_permission_denied");
       fail("image_invalid");
     }
     if (
@@ -955,29 +991,35 @@ export class ProductImageMutationClient {
     }
     assertCacheScope(value.cacheScope);
     return {
-      mainUploadUrl: validatedSignedUrl(
-        value.mainUploadUrl,
-        this.#trustedOrigins,
-        expectedStoragePath({
-          operation: "upload/sign",
-          productId,
-          shopId,
-          variant: "main",
-          versionId,
-        }),
-      ),
+      mainUploadUrl:
+        value.mainUploadUrl === null
+          ? null
+          : validatedSignedUrl(
+              value.mainUploadUrl,
+              this.#trustedOrigins,
+              expectedStoragePath({
+                operation: "upload/sign",
+                productId,
+                shopId,
+                variant: "main",
+                versionId,
+              }),
+            ),
       status: "upload_required" as const,
-      thumbUploadUrl: validatedSignedUrl(
-        value.thumbUploadUrl,
-        this.#trustedOrigins,
-        expectedStoragePath({
-          operation: "upload/sign",
-          productId,
-          shopId,
-          variant: "thumb",
-          versionId,
-        }),
-      ),
+      thumbUploadUrl:
+        value.thumbUploadUrl === null
+          ? null
+          : validatedSignedUrl(
+              value.thumbUploadUrl,
+              this.#trustedOrigins,
+              expectedStoragePath({
+                operation: "upload/sign",
+                productId,
+                shopId,
+                variant: "thumb",
+                versionId,
+              }),
+            ),
       versionId,
     };
   }

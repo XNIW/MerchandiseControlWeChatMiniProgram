@@ -122,7 +122,10 @@ function prepareSecondSessionJpeg(platform: FakePlatform): void {
   platform.fileBytes.set(thumbPath, jpegBytes(12));
 }
 
-function intentUploadResponse(mainUrl = uploadUrl("main"), thumbUrl = uploadUrl("thumb")) {
+function intentUploadResponse(
+  mainUrl: string | null = uploadUrl("main"),
+  thumbUrl: string | null = uploadUrl("thumb"),
+) {
   return {
     data: {
       cacheScope: CACHE_SCOPE,
@@ -136,6 +139,185 @@ function intentUploadResponse(mainUrl = uploadUrl("main"), thumbUrl = uploadUrl(
     statusCode: 201,
   };
 }
+
+test("prepared preview cancellation sends no intent and saves no durable files", async () => {
+  const platform = new FakePlatform();
+  prepareJpeg(platform);
+  const { client } = activeClient(platform);
+  await expectReject(
+    () =>
+      client.selectAndReplace(SHOP_ID, PRODUCT_ID, "camera", async (preview) => {
+        assertEqual(preview.mainPath, MAIN_PATH, "preview uses encoded main");
+        assertEqual(preview.thumbPath, THUMB_PATH, "preview uses encoded thumbnail");
+        return false;
+      }),
+    (error) => isProductImageMutationError(error, "image_operation_cancelled"),
+  );
+  assertEqual(platform.requests.length, 0, "no remote intent before confirmation");
+  assertEqual(platform.savedFileCount, 0, "no durable image after cancellation");
+});
+
+test("preview confirmation cannot send after session replacement", async () => {
+  const platform = new FakePlatform();
+  prepareJpeg(platform);
+  const { client, sessions } = activeClient(platform);
+  await expectReject(
+    () =>
+      client.selectAndReplace(SHOP_ID, PRODUCT_ID, "album", async () => {
+        saveSession(sessions, SECOND_ACCESS_TOKEN);
+        return true;
+      }),
+    (error) => isProductImageMutationError(error, "session_expired"),
+  );
+  assertEqual(platform.requests.length, 0, "no request from obsolete preview");
+});
+
+test("partial upload recovery after restart skips server-verified immutable main", async () => {
+  const platform = new FakePlatform();
+  prepareJpeg(platform);
+  const { client } = activeClient(platform);
+  platform.queuedResponses.push(
+    intentUploadResponse(),
+    { data: "", statusCode: 200 },
+    new Error("offline"),
+    new Error("offline"),
+  );
+  await expectReject(
+    () => client.selectAndReplace(SHOP_ID, PRODUCT_ID),
+    (error) => isProductImageMutationError(error, "image_upload_failed"),
+  );
+  const first = platform.requests[0];
+  const restarted = activeClient(platform).client;
+  platform.queuedResponses.push(
+    intentUploadResponse(null),
+    { data: "", statusCode: 200 },
+    finalizeResponse(),
+  );
+  assertEqual(
+    (await restarted.selectAndReplace(SHOP_ID, PRODUCT_ID)).status,
+    "finalized",
+    "resumed finalize",
+  );
+  assertEqual(
+    platform.requests.filter((r) => r.url === uploadUrl("main")).length,
+    1,
+    "main never overwritten",
+  );
+  const intents = platform.requests.filter((r) => r.url.endsWith("/intent"));
+  assertEqual(
+    intents[1]?.headers?.["Idempotency-Key"],
+    first?.headers?.["Idempotency-Key"],
+    "same durable key",
+  );
+  assertEqual(platform.chooseImageCalls, 1, "same prepared image");
+});
+
+test("committed uploads with lost replies reconcile without another PUT", async () => {
+  const platform = new FakePlatform();
+  prepareJpeg(platform);
+  const { client } = activeClient(platform);
+  platform.queuedResponses.push(intentUploadResponse(), new Error("lost main reply"), {
+    data: { message: "AssetAlreadyExists" },
+    statusCode: 400,
+  });
+  await expectReject(
+    () => client.selectAndReplace(SHOP_ID, PRODUCT_ID),
+    (error) => isProductImageMutationError(error, "image_upload_failed"),
+  );
+  const puts = platform.requests.filter((r) => r.method === "PUT").length;
+  platform.queuedResponses.push(intentUploadResponse(null, null), finalizeResponse());
+  assertEqual(
+    (await activeClient(platform).client.selectAndReplace(SHOP_ID, PRODUCT_ID)).status,
+    "finalized",
+    "verified server replay finalizes",
+  );
+  assertEqual(
+    platform.requests.filter((r) => r.method === "PUT").length,
+    puts,
+    "no PUT for verified objects",
+  );
+});
+
+test("lost finalize response survives restart and completes through current-version noop", async () => {
+  const platform = new FakePlatform();
+  prepareJpeg(platform);
+  const { client } = activeClient(platform);
+  platform.queuedResponses.push(
+    intentUploadResponse(),
+    { data: "", statusCode: 200 },
+    { data: "", statusCode: 200 },
+    new Error("lost finalize reply"),
+  );
+  await expectReject(
+    () => client.selectAndReplace(SHOP_ID, PRODUCT_ID),
+    (error) => error instanceof CatalogMutationContractError && error.code === "offline",
+  );
+  platform.queuedResponses.push({
+    statusCode: 200,
+    data: { ok: true, cacheScope: CACHE_SCOPE, status: "noop", versionId: VERSION_ID },
+  });
+  assertEqual(
+    (await activeClient(platform).client.selectAndReplace(SHOP_ID, PRODUCT_ID)).status,
+    "noop",
+    "already current image reconciled",
+  );
+  assertEqual(
+    platform.requests.filter((r) => r.url.endsWith("/finalize")).length,
+    1,
+    "no extra publication",
+  );
+  assertEqual(platform.removedSavedFiles.length, 2, "confirmed success cleans own files");
+});
+
+test("rate limit keeps durable image identity for the next exact retry", async () => {
+  const platform = new FakePlatform();
+  prepareJpeg(platform);
+  const { client } = activeClient(platform);
+  platform.queuedResponses.push({ statusCode: 429, data: { ok: false, code: "rate_limited" } });
+  await expectReject(
+    () => client.selectAndReplace(SHOP_ID, PRODUCT_ID),
+    (error) => error instanceof CatalogMutationContractError && error.code === "rate_limited",
+  );
+  assert(client.hasDurableAttempt("f".repeat(64), SHOP_ID), "rate limited attempt retained");
+});
+test("server revalidation timeout keeps durable image identity for the next exact retry", async () => {
+  const platform = new FakePlatform();
+  prepareJpeg(platform);
+  const { client } = activeClient(platform);
+  platform.queuedResponses.push({
+    statusCode: 503,
+    data: { ok: false, code: "backend_unavailable" },
+  });
+  await expectReject(
+    () => client.selectAndReplace(SHOP_ID, PRODUCT_ID),
+    (error) => error instanceof CatalogMutationContractError && error.code === "backend_temporary",
+  );
+  assert(
+    client.hasDurableAttempt("f".repeat(64), SHOP_ID),
+    "uncertain revalidation attempt retained",
+  );
+});
+test("camera permission denial remains distinct from cancellation and upload failure", async () => {
+  const globals = globalThis as unknown as { wx?: unknown };
+  const old = globals.wx;
+  globals.wx = {
+    chooseMedia: (options: { fail: (error: { errMsg: string }) => void }) =>
+      options.fail({ errMsg: "chooseMedia:fail auth deny" }),
+  };
+  try {
+    const platform = new FakePlatform();
+    platform.chooseImage = createWeChatPlatform().chooseImage;
+    const { client } = activeClient(platform);
+    await expectReject(
+      () => client.selectAndReplace(SHOP_ID, PRODUCT_ID),
+      (error) => isProductImageMutationError(error, "image_permission_denied"),
+    );
+    assertEqual(platform.requests.length, 0, "no server write after permission denial");
+  } finally {
+    if (old === undefined) delete globals.wx;
+    else globals.wx = old;
+  }
+});
 
 function finalizeResponse(versionId = VERSION_ID) {
   return {

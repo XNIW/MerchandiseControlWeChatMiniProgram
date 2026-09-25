@@ -97,3 +97,7 @@ timestamps, attempts/backoff, dependencies and state. They contain no bearer,
 provider code, secret, session key or signed URL. Image records persist only a
 bounded official local file path plus hash/metadata and request a fresh intent at
 flush time.
+
+### WECHAT-010 image replay (Mini only)
+
+On an exact intent replay, each signed upload URL may be exactly `null` only when the server has downloaded and verified that immutable variant against the retained request metadata (JPEG, dimensions, bytes and SHA256). The client skips that PUT and still calls canonical finalize. Non-null URLs retain origin/path/version validation and never permit upsert. Ready replay is `noop` only while the same active product still references the version. Removed, superseded, archived or expired pending versions cannot be resurrected. A revalidation infrastructure error is retryable503 with no URLs; explicit denial is403. Local preview confirmation precedes intent allocation and durable storage; retry reuses previously confirmed bytes/key.
