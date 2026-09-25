@@ -145,3 +145,4 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 
 | 2026-09-25T18:44:00Z | WECHAT-010 | Prosecuzione residui: sei difetti immagini riprodotti/corretti, ulteriori rilievi review lifecycle/revalidation risolti | 149Mini,1030Admin,41pgTAP, concorrenza locale PASS; AppSecret assente, business/telefono NOT_RUN; REVIEW |
 | 2026-09-25T18:53:00Z | WECHAT-010 | PR20/109 integrate dopo CI; delta selettivo distribuito,144registry esatto,12HTTP OFF PASS | Worker6343d39c; AppSecret assente, Mac bloccato; runtime/telefono NOT_RUN; nessun DONE |
+| 2026-09-25T19:03:05.409Z | WECHAT-010 | Mac tornato accessibile: nuovo smoke DevTools UI/SDK OFF5/5 PASS | Buildf956680/app08cb400,0nuove eccezioni, no session/shop; primo errore SDKrawPath risolto attendendo pagina; businessNOT_RUN |
