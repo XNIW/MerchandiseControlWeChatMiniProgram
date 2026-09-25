@@ -46,7 +46,11 @@ test("sales API sends bounded shop-scoped requests", async () => {
 
   assertEqual((await api.authorizedShops()).length, 0, "empty authorized shop fixture");
   assertEqual(await api.dailySummary(shopId), null, "empty summary fixture");
-  assertEqual((await api.dailySalesPage(shopId, { limit: 50 })).length, 0, "empty sales fixture");
+  assertEqual(
+    (await api.dailySalesPage(shopId, { limit: 50, date: "2026-09-25" })).length,
+    0,
+    "empty sales fixture",
+  );
   const salesRequest = platform.requests[2];
   assert(salesRequest?.url.includes(`shop_id=${shopId}`), "shop id must be explicit");
   assert(salesRequest?.url.includes("limit=50"), "page must remain bounded");

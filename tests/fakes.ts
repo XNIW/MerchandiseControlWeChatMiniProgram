@@ -51,6 +51,10 @@ export class FakePlatform implements MiniProgramPlatform {
     return info;
   }
 
+  getStorageKeys(): readonly string[] {
+    return [...this.storage.keys()];
+  }
+
   getStorage(key: string): unknown {
     return this.storage.get(key);
   }

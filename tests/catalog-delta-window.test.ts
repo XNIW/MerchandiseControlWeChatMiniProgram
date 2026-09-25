@@ -98,7 +98,9 @@ test("catalog delta reloads all visible keyset pages, independent of event ID co
       );
       assertEqual(
         JSON.stringify(page.data.products),
-        JSON.stringify(source.map((p) => ({ ...p, thumbnail_url: null }))),
+        JSON.stringify(
+          source.map((p) => ({ ...p, price_text: String(p.retail_price), thumbnail_url: null })),
+        ),
         "canonical order preserved",
       );
     }

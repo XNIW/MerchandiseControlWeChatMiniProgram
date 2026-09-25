@@ -21,6 +21,9 @@ export function utf8ByteLength(value: string): number {
 const requestIdentifierPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const knownErrors = new Set<AuthErrorCode>([
+  "timeout",
+  "permission_denied",
+  "shop_suspended",
   "account_suspended",
   "backend_temporary",
   "code_expired",
@@ -153,8 +156,14 @@ export class HttpClient {
         timeoutMilliseconds: 8_000,
         url,
       });
-    } catch {
-      throw this.#requestError(options.errorDomain, "offline");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "";
+      throw this.#requestError(
+        options.errorDomain,
+        options.errorDomain !== "catalog_mutation" && /timeout/i.test(message)
+          ? "timeout"
+          : "offline",
+      );
     }
     let responseSize: number;
     try {
@@ -184,10 +193,10 @@ export class HttpClient {
 
   #requestError(
     errorDomain: HttpPostOptions["errorDomain"],
-    code: "backend_temporary" | "offline",
+    code: "backend_temporary" | "offline" | "timeout",
   ): AuthContractError | CatalogMutationContractError {
     return errorDomain === "catalog_mutation"
-      ? new CatalogMutationContractError(code)
+      ? new CatalogMutationContractError(code === "timeout" ? "backend_temporary" : code)
       : new AuthContractError(code);
   }
 

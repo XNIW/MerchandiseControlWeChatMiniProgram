@@ -1,3 +1,4 @@
+import { parseCatalogNumber, parseUnchangedCatalogNumber } from "../lib/catalog-numbers";
 import type {
   AuthorizedShop,
   CatalogMutationErrorCode,
@@ -71,15 +72,8 @@ export function isCatalogRevisionConflict(code: CatalogMutationErrorCode): boole
   return code === "conflict" || code === "stale_version";
 }
 
-function optionalCatalogNumber(value: string): number | undefined | null {
-  if (value.length === 0) return undefined;
-  if (!/^(?:0|[1-9]\d*)(?:\.\d{1,3})?$/.test(value)) return null;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed <= 999_999_999_999.999 ? parsed : null;
-}
-
 export function parseRequiredCatalogNumber(value: string): number | null {
-  const parsed = optionalCatalogNumber(value);
+  const parsed = parseCatalogNumber(value, "price");
   return parsed === undefined ? null : parsed;
 }
 
@@ -130,7 +124,14 @@ export function planRelationArchive(
   };
 }
 
-export function validateProductForm(values: ProductFormValues): ProductFormValidation {
+export function validateProductForm(
+  values: ProductFormValues,
+  original: {
+    purchasePrice?: number | null;
+    retailPrice?: number | null;
+    stockQuantity?: number | null;
+  } = {},
+): ProductFormValidation {
   if (
     values.barcode.length === 0 ||
     values.barcode.length > 96 ||
@@ -143,9 +144,21 @@ export function validateProductForm(values: ProductFormValues): ProductFormValid
   ) {
     return { errorKey: "requiredFields", ok: false };
   }
-  const purchasePrice = optionalCatalogNumber(values.purchasePrice);
-  const retailPrice = optionalCatalogNumber(values.retailPrice);
-  const stockQuantity = optionalCatalogNumber(values.stockQuantity);
+  const purchasePrice = parseUnchangedCatalogNumber(
+    values.purchasePrice,
+    "price",
+    original.purchasePrice,
+  );
+  const retailPrice = parseUnchangedCatalogNumber(
+    values.retailPrice,
+    "price",
+    original.retailPrice,
+  );
+  const stockQuantity = parseUnchangedCatalogNumber(
+    values.stockQuantity,
+    "quantity",
+    original.stockQuantity,
+  );
   if (purchasePrice === null || retailPrice === null || stockQuantity === null) {
     return { errorKey: "invalidNumber", ok: false };
   }
@@ -206,4 +219,25 @@ export function mutationErrorTranslationKey(code: CatalogMutationErrorCode): Tra
     case "validation_failed":
       return "error";
   }
+}
+
+export function readErrorTranslationKey(error: unknown): TranslationKey {
+  const code = error && typeof error === "object" && "code" in error ? error.code : undefined;
+  if (code === "timeout") return "requestTimeout";
+  if (code === "rate_limited") return "rateLimited";
+  if (
+    typeof code === "string" &&
+    [
+      "offline",
+      "session_expired",
+      "unauthenticated",
+      "membership_missing",
+      "shop_suspended",
+      "profile_suspended",
+      "account_suspended",
+      "permission_denied",
+    ].includes(code)
+  )
+    return mutationErrorTranslationKey(code as CatalogMutationErrorCode);
+  return "retryableError";
 }

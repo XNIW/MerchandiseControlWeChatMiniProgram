@@ -11,6 +11,7 @@ import {
 import type { AuthorizedShop } from "./lib/contracts";
 import { DurableCatalogOutbox } from "./lib/durable-catalog-outbox";
 import { HttpClient } from "./lib/http-client";
+import { OutboxDrain } from "./lib/outbox-drain";
 import { createWeChatPlatform } from "./lib/platform";
 import { ProductImageMutationClient } from "./lib/product-image-mutation-client";
 import { SalesApiClient } from "./lib/sales-api-client";
@@ -68,6 +69,22 @@ const imageClient =
       })
     : null;
 
+const drain = catalogClient
+  ? new OutboxDrain(
+      outbox,
+      catalogClient,
+      sessionStore,
+      {
+        schedule: (callback, delay) => setTimeout(callback, delay),
+        clear: (timer) => clearTimeout(timer),
+      },
+      (shopId) => {
+        sensitiveCaches.invalidate();
+        void syncCoordinator?.syncNow(shopId);
+      },
+    )
+  : null;
+
 App<MerchandiseControlApp>({
   activeShop: null,
   authClient: http
@@ -81,6 +98,7 @@ App<MerchandiseControlApp>({
     this.clearShopContext();
   },
   clearShopContext() {
+    drain?.stop();
     this.syncCoordinator?.stop();
     this.activeShop = null;
     this.pendingCatalogFilter = null;
@@ -109,9 +127,18 @@ App<MerchandiseControlApp>({
     const session = this.sessionStore.load();
     const shopId = this.activeShop?.shop_id;
     if (session && shopId) {
-      const hasPending =
-        this.outbox.pendingForCurrentShop(shopId).length > 0 ||
-        this.imageClient?.hasDurableAttempt(session.accountFingerprint, shopId) === true;
+      let scopes: readonly string[] = [shopId];
+      let hasPending = true;
+      try {
+        scopes = [...new Set([shopId, ...this.outbox.scopesForCurrentAccount()])];
+        hasPending = scopes.some(
+          (id) =>
+            this.outbox.pendingForCurrentShop(id).length > 0 ||
+            this.imageClient?.hasDurableAttempt(session.accountFingerprint, id) === true,
+        );
+      } catch {
+        /* A corrupt journal is retained and must never prevent logout. */
+      }
       if (hasPending) {
         const text = translationsFor(this.locale);
         const retain = await new Promise<boolean>((resolve) => {
@@ -126,42 +153,37 @@ App<MerchandiseControlApp>({
           });
         });
         if (!retain) {
-          this.outbox.discard(session.accountFingerprint, shopId);
-          await this.imageClient?.discardDurableAttempts(session.accountFingerprint, shopId);
+          for (const scope of scopes) {
+            try {
+              this.outbox.discard(session.accountFingerprint, scope);
+              await this.imageClient?.discardDurableAttempts(session.accountFingerprint, scope);
+            } catch {
+              wx.showToast({ icon: "none", title: text.retainPending });
+            }
+          }
         }
       }
     }
     this.clearSessionContext();
   },
   onLaunch() {
+    wx.onNetworkStatusChange(({ isConnected }) => drain?.networkChanged(isConnected));
+    wx.getNetworkType({
+      success: ({ networkType }) => drain?.networkChanged(networkType !== "none"),
+    });
     applyTabLocale(this.locale);
     if (sessionStore.load() === null) this.clearShopContext();
   },
   onShow() {
     appVisible = true;
-    const shopId = this.activeShop?.shop_id;
-    const generation = this.sessionStore.generation;
-    if (this.catalogClient && this.activeShop) {
-      void this.outbox
-        .flush(this.catalogClient, this.activeShop.shop_id)
-        .then((results) => {
-          if (
-            results.length > 0 &&
-            appVisible &&
-            shopId &&
-            this.activeShop?.shop_id === shopId &&
-            this.sessionStore.generation === generation
-          ) {
-            return this.syncCoordinator?.syncNow(shopId);
-          }
-          return undefined;
-        })
-        .catch(() => undefined);
+    if (this.activeShop) {
+      drain?.start(this.activeShop.shop_id);
       this.syncCoordinator?.start(this.activeShop.shop_id);
     }
   },
   onHide() {
     appVisible = false;
+    drain?.stop();
     this.syncCoordinator?.stop();
   },
   outbox,
@@ -173,24 +195,12 @@ App<MerchandiseControlApp>({
     }
     this.activeShop = shop;
     platform.setStorage("mc.activeShopId", shop.shop_id);
-    this.outbox.resumeAuthRequired(shop.shop_id);
-    const generation = this.sessionStore.generation;
-    if (this.catalogClient) {
-      void this.outbox
-        .flush(this.catalogClient, shop.shop_id)
-        .then((results) => {
-          if (
-            results.length > 0 &&
-            appVisible &&
-            this.activeShop?.shop_id === shop.shop_id &&
-            this.sessionStore.generation === generation
-          ) {
-            return this.syncCoordinator?.syncNow(shop.shop_id);
-          }
-          return undefined;
-        })
-        .catch(() => undefined);
+    try {
+      this.outbox.resumeAuthRequired(shop.shop_id);
+    } catch {
+      /* Preserve damaged journal for explicit recovery. */
     }
+    if (appVisible) drain?.start(shop.shop_id);
     if (appVisible) this.syncCoordinator?.start(shop.shop_id);
   },
   setLocale(locale) {

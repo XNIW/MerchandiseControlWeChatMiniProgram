@@ -3,7 +3,11 @@ import type { CatalogMutationAttemptController } from "../../lib/catalog-mutatio
 import { CatalogMutationContractError, type CatalogMutationInput } from "../../lib/contracts";
 import type { CatalogEntityType, CatalogLifecycleEntity } from "../../lib/sales-api-client";
 import { translationsFor } from "../../locales/index";
-import { hasCatalogCapability, mutationErrorTranslationKey } from "../catalog-management";
+import {
+  hasCatalogCapability,
+  mutationErrorTranslationKey,
+  readErrorTranslationKey,
+} from "../catalog-management";
 
 const app = getApp<MerchandiseControlApp>();
 type LifecycleRow = CatalogLifecycleEntity & { readonly state_label: string };
@@ -16,6 +20,9 @@ interface RestoreAction {
 
 interface LifecycleRuntime {
   restoreAction: RestoreAction | null;
+  mounted: boolean;
+  sequence: number;
+  context?: string;
 }
 
 function runtime(page: unknown): LifecycleRuntime {
@@ -42,11 +49,24 @@ Page({
   onLoad(options: Record<string, string | undefined>) {
     const entityType: CatalogEntityType =
       options.type === "category" || options.type === "supplier" ? options.type : "product";
+    runtime(this).mounted = true;
+    runtime(this).sequence = 0;
     runtime(this).restoreAction = null;
     this.setData({ entityType, text: translationsFor(app.locale) });
     wx.setNavigationBarTitle({ title: this.data.text.archivedEntities });
   },
+  onUnload() {
+    runtime(this).mounted = false;
+    runtime(this).sequence++;
+  },
   onShow() {
+    const context = `${app.sessionStore.generation}:${app.activeShop?.shop_id}`;
+    if (runtime(this).context !== context) {
+      runtime(this).context = context;
+      runtime(this).restoreAction = null;
+      runtime(this).sequence++;
+      this.setData({ items: [], loading: false, restoringId: "" });
+    }
     this.setData({
       canRestore: hasCatalogCapability(app.activeShop, capability(this.data.entityType)),
       text: translationsFor(app.locale),
@@ -59,6 +79,14 @@ Page({
       this.setData({ errorMessage: this.data.text.permissionDenied });
       return;
     }
+    const generation = app.sessionStore.generation,
+      shopId = app.activeShop.shop_id,
+      sequence = ++runtime(this).sequence;
+    const valid = () =>
+      runtime(this).mounted &&
+      runtime(this).sequence === sequence &&
+      generation === app.sessionStore.generation &&
+      shopId === app.activeShop?.shop_id;
     const last = reset ? undefined : this.data.items[this.data.items.length - 1];
     this.setData({ errorMessage: "", loading: true, ...(reset ? { items: [] } : {}) });
     try {
@@ -71,6 +99,7 @@ Page({
           limit: 50,
         },
       );
+      if (!valid()) return;
       const rows = entities.map((item) => ({ ...item, state_label: this.data.text.archived }));
       const existing = new Set(this.data.items.map((item) => item.entity_id));
       this.setData({
@@ -79,10 +108,10 @@ Page({
           ? rows
           : [...this.data.items, ...rows.filter((item) => !existing.has(item.entity_id))],
       });
-    } catch {
-      this.setData({ errorMessage: this.data.text.offline });
+    } catch (error) {
+      if (valid()) this.setData({ errorMessage: this.data.text[readErrorTranslationKey(error)] });
     } finally {
-      this.setData({ loading: false });
+      if (valid()) this.setData({ loading: false });
     }
   },
   loadMore() {
@@ -90,6 +119,12 @@ Page({
   },
   async restore(event: WechatMiniprogram.BaseEvent) {
     if (!this.data.canRestore || this.data.restoringId || !app.activeShop) return;
+    const generation = app.sessionStore.generation,
+      shopId = app.activeShop.shop_id;
+    const valid = () =>
+      runtime(this).mounted &&
+      generation === app.sessionStore.generation &&
+      shopId === app.activeShop?.shop_id;
     const entityId = String(event.currentTarget.dataset.id ?? "");
     const entity = this.data.items.find((item) => item.entity_id === entityId);
     if (!entity) return;
@@ -104,7 +139,7 @@ Page({
         confirmText: this.data.text.restore,
         content: this.data.text.restoreConfirm,
       });
-      if (!confirmation.confirm) return;
+      if (!confirmation.confirm || !valid()) return;
     }
     const operation = `${this.data.entityType}_restore` as
       | "category_restore"
@@ -114,7 +149,7 @@ Page({
       expectedUpdatedAt: entity.updated_at,
       operation,
       payload: { reason: "mini_program_user_action" },
-      shopId: app.activeShop.shop_id,
+      shopId,
       targetId: entityId,
     };
     const attempt = existing?.attempt ?? app.createCatalogMutationAttempt();
@@ -127,10 +162,12 @@ Page({
     try {
       if (attempt.state.lifecycle === "retryable_error") await attempt.retry();
       else await attempt.start(input);
+      if (!valid()) return;
       runtime(this).restoreAction = null;
       app.sensitiveCaches.invalidate();
       this.setData({ items: this.data.items.filter((item) => item.entity_id !== entityId) });
     } catch (error) {
+      if (!valid()) return;
       if (attempt.state.lifecycle !== "retryable_error") runtime(this).restoreAction = null;
       const key =
         error instanceof CatalogMutationContractError
@@ -138,7 +175,7 @@ Page({
           : "retryableError";
       this.setData({ errorMessage: this.data.text[key] });
     } finally {
-      this.setData({ restoringId: "" });
+      if (valid()) this.setData({ restoringId: "" });
     }
   },
 });

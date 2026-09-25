@@ -1,5 +1,7 @@
 # MerchandiseControl WeChat Mini Program
 
+> Stato operativo corrente2026-09-25: [report canonico](docs/testing/WECHAT-010-REPORT.md), matrice locale/DevTools/telefono separata. Il resto delle note datate precedenti è storico. Mandato TEST14settembre valido; rotazione NOT_PERFORMED/ACCEPTED_FOR_TEST_ONLY. Integrazione funzionale OFF in corso; nessun DONE/live implicito.
+
 Status: **FOUNDATION / DEVELOPMENT / NOT PRODUCTION READY**
 
 A native TypeScript WeChat Mini Program companion for MerchandiseControl, intended to provide personal WeChat sign-in, a read-only shop-scoped view of sales/POS data, and controlled catalog management for authorized personal shop members.

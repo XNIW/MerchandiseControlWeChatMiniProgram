@@ -187,8 +187,8 @@ test("history and account pages clear old scope and reject late session/shop/cac
     invoke(historyPage, "onShow");
     assertEqual(
       pageArray<SyncHistoryEntry>(historyPage, "syncItems").length,
-      0,
-      "onShow clears previously rendered shop data",
+      1,
+      "same-scope onShow preserves rendered rows while refreshing",
     );
     historySession.generation += 1;
     historyCaches.generation += 1;

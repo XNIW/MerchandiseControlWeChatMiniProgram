@@ -8,4 +8,4 @@
   <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
   <view wx:if="{{!loading && !errorMessage && items.length === 0}}" class="empty">{{text.empty}}</view>
   <view class="list"><view wx:for="{{items}}" wx:key="category_id" class="row" data-id="{{item.category_id}}" bindtap="openProducts"><view><text class="strong">{{item.category_name}}</text><text class="muted">{{text.productCount}} · {{item.product_count}}</text></view><button wx:if="{{canManage}}" size="mini" data-id="{{item.category_id}}" catchtap="manage">{{text.manage}}</button></view></view>
-</view>
+<button wx:if="{{hasMore}}" loading="{{loading}}" disabled="{{loading}}" bindtap="loadMore">{{text.loadMore}}</button><text wx:else>{{text.endOfList}}</text></view>

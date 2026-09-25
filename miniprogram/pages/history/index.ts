@@ -6,7 +6,7 @@ import type {
   CatalogHistoryOperation,
 } from "../../lib/sales-api-client";
 import { translationsFor } from "../../locales/index";
-import { hasCatalogCapability } from "../catalog-management";
+import { hasCatalogCapability, readErrorTranslationKey } from "../catalog-management";
 
 const app = getApp<MerchandiseControlApp>();
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -45,13 +45,13 @@ function isHistoryRequestCurrent(context: HistoryRequestContext): boolean {
   );
 }
 
-function startOfLocalDay(date: string): string {
-  return new Date(`${date}T00:00:00.000`).toISOString();
-}
-
-function endOfLocalDay(date: string): string {
-  return new Date(`${date}T23:59:59.999`).toISOString();
-}
+let historyRefreshPending = false;
+let historyVisible = false;
+let historyCursor: CatalogHistoryRow | undefined;
+let syncCursor: SyncHistoryEntry | undefined;
+let historyScope = "";
+let appliedFilters = { entityIndex: 0, operationIndex: 0, entityId: "", fromDate: "", toDate: "" };
+let unsubscribeHistory: (() => boolean) | undefined;
 
 Page({
   data: {
@@ -83,13 +83,22 @@ Page({
     void this.load(true).finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
+    historyVisible = true;
+    historyRefreshPending = false;
     historyRequestGeneration += 1;
     const text = translationsFor(app.locale);
+    const scope = `${app.sessionStore.generation}:${app.activeShop?.shop_id ?? ""}`;
+    const retain = historyScope === scope;
+    historyScope = scope;
+    if (!retain) {
+      historyCursor = undefined;
+      syncCursor = undefined;
+    }
     this.setData({
       canReadCatalogHistory: hasCatalogCapability(app.activeShop, "can_read_catalog_history"),
-      catalogItems: [],
-      entityId: "",
-      entityIndex: 0,
+      catalogItems: retain ? this.data.catalogItems : [],
+      entityId: retain ? this.data.entityId : "",
+      entityIndex: retain ? this.data.entityIndex : 0,
       entityOptions: [
         { label: text.all, value: "" },
         { label: text.products, value: "product" },
@@ -110,21 +119,35 @@ Page({
         { label: text.imageRemoved, value: "image_removed" },
       ],
       errorMessage: "",
-      fromDate: "",
-      hasMoreCatalog: false,
-      hasMoreSync: false,
+      fromDate: retain ? this.data.fromDate : "",
+      hasMoreCatalog: retain ? this.data.hasMoreCatalog : false,
+      hasMoreSync: retain ? this.data.hasMoreSync : false,
       loading: false,
-      operationIndex: 0,
-      syncItems: [],
+      operationIndex: retain ? this.data.operationIndex : 0,
+      syncItems: retain ? this.data.syncItems : [],
       text,
-      toDate: "",
+      toDate: retain ? this.data.toDate : "",
     });
     wx.setNavigationBarTitle({ title: text.history });
     if (!app.featureReady) return;
-    void this.load(true);
+    unsubscribeHistory?.();
+    unsubscribeHistory = app.syncCoordinator?.subscribe((notification) => {
+      if (notification.shopId === app.activeShop?.shop_id) {
+        if (this.data.loading) historyRefreshPending = true;
+        else void this.load(true, true);
+      }
+    });
+    void this.load(true, retain);
+  },
+  onHide() {
+    historyVisible = false;
+    historyRefreshPending = false;
+    unsubscribeHistory?.();
+    unsubscribeHistory = undefined;
+    historyRequestGeneration += 1;
   },
   onUnload() {
-    historyRequestGeneration += 1;
+    this.onHide();
   },
   selectCatalog() {
     if (this.data.viewMode === "catalog") return;
@@ -172,7 +195,7 @@ Page({
     });
     void this.load(true);
   },
-  async load(reset: boolean) {
+  async load(reset: boolean, preserve = false) {
     if (!app.featureReady) return;
     const shop = app.activeShop;
     const salesClient = app.salesClient;
@@ -192,15 +215,19 @@ Page({
     this.setData({ errorMessage: "", loading: true });
     try {
       if (context.viewMode === "sync") {
-        const last = reset ? undefined : syncItems[syncItems.length - 1];
+        const last = reset ? undefined : syncCursor;
         const next = await salesClient.syncHistory(shop.shop_id, last?.event_id);
         if (!isHistoryRequestCurrent(context) || this.data.viewMode !== context.viewMode) return;
+        syncCursor = next[next.length - 1];
         const ids = new Set(syncItems.map((item) => item.event_id));
         this.setData({
           hasMoreSync: next.length === 50,
-          syncItems: reset
-            ? next
-            : [...syncItems, ...next.filter((item) => !ids.has(item.event_id))],
+          syncItems: (reset
+            ? preserve
+              ? [...next, ...syncItems.filter((i) => !next.some((n) => n.event_id === i.event_id))]
+              : [...next]
+            : [...syncItems, ...next.filter((item) => !ids.has(item.event_id))]
+          ).sort((a, b) => b.event_id - a.event_id),
         });
         return;
       }
@@ -210,13 +237,22 @@ Page({
         }
         return;
       }
-      const last = reset ? undefined : catalogItems[catalogItems.length - 1];
-      const entityType = this.data.entityOptions[this.data.entityIndex]?.value || undefined;
-      const operation = this.data.operationOptions[this.data.operationIndex]?.value || undefined;
-      const fromAt = this.data.fromDate ? startOfLocalDay(this.data.fromDate) : undefined;
-      const toAt = this.data.toDate ? endOfLocalDay(this.data.toDate) : undefined;
+      const last = reset ? undefined : historyCursor;
+      if (reset && !preserve)
+        appliedFilters = {
+          entityIndex: this.data.entityIndex,
+          operationIndex: this.data.operationIndex,
+          entityId: this.data.entityId,
+          fromDate: this.data.fromDate,
+          toDate: this.data.toDate,
+        };
+      const filters = appliedFilters;
+      const entityType = this.data.entityOptions[filters.entityIndex]?.value || undefined;
+      const operation = this.data.operationOptions[filters.operationIndex]?.value || undefined;
+      const fromAt = filters.fromDate || undefined;
+      const toAt = filters.toDate || undefined;
       if (
-        (this.data.entityId && !uuidPattern.test(this.data.entityId)) ||
+        (filters.entityId && !uuidPattern.test(filters.entityId)) ||
         (fromAt !== undefined &&
           toAt !== undefined &&
           (Date.parse(toAt) < Date.parse(fromAt) ||
@@ -225,17 +261,17 @@ Page({
         if (isHistoryRequestCurrent(context)) this.setData({ errorMessage: text.invalidFilters });
         return;
       }
-      const entityId = this.data.entityId;
+      const entityId = filters.entityId;
       const entityOptions = this.data.entityOptions;
       const operationOptions = this.data.operationOptions;
       const next = await salesClient.catalogHistory(shop.shop_id, {
         ...(last ? { beforeAuditLogId: last.history_id, beforeCreatedAt: last.occurred_at } : {}),
         ...(entityId ? { entityId } : {}),
         ...(entityType ? { entityType } : {}),
-        ...(fromAt ? { fromAt } : {}),
+        ...(fromAt ? { fromDate: fromAt } : {}),
         limit: 50,
         ...(operation ? { operation } : {}),
-        ...(toAt ? { toAt } : {}),
+        ...(toAt ? { toDate: toAt } : {}),
       });
       if (!isHistoryRequestCurrent(context) || this.data.viewMode !== context.viewMode) return;
       const operationLabels = new Map(operationOptions.map((item) => [item.value, item.label]));
@@ -247,20 +283,39 @@ Page({
         result_label: item.result === "success" ? text.success : item.result,
         surface_label: item.surface === "mini_program" ? text.miniProgram : text.imageApi,
       }));
+      historyCursor = rows[rows.length - 1];
       const ids = new Set(catalogItems.map((item) => item.history_id));
       this.setData({
-        catalogItems: reset
-          ? rows
-          : [...catalogItems, ...rows.filter((item) => !ids.has(item.history_id))],
+        catalogItems: (reset
+          ? preserve
+            ? [
+                ...rows,
+                ...catalogItems.filter((i) => !rows.some((r) => r.history_id === i.history_id)),
+              ]
+            : rows
+          : [...catalogItems, ...rows.filter((item) => !ids.has(item.history_id))]
+        ).sort(
+          (a, b) =>
+            b.occurred_at.localeCompare(a.occurred_at) || b.history_id.localeCompare(a.history_id),
+        ),
         hasMoreCatalog: rows.length === 50,
       });
-    } catch {
+    } catch (error) {
       if (isHistoryRequestCurrent(context) && this.data.viewMode === context.viewMode) {
-        this.setData({ errorMessage: text.offline });
+        this.setData({ errorMessage: text[readErrorTranslationKey(error)] });
       }
     } finally {
       if (historyRequestGeneration === context.requestGeneration) {
+        if (
+          app.sessionStore.generation !== context.sessionGeneration ||
+          app.activeShop?.shop_id !== context.shopId
+        )
+          this.setData({ catalogItems: [], syncItems: [] });
         this.setData({ loading: false });
+        if (historyVisible && historyRefreshPending) {
+          historyRefreshPending = false;
+          void this.load(true, true);
+        }
       }
     }
   },
