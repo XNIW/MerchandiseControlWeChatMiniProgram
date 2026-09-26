@@ -1,85 +1,123 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-Stato corrente: **letture autentiche verificate in DevTools; mutazioni catalogo TEST abilitate, prima scrittura in attesa del nuovo login personale dopo scadenza della sessione**. Pairing preservato, enrollment chiuso. Nessun DONE auto-approvato.
+Stato corrente: **pilot TEST parzialmente collaudato:16letture e9casi catalogo
+verificati in DevTools. Fix sync Admin integrato; ritest autentico, immagini,
+offline e convergenza ancora aperti.** Nessun DONE auto-approvato.
 
-## Collaudo business autentico — 2026-09-26
+## Evidenza autentica e runtime — 2026-09-26
 
-Mac sbloccato e build readonly effettivamente caricata: Mini
-`0956e1a3d60748623d622e837fd70d8ece3c2883`, Admin
-`aa455df14b2531426adc421271d44b3ce48a188a`; checkout applicativi puliti.
-DevTools ufficiale2.02.2609232, base library3.17.0, viewport375×639,
-SDK ufficiale0.12.1, urlCheck true. Manifest dist invariato
-`da0b67ff36811b2e305eafe67c104403122fab2c88bd979e0b39c1d034e53bec`.
-Il codice Worker selettivo resta a805d64044dec3b1304f5c52709f886580c48390;
-nessun deploy della main Admin o DDL nuovo. Registry144 confrontato per
-versione/nome/MD5 degli statement con la baseline approvata, zero commerce.
+Pairing personale verificato separatamente dal login Home: Tencent accetta la
+credenziale TEST; mapping, audit e due prove consumate corrispondono al target.
+ROTATION NOT_PERFORMED / ACCEPTED_FOR_TEST_ONLY restano invariati. Pairing
+preservato, enrollment chiuso, nessuna nuova identità o sessione artificiale.
 
-L'utente ha premuto personalmente il login Home distinto dal pairing. Run
-`5086f26a-d829-49a6-bd24-a0348fd8a134`,15:32:02–15:35:40UTC: **11 PASS**,
-status complessivo PARTIAL,0nuove eccezioni. Profilo canonico, mapping e shop
-esatti, prima pagina50prodotti confrontata anche nel rendering, ricerca barcode,
-dettaglio prodotto,3prezzi,50categorie e78fornitori verificati contro SELECT
-indipendenti. Home e riepiloghi dei periodi7/30/mese verificati sono vuoti;
-il periodo30giorni parte dal2026-08-28. I quattro filtri tipo vendita sono
-vuoti nel periodo2026-09-01..2026-09-26.
-La prova login consumata/verificata è stata riscontrata nel backend.
-History non è ancora verificata: richiede gli eventi delle scritture della run.
+Build Mini usata nelle prove `0956e1a3d60748623d622e837fd70d8ece3c2883`,
+Admin applicativo `aa455df14b2531426adc421271d44b3ce48a188a` prima del fix sync.
+DevTools ufficiale2.02.2609232/base3.17.0, SDK0.12.1, viewport375×639,
+urlCheck true. Manifest dist `da0b67ff36811b2e305eafe67c104403122fab2c88bd979e0b39c1d034e53bec`.
+Worker effettivo **beb94e1e-7c26-4d34-ab20-f0b0d0be9315** al100%, codice runtime
+selettivo **a805d64044dec3b1304f5c52709f886580c48390**. Auth Mini e catalog
+mutations ON; enrollment/linking/Web/Android/iOS WeChat OFF. Google nativo è
+un sistema distinto e l'accesso è stato eseguito personalmente dall'utente.
+Allowlist esatte, altri binding e tracing OFF preservati. Nessun deploy main intera.
 
-Estensione storica15:47:20–15:48:44UTC: **5 PASS**,0nuove eccezioni,
-periodo2026-06-07..2026-07-06,12documenti esistenti:8vendite,2rimborsi,2annullamenti.
-Lista, filtri tipo e dettaglio righe della vendita confrontati con le tabelle
-canoniche, senza scritture finanziarie. Un primo tentativo è scaduto attendendo
-il readback indipendente: ricevuta FAIL conservata; la nuova esecuzione PASS
-ha atteso il completamento effettivo del cambio periodo. Il helper storico
-revisionato ha SHA256 `cdd1dd62aea7e77bf0fbf0ecfd71fd8ab18b032b4e9177b96d1b4f3bf672f0c4`.
-Il primo avvio del runner aveva inoltre rilevato lsof fuori PATH, prima del login:
-risolto includendo /usr/sbin, senza indebolire il controllo del listener ufficiale.
+Run letture `5086f26a-d829-49a6-bd24-a0348fd8a134`:11PASS15:32–15:35UTC,
+più5PASS storici15:47–15:48UTC,0eccezioni. Profilo/shop canonici, prima pagina
+50prodotti anche nel rendering, ricerca barcode/dettaglio/3prezzi,50categorie,
+78fornitori e periodi Home/vendite verificati contro SELECT indipendenti.
+Zero vendite correttamente nel periodo2026-09-01..09-26; ultimi30giorni dal08-28.
+Nel periodo2026-06-07..07-06:12documenti esistenti (8vendite,2rimborsi,2annullamenti),
+filtri e dettaglio righe concordi. Nessuna transazione finanziaria creata.
 
-Dopo queste prove e preflight fresco, una sola PATCH revisionata abilita
-WECHAT_MINI_PROGRAM_CATALOG_MUTATIONS_ENABLED. Worker corrente
-**beb94e1e-7c26-4d34-ab20-f0b0d0be9315**: login Mini e mutazioni catalogo ON;
-enrollment, linking, Web, Android e iOS OFF. Etàg sorgente/runtime, altri binding,
-settings, esatti AppID/profilo/shop TEST e tracing OFF preservati e verificati
-con metadati e stato pubblico. Helper attivazione APPROVED SHA256
-`236fe8dc266a7eb1074c41f14109b59b08e8aced09beec60cfb5709af70ea898`;
-riconciliazione readonly APPROVED SHA256
-`d6aa75a0503ebc2b033e9e7546e8327cc746ffc3341faffad7a3cc127a106eca`.
-Nessun nuovo flag client: le capability scrivibili arrivano dal confine server.
+Run scritture `e21c8dd0-acb6-4d8e-8cd1-649307536bf4`,16:02–16:06UTC:
+**9PASS UI+readback** —2categorie,2fornitori, prodotto completo, modifica,
+archiviazione, ripristino e rifiuto barcode duplicato. Acquisto10.000CLP,
+vendita47.100→48.200CLP, quantità1,25; nome/relazioni/prezzi canonici verificati.
+Report complessivo WAITING_PERSONAL_ACTION per timeout della conferma di uscita
+bozza duplicata;9intent VERIFIED,5fixture tracciate,0nuove eccezioni.
+La successiva uscita/discard tramite GUI è osservata, ma non prova la ripresa
+retroattiva del runner. Creazioni non ripetute. Rename/replacement/History non eseguiti.
 
-La sessione è successivamente scaduta: Home mostra Sign in with WeChat e il
-runner mutazioni si ferma con AUTHENTIC_BUSINESS_SESSION_REQUIRED prima di
-qualsiasi intent. Run `e21c8dd0-acb6-4d8e-8cd1-649307536bf4`:0intent,0fixture.
-**Azione esterna, owner utente:** premere personalmente Sign in with WeChat
-nella Home DevTools. Non occorre ripetere pairing o inserimento AppSecret.
-Dopo il gesto: aggiornare i preflight scaduti e riprendere le scritture UI della run,
-con readback indipendente e conferme business autorizzate. Nessun retry di scrittura
-incerta è stato eseguito. Due immagini sintetiche private sono pronte per i picker
-DevTools; non sono prova fotocamera o telefono e non sono state caricate.
+Tentativo immagine16:15UTC: sessione scaduta prima del picker; nessun upload.
+Intent manuale RECONCILED_NO_WRITE, readback prima/dopo identico e nessuna versione
+immagine. Due JPEG sintetici propri pronti per il picker non provano camera fisica.
 
-| Mandato | Evidenza autentica disponibile | Residuo effettivo |
+## Difetto sync corretto e integrazione
+
+Il primo checkpoint Mini restituiva503: il device autentico ha0registrazioni
+shop_devices e il resolver nativo richiedeva una lease attiva del dispositivo nativo in shop_devices. Migrazione Admin
+**20260926164349_wechat_010_mini_session_sync_scope**: reader privati dedicati
+alla sessione Mini, profilo e membership effettivi; mapping, locks, proiezione,
+limiti e snapshot preservati. Funzioni native e loro ACL byte-identici al remoto
+prima della modifica; nessuna lease artificiale o dato business modificato via SQL.
+
+Review indipendente APPROVED, SHA SQL
+`1800620a45edbc5e84c4ac8286d124cbbd664161b37effb26a68c7d514a14ad9`.
+523pgTAP isolati PASS (84pairing,52BFF,22letture,365native), Node22 verify PASS,
+1031foundation PASS/2skip. Restore delle vecchie wrapper riproduce il difetto;
+wrapper-only reapply84PASS. Piano compensazione protetto: ripristinare solo le
+wrapper tramite nuova migrazione, conservare helper privati revocati e registry.
+Nessuna cancellazione di storia o sessioni prevista.
+
+Applicata una volta16:43UTC; timestamp sorgente riconciliato senza cambiare SQL.
+Registry145 con tutte le precedenti144 versioni/nomi/hash invariati; zero commerce.
+Quattro funzioni Mini corrispondono a fingerprint/owner/ACL del DB testato;
+advisor security/performance invariati escludendo timestamp di osservazione.
+[PR114](https://github.com/XNIW/merchandise-control-admin-web/pull/114) head
+`59b680d140fa3dd0b8ab784b409c78a00d659c1f`, review APPROVED e CI/Cloudflare
+36256703510/36256703513 PASS; merge `fe4907adc51ff842720e1c7eb36aa05e0fa53cb8`.
+Release selettiva `22158297` aggiunge solo SQL già applicato; Worker runtime invariato.
+Ritest checkpoint/delta autentico dopo fix **NOT_RUN**, non dedotto dai test SQL.
+
+## Simulatori e blocchi concreti
+
+Android MediumPhone/API35, sorgente ca0a58d8: build riuscita, Google personale,
+progetto TEST e profilo/shop canonici verificati da UI/config e preferenza scoped.
+Shop TASK068E selezionato. Catalogo ancora vuoto; bootstrap osservato skipped
+prima che business_scope raggiungesse READY, nessuna prova successiva di convergenza.
+
+iPhone15ProMax/iOS26.1, sorgente c55e3a93: Google personale e stesso scope
+verificati. iPhone17/iOS26.5 aveva fallito l'avvio; usato simulatore esistente.
+Vecchio banner di recupero proveniva da stato luglio, non da una nuova richiesta.
+Retry GUI16:36UTC eseguito: errore fresco keyNotFound(catalog). Decoder nativo
+richiede catalog prima di leggere status; il contratto server omette catalog nei
+risultati resource_exceeded/invalid_baseline. Readback16:47UTC:16storie attive
+compresse su178 nello scope verificato, condizione che attiva il gate nativo
+compressed_legacy_history_requires_remediation. Nessun payload storico esposto.
+Dati ordinari e sorgenti nativi invariati; niente reset, import o remediation arbitraria.
+Correzione decoder/remediation nativa richiede un mandato distinto per quelle superfici.
+
+**BLOCKED_EXTERNAL, owner utente:** il Mac risulta nuovamente bloccato; sblocco e
+Sign in with WeChat personale dalla Home richiesti per la sessione Mini scaduta.
+Emulatore Android/simulatore iOS non richiedono un nuovo login. Rimangono possibili review e
+integrazione offline; la GUI non viene aggirata via SDK mentre il Mac è bloccato.
+
+## Matrice A–G e limiti delle prove
+
+| Mandato | Evidenza disponibile | Residuo effettivo |
 |---|---|---|
-| A Account/sessione/shop | Pairing, login distinto, profilo/shop canonici PASS; scadenza con ritorno al login osservata | Riaccesso dopo scadenza, foreground/logout/pending e negativi nei soli contesti consentiti |
-| B Letture/vendite | Home/periodi vuoti corretti,12documenti storici e righe dettaglio;50prodotti,50categorie,78fornitori,3prezzi; UI e SELECT concordi | History run, ulteriori filtri/sort, pagine e casi limite assenti dal dataset |
-| C Catalogo/prezzi | Implementazione e prove isolate precedenti riusate; gate scritture abilitato dopo letture PASS | Creazione/modifica/archive/restore, duplicato, revisioni/replacement e formati nel runtime;0scritture finora |
-| D Immagini | Codice e suite precedenti; picker/preview adapter revisionato | Upload/sostituzione/rimozione, recovery e immagini private live; camera/permessi/orientamento su telefono |
-| E Offline/sync/recupero | Implementazione e regressioni isolate precedenti | Salvataggio offline→online nella stessa schermata, riapertura/multifase/conflitti/History live |
-| F Convergenza | Stesso backend letto tramite connector, senza attestare client nativi | Admin/Android/iOS runtime e ritorno; adb0dispositivi, iPhone associato rilevato unavailable; nessuna modifica ai sorgenti nativi |
-| G Usabilità/lingue | Rendering reale prima pagina, pagine autenticate inglesi attraversate | Ispezione visiva autenticata4lingue, CTA/conferme/bozze/offline |
-| Telefono/prestazioni | DevTools autenticato; quattro durate di scenari comprensive del readback | PHONE_VALIDATED NO; campioni UX comparabili e p50/p95 NON_MISURATO |
+| A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Riaccesso dopo ultima scadenza, foreground/logout/pending; negativi isolati separati |
+| B Letture/vendite |16casi UI+SELECT, zero corretto e12documenti storici | History run, ulteriori filtri/sort/pagine; edge case solo isolati |
+| C Catalogo/prezzi |9casi reali,5fixture, CLP interi e quantità1,25 | Rename/sostituzioni, conflitti live, storico multipagina e legacy invariati |
+| D Immagini | Implementazione/recovery isolati; tentativo live NO_WRITE riconciliato | Camera/album/anteprima/upload/versione/rimozione/rete e telefono |
+| E Offline/sync | Difetto lease riprodotto e fix isolato/integrato | Riprova checkpoint/delta e salvataggio offline→online senza navigazione, lifecycle |
+| F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Catalogo Android non arrivato; recovery iOS bloccato; nessun roundtrip attestato |
+| G Usabilità/lingue | Rendering prima pagina e percorsi inglesi reali | Ispezione autenticata4lingue, CTA/bozze/offline |
+| Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
-Le durate45.566ms (periodi),14.486ms (ricerca/dettaglio/prezzi),6.602ms
-(categorie),6.468ms (fornitori) includono orchestrazione e verifica SQL:
-non sono latenze utente né campioni sufficienti per percentili o confronto budget.
-Login, prima pagina, save, immagini e convergenza non hanno ancora misure UX complete.
+Le durate scenari45.566/14.486/6.602/6.468ms includono readback/orchestrazione,
+non latenze utente. La run scritture interrotta non ha emesso campioni UX nel report;
+nessun percentile o rispetto budget dedotto. Login/prima pagina/save/immagini/
+convergenza richiedono misure comparabili. Zero campioni significa NON_MISURATO.
 
-CODE_COMPLETE resta limitato ai delta già revisionati. **LIVE_VALIDATED parziale
-per login e letture DevTools; pilot complessivo non accettato. PHONE_VALIDATED NO;
-PUBLIC_RELEASE_READY NO.** ROTATION NOT_PERFORMED / ACCEPTED_FOR_TEST_ONLY invariati.
-Le ricevute private conservano contesto/hash, errori e confronti senza token,
-codici monouso, URL firmati o identificatori WeChat completi. Nessuna fixture business
-creata: nessun cleanup dati necessario; pairing legittimo preservato.
+Cinque fixture della run conservate con marker e ID nel packet; nessun cleanup
+automatico. Intent tutti riconciliati al termine della run, runner lock assente;
+controllare nuovamente outbox e journal prima di riprendere o archiviare fixture.
+Pairing personale preservato. AppSecret/sessioni/codici/URLfirmati non sono evidenza.
+**CODE_COMPLETE** limitato ai delta approvati; **LIVE_VALIDATED parziale**;
+**PHONE_VALIDATED NO; PUBLIC_RELEASE_READY NO**. Il pilot completo non è accettato.
 
-Le sezioni seguenti sono storiche e non descrivono i flag o blocchi correnti.
+Le sezioni seguenti sono ricevute storiche, non stato o blocchi correnti.
 
 ## Pairing autentico e attivazione readonly — 2026-09-26
 

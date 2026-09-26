@@ -1,18 +1,22 @@
 # Active task
 
-## Stato corrente — letture autentiche verificate, mutazioni TEST abilitate
+## Stato corrente — collaudo autentico parziale, correzione sync TEST integrata
 
-Pairing e login personale distinto verificati in DevTools ufficiale. La verticale
-profilo/shop/catalogo e le letture business hanno superato 11 controlli; ulteriori
-5 controlli sulle vendite storiche includono 8 vendite, 2 rimborsi, 2 annullamenti
-e dettaglio righe, confrontati con SELECT indipendenti. Nessuna scrittura finanziaria.
-Worker beb94e1e-7c26-4d34-ab20-f0b0d0be9315: login Mini e mutazioni catalogo ON,
-enrollment e altre superfici OFF; singleton TEST, sorgente selettiva a805d640,
-tracing OFF e registry144 invariati. La sessione è poi scaduta prima della prima
-scrittura: nessun intent o fixture creato, nuovo login personale richiesto.
-Collaudo scritture/immagini/offline ancora NOT_RUN; telefono e convergenza nativa
-non attestati. Stato EXECUTION / attesa gesto personale, nessun DONE. Il report
-canonico distingue le prove concluse dai residui; le sezioni datate sotto sono storiche.
+Pairing e login personale distinto verificati. DevTools:16casi lettura e9casi
+catalogo PASS con readback indipendente;5fixture proprie e9intent VERIFIED.
+Auth Mini e mutazioni ON solo per il target TEST autorizzato; enrollment OFF.
+Corretto il checkpoint503 nel confine Admin: PR114 integrata, migrazione
+20260926164349 applicata una volta; registry145/precedenti144hash preservati,
+zero commerce. Worker beb94e1e e codice runtime a805d640 invariati.
+Emulatore Android e simulatore iOS autenticati personalmente e verificati sullo stesso profilo/shop.
+Convergenza non attestata: iPhone Retry fallisce per envelope catalog mancante,
+con16sessioni storiche compresse che attivano il gate nativo di recupero.
+Nessuna modifica ai sorgenti o dati ordinari nativi.
+Mac nuovamente bloccato e sessione Mini scaduta prima del picker: sblocco e
+riaccesso personale richiesti per ritest sync, immagini, relazioni e offline.
+Il report canonico distingue prova autentica, locale, residui e recupero.
+Stato REVIEW del fix / BLOCKED_EXTERNAL del runtime, owner utente; nessun DONE.
+Le sezioni datate precedenti sono storiche.
 
 ## 2026-09-25 — Residui immagini in REVIEW, accettazione BLOCKED_EXTERNAL
 
