@@ -1,16 +1,18 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
-## Stato corrente — pairing verificato, build readonly pronta
+## Stato corrente — letture autentiche verificate, mutazioni TEST abilitate
 
-Il pairing personale è riuscito: due prove Tencent consumate/verificate, mapping
-canonico attivo e audit linked confermati. Enrollment chiuso; solo login Mini ON
-sul Worker15ad37e9-6176-4410-baab-28a67615211f, altri6flag OFF. Codice della release
-selettiva a805d640, ambito singleton e tracing preservati; registry144 invariato.
-Build readonly verify149/149 PASS, ma caricamento DevTools bloccato dal Mac
-nuovamente locked: sblocco manuale richiesto. Poi login Home personale distinto
-e collaudo business; questi restano NOT_RUN. Rotazione NOT_PERFORMED, eccezione
-TEST invariata. Nessuna fixture business o DONE. Report canonico aggiornato;
-le note datate successive sono storiche.
+Pairing e login personale distinto verificati in DevTools ufficiale. La verticale
+profilo/shop/catalogo e le letture business hanno superato 11 controlli; ulteriori
+5 controlli sulle vendite storiche includono 8 vendite, 2 rimborsi, 2 annullamenti
+e dettaglio righe, confrontati con SELECT indipendenti. Nessuna scrittura finanziaria.
+Worker beb94e1e-7c26-4d34-ab20-f0b0d0be9315: login Mini e mutazioni catalogo ON,
+enrollment e altre superfici OFF; singleton TEST, sorgente selettiva a805d640,
+tracing OFF e registry144 invariati. La sessione è poi scaduta prima della prima
+scrittura: nessun intent o fixture creato, nuovo login personale richiesto.
+Collaudo scritture/immagini/offline ancora NOT_RUN; telefono e convergenza nativa
+non attestati. Stato EXECUTION / attesa gesto personale, nessun DONE. Il report
+canonico distingue le prove concluse dai residui; le sezioni datate sotto sono storiche.
 
 ## 2026-09-25 — Residui immagini in REVIEW, accettazione BLOCKED_EXTERNAL
 

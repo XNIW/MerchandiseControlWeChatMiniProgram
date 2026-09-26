@@ -1,6 +1,85 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-Stato corrente: **pairing autentico verificato; enrollment chiuso, login Mini readonly attivo sul server e build pronta; caricamento DevTools in attesa dello sblocco Mac**. Il login distinto e il collaudo business non sono ancora eseguiti. Report operativo canonico, matrice locale/DevTools/telefono separata. Nessun DONE auto-approvato.
+Stato corrente: **letture autentiche verificate in DevTools; mutazioni catalogo TEST abilitate, prima scrittura in attesa del nuovo login personale dopo scadenza della sessione**. Pairing preservato, enrollment chiuso. Nessun DONE auto-approvato.
+
+## Collaudo business autentico — 2026-09-26
+
+Mac sbloccato e build readonly effettivamente caricata: Mini
+`0956e1a3d60748623d622e837fd70d8ece3c2883`, Admin
+`aa455df14b2531426adc421271d44b3ce48a188a`; checkout applicativi puliti.
+DevTools ufficiale2.02.2609232, base library3.17.0, viewport375×639,
+SDK ufficiale0.12.1, urlCheck true. Manifest dist invariato
+`da0b67ff36811b2e305eafe67c104403122fab2c88bd979e0b39c1d034e53bec`.
+Il codice Worker selettivo resta a805d64044dec3b1304f5c52709f886580c48390;
+nessun deploy della main Admin o DDL nuovo. Registry144 confrontato per
+versione/nome/MD5 degli statement con la baseline approvata, zero commerce.
+
+L'utente ha premuto personalmente il login Home distinto dal pairing. Run
+`5086f26a-d829-49a6-bd24-a0348fd8a134`,15:32:02–15:35:40UTC: **11 PASS**,
+status complessivo PARTIAL,0nuove eccezioni. Profilo canonico, mapping e shop
+esatti, prima pagina50prodotti confrontata anche nel rendering, ricerca barcode,
+dettaglio prodotto,3prezzi,50categorie e78fornitori verificati contro SELECT
+indipendenti. Home e riepiloghi dei periodi7/30/mese verificati sono vuoti;
+il periodo30giorni parte dal2026-08-28. I quattro filtri tipo vendita sono
+vuoti nel periodo2026-09-01..2026-09-26.
+La prova login consumata/verificata è stata riscontrata nel backend.
+History non è ancora verificata: richiede gli eventi delle scritture della run.
+
+Estensione storica15:47:20–15:48:44UTC: **5 PASS**,0nuove eccezioni,
+periodo2026-06-07..2026-07-06,12documenti esistenti:8vendite,2rimborsi,2annullamenti.
+Lista, filtri tipo e dettaglio righe della vendita confrontati con le tabelle
+canoniche, senza scritture finanziarie. Un primo tentativo è scaduto attendendo
+il readback indipendente: ricevuta FAIL conservata; la nuova esecuzione PASS
+ha atteso il completamento effettivo del cambio periodo. Il helper storico
+revisionato ha SHA256 `cdd1dd62aea7e77bf0fbf0ecfd71fd8ab18b032b4e9177b96d1b4f3bf672f0c4`.
+Il primo avvio del runner aveva inoltre rilevato lsof fuori PATH, prima del login:
+risolto includendo /usr/sbin, senza indebolire il controllo del listener ufficiale.
+
+Dopo queste prove e preflight fresco, una sola PATCH revisionata abilita
+WECHAT_MINI_PROGRAM_CATALOG_MUTATIONS_ENABLED. Worker corrente
+**beb94e1e-7c26-4d34-ab20-f0b0d0be9315**: login Mini e mutazioni catalogo ON;
+enrollment, linking, Web, Android e iOS OFF. Etàg sorgente/runtime, altri binding,
+settings, esatti AppID/profilo/shop TEST e tracing OFF preservati e verificati
+con metadati e stato pubblico. Helper attivazione APPROVED SHA256
+`236fe8dc266a7eb1074c41f14109b59b08e8aced09beec60cfb5709af70ea898`;
+riconciliazione readonly APPROVED SHA256
+`d6aa75a0503ebc2b033e9e7546e8327cc746ffc3341faffad7a3cc127a106eca`.
+Nessun nuovo flag client: le capability scrivibili arrivano dal confine server.
+
+La sessione è successivamente scaduta: Home mostra Sign in with WeChat e il
+runner mutazioni si ferma con AUTHENTIC_BUSINESS_SESSION_REQUIRED prima di
+qualsiasi intent. Run `e21c8dd0-acb6-4d8e-8cd1-649307536bf4`:0intent,0fixture.
+**Azione esterna, owner utente:** premere personalmente Sign in with WeChat
+nella Home DevTools. Non occorre ripetere pairing o inserimento AppSecret.
+Dopo il gesto: aggiornare i preflight scaduti e riprendere le scritture UI della run,
+con readback indipendente e conferme business autorizzate. Nessun retry di scrittura
+incerta è stato eseguito. Due immagini sintetiche private sono pronte per i picker
+DevTools; non sono prova fotocamera o telefono e non sono state caricate.
+
+| Mandato | Evidenza autentica disponibile | Residuo effettivo |
+|---|---|---|
+| A Account/sessione/shop | Pairing, login distinto, profilo/shop canonici PASS; scadenza con ritorno al login osservata | Riaccesso dopo scadenza, foreground/logout/pending e negativi nei soli contesti consentiti |
+| B Letture/vendite | Home/periodi vuoti corretti,12documenti storici e righe dettaglio;50prodotti,50categorie,78fornitori,3prezzi; UI e SELECT concordi | History run, ulteriori filtri/sort, pagine e casi limite assenti dal dataset |
+| C Catalogo/prezzi | Implementazione e prove isolate precedenti riusate; gate scritture abilitato dopo letture PASS | Creazione/modifica/archive/restore, duplicato, revisioni/replacement e formati nel runtime;0scritture finora |
+| D Immagini | Codice e suite precedenti; picker/preview adapter revisionato | Upload/sostituzione/rimozione, recovery e immagini private live; camera/permessi/orientamento su telefono |
+| E Offline/sync/recupero | Implementazione e regressioni isolate precedenti | Salvataggio offline→online nella stessa schermata, riapertura/multifase/conflitti/History live |
+| F Convergenza | Stesso backend letto tramite connector, senza attestare client nativi | Admin/Android/iOS runtime e ritorno; adb0dispositivi, iPhone associato rilevato unavailable; nessuna modifica ai sorgenti nativi |
+| G Usabilità/lingue | Rendering reale prima pagina, pagine autenticate inglesi attraversate | Ispezione visiva autenticata4lingue, CTA/conferme/bozze/offline |
+| Telefono/prestazioni | DevTools autenticato; quattro durate di scenari comprensive del readback | PHONE_VALIDATED NO; campioni UX comparabili e p50/p95 NON_MISURATO |
+
+Le durate45.566ms (periodi),14.486ms (ricerca/dettaglio/prezzi),6.602ms
+(categorie),6.468ms (fornitori) includono orchestrazione e verifica SQL:
+non sono latenze utente né campioni sufficienti per percentili o confronto budget.
+Login, prima pagina, save, immagini e convergenza non hanno ancora misure UX complete.
+
+CODE_COMPLETE resta limitato ai delta già revisionati. **LIVE_VALIDATED parziale
+per login e letture DevTools; pilot complessivo non accettato. PHONE_VALIDATED NO;
+PUBLIC_RELEASE_READY NO.** ROTATION NOT_PERFORMED / ACCEPTED_FOR_TEST_ONLY invariati.
+Le ricevute private conservano contesto/hash, errori e confronti senza token,
+codici monouso, URL firmati o identificatori WeChat completi. Nessuna fixture business
+creata: nessun cleanup dati necessario; pairing legittimo preservato.
+
+Le sezioni seguenti sono storiche e non descrivono i flag o blocchi correnti.
 
 ## Pairing autentico e attivazione readonly — 2026-09-26
 

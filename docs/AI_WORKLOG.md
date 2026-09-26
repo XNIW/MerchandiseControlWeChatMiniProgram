@@ -131,3 +131,5 @@ Official DevTools postmerge smoke found WXML compiler rejection of encoded logic
 | 2026-09-25T20:49:14.938Z | WECHAT-010 | PR112/23 integrate; fix Workers selettivo a805d640 distribuito come246797b4, binding/runtime/settings preservati; HTTP pubblico5/5PASS | Enrollment ON/6OFF; ritest autentico fermo sul Mac bloccato, sblocco richiesto; nessun business/telefono o DONE |
 
 | 2026-09-26 | WECHAT-010 | Pairing personale riuscito; readback15:01UTC:1mapping,1audit linked, due prove consumate, ordine/scadenza validi. Enrollment chiuso e readonly server ON come Worker15ad37e9, altri6OFF; propagazione riconciliata senza retry. | Registry144 esatto; build readonly149PASS. Mac nuovamente bloccato prima del caricamento; sblocco richiesto. Login distinto/business/telefono NOT_RUN, nessuna fixture o DONE. |
+
+| 2026-09-26T15:52Z | WECHAT-010 | Login personale distinto e letture DevTools11PASS; vendite storiche5PASS con SELECT indipendenti. Worker beb94e1e: auth Mini/mutazioni ON, enrollment/altri OFF;144registry invariato. | Prima scrittura fermata per sessione scaduta;0intent/fixture, riaccesso personale richiesto. Nessun telefono/PASS globale o DONE. |
