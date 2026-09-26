@@ -1,8 +1,8 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-Stato corrente: **pilot TEST parzialmente collaudato:16letture e9casi catalogo
-verificati in DevTools. Fix sync Admin integrato; ritest autentico, immagini,
-offline e convergenza ancora aperti.** Nessun DONE auto-approvato.
+Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
+13 casi catalogo verificati in DevTools. Checkpoint e watermark sync verificati;
+immagini, offline e convergenza restano aperti.** Nessun DONE auto-approvato.
 
 ## Evidenza autentica e runtime — 2026-09-26
 
@@ -36,11 +36,35 @@ vendita47.100→48.200CLP, quantità1,25; nome/relazioni/prezzi canonici verific
 Report complessivo WAITING_PERSONAL_ACTION per timeout della conferma di uscita
 bozza duplicata;9intent VERIFIED,5fixture tracciate,0nuove eccezioni.
 La successiva uscita/discard tramite GUI è osservata, ma non prova la ripresa
-retroattiva del runner. Creazioni non ripetute. Rename/replacement/History non eseguiti.
+retroattiva del runner. Creazioni non ripetute.
+
+Continuazione 17:12–17:39UTC: **4 ulteriori casi catalogo PASS**, rinomina e
+sostituzione con archiviazione per categoria e fornitore, tramite UI reale e
+SELECT indipendenti. Il prodotto proprio punta ora a categoria-b/fornitore-b;
+le due entità precedenti risultano archiviate. Totale 13 casi catalogo, senza
+nuove fixture. History filtrata sul prodotto mostra 5 ID che coincidono con
+5 audit canonici: **1 ulteriore scenario lettura PASS**, totale 17, non 5 casi.
+Journal della continuazione e delle tre operazioni manuali VERIFIED.
+I fallimenti del runner restano conservati: clock del readback lievemente
+avanti risolto attendendo l’orologio reale, errore controllo picker e un
+caricamento categorie HTTP503/5,14s. Riapertura UI riuscita; nessuna causa
+definitiva attribuita al 503 e nessun report fallito riscritto come PASS.
 
 Tentativo immagine16:15UTC: sessione scaduta prima del picker; nessun upload.
 Intent manuale RECONCILED_NO_WRITE, readback prima/dopo identico e nessuna versione
 immagine. Due JPEG sintetici propri pronti per il picker non provano camera fisica.
+
+Tentativo 17:39–17:40UTC: selezione effettiva del JPEG proprio nel picker
+DevTools, errore app prima dell’anteprima (IMAGE_PREVIEW_ERROR), sessione ancora
+valida al controllo successivo. Report FAIL/zero casi PASS conservato. SELECT
+scoped post-tentativo: zero intent e versioni, immagine primaria nulla; outbox
+e tentativi durevoli immagine vuoti. Journal VERIFIED significa soltanto
+riconciliazione RECONCILED_NO_WRITE, con intent/context/shop/prodotto e hash
+dei readback protetti; non certifica upload riuscito né autorizza replay.
+Diagnostica tramite API native reali: JPEG 900×1200, compressione/miniatura
+288×384, SHA-256 e byte ArrayBuffer con marcatori JPEG validi. Non è una prova
+del percorso app: causa ancora non localizzata, nessun fix speculativo.
+Breakpoint mirato nel debugger pronto; nuova prova richiede sessione personale.
 
 ## Difetto sync corretto e integrazione
 
@@ -67,14 +91,30 @@ advisor security/performance invariati escludendo timestamp di osservazione.
 `59b680d140fa3dd0b8ab784b409c78a00d659c1f`, review APPROVED e CI/Cloudflare
 36256703510/36256703513 PASS; merge `fe4907adc51ff842720e1c7eb36aa05e0fa53cb8`.
 Release selettiva `22158297` aggiunge solo SQL già applicato; Worker runtime invariato.
-Ritest checkpoint/delta autentico dopo fix **NOT_RUN**, non dedotto dai test SQL.
+Ritest autentico dopo fix: checkpoint HTTP200 e watermark scoped 12425.
+Alle17:52:51UTC il watermark persistito è12430; SELECT indipendente17:53:17UTC
+conferma max12430 e i5eventi12426–12430 delle modifiche alle relazioni
+(catalog_changed/tombstone). lastReconciledAt resta17:07:50.617Z: avanzamento
+del cursore dopo le modifiche verificato. Questa prova non attesta salvataggio
+offline, aggiornamento di ogni schermata, budget temporali o convergenza nativa.
+Ricevuta privata sync-delta-live-reconciliation.json con ambito esatto.
 
 ## Simulatori e blocchi concreti
 
 Android MediumPhone/API35, sorgente ca0a58d8: build riuscita, Google personale,
 progetto TEST e profilo/shop canonici verificati da UI/config e preferenza scoped.
-Shop TASK068E selezionato. Catalogo ancora vuoto; bootstrap osservato skipped
-prima che business_scope raggiungesse READY, nessuna prova successiva di convergenza.
+Shop TASK068E selezionato. Diagnosi successiva: owner corretto ma store del
+binding locale diverso dallo shop scelto. Arresto normale tramite Android
+Studio; copia coerente DB/WAL in sola lettura conferma zero righe nelle12tabelle
+business/cache controllate. Riavvio e scelta UI «Replace with cloud data»
+registrati con intent; nessun dato ordinario da sostituire.
+Recupero fallito con rollback Room: binding_replace_device_identity_missing,
+scope ERROR_RECOVERABLE. InventoryRepository richiede un deviceId persistito
+per sostituire il binding; la registrazione che lo crea richiede scope READY.
+Review indipendente conferma la precondizione circolare. Non è un blocco
+Supabase risolvibile ripetendo login o cambiando shop. Occorre un fix nativo
+fuori dal mandato attuale; nessun ID inventato, reset DB o modifica sorgente.
+Il catalogo rimane vuoto e la sync sospesa; convergenza non attestata.
 
 iPhone15ProMax/iOS26.1, sorgente c55e3a93: Google personale e stesso scope
 verificati. iPhone17/iOS26.5 aveva fallito l'avvio; usato simulatore esistente.
@@ -97,11 +137,11 @@ integrazione offline; la GUI non viene aggirata via SDK mentre il Mac è bloccat
 | Mandato | Evidenza disponibile | Residuo effettivo |
 |---|---|---|
 | A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Riaccesso dopo ultima scadenza, foreground/logout/pending; negativi isolati separati |
-| B Letture/vendite |16casi UI+SELECT, zero corretto e12documenti storici | History run, ulteriori filtri/sort/pagine; edge case solo isolati |
-| C Catalogo/prezzi |9casi reali,5fixture, CLP interi e quantità1,25 | Rename/sostituzioni, conflitti live, storico multipagina e legacy invariati |
-| D Immagini | Implementazione/recovery isolati; tentativo live NO_WRITE riconciliato | Camera/album/anteprima/upload/versione/rimozione/rete e telefono |
-| E Offline/sync | Difetto lease riprodotto e fix isolato/integrato | Riprova checkpoint/delta e salvataggio offline→online senza navigazione, lifecycle |
-| F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Catalogo Android non arrivato; recovery iOS bloccato; nessun roundtrip attestato |
+| B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto con5audit | Ulteriori filtri/sort/pagine; edge case solo isolati |
+| C Catalogo/prezzi |13casi reali,5fixture, rinomina e sostituzione/archiviazione categoria/fornitore, CLP interi e quantità1,25 | Conflitti live, storico multipagina e legacy invariati |
+| D Immagini | Picker reale; errore prima dell’anteprima, NO_WRITE riconciliato; API JPEG diagnostiche riuscite | Localizzare e correggere il percorso app; anteprima/upload/album/versione/rimozione/rete e telefono |
+| E Offline/sync | Fix lease integrato; checkpoint200, watermark12425→12430 concorde con5eventi scoped | Salvataggio offline→online senza navigazione, aggiornamento schermate e lifecycle |
+| F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
 | G Usabilità/lingue | Rendering prima pagina e percorsi inglesi reali | Ispezione autenticata4lingue, CTA/bozze/offline |
 | Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
@@ -111,11 +151,17 @@ nessun percentile o rispetto budget dedotto. Login/prima pagina/save/immagini/
 convergenza richiedono misure comparabili. Zero campioni significa NON_MISURATO.
 
 Cinque fixture della run conservate con marker e ID nel packet; nessun cleanup
-automatico. Intent tutti riconciliati al termine della run, runner lock assente;
+automatico. Intent riconciliati, incluso il tentativo immagini FAIL/NO_WRITE; runner lock assente;
 controllare nuovamente outbox e journal prima di riprendere o archiviare fixture.
 Pairing personale preservato. AppSecret/sessioni/codici/URLfirmati non sono evidenza.
 **CODE_COMPLETE** limitato ai delta approvati; **LIVE_VALIDATED parziale**;
 **PHONE_VALIDATED NO; PUBLIC_RELEASE_READY NO**. Il pilot completo non è accettato.
+
+Verifica della continuazione documentale: Node26.7.0 `npm run verify` PASS,
+110test TypeScript e39test MJS, governance/privacy/secret scan/typecheck/lint/
+build inclusi; `git diff --check` PASS. Runner privato continuazione12test PASS;
+checkpoint immagini validato contro lo schema originale dopo riconciliazione.
+Nessun codice applicativo, distribuzione Worker o migrazione aggiunti in questo delta.
 
 Le sezioni seguenti sono ricevute storiche, non stato o blocchi correnti.
 
