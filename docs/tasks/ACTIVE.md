@@ -1,21 +1,24 @@
 # Active task
 
-## Stato corrente — collaudo autentico parziale, correzione sync TEST integrata
+## Stato corrente — collaudo autentico parziale, sync Mini verificato
 
-Pairing e login personale distinto verificati. DevTools:16casi lettura e9casi
-catalogo PASS con readback indipendente;5fixture proprie e9intent VERIFIED.
-Auth Mini e mutazioni ON solo per il target TEST autorizzato; enrollment OFF.
-Corretto il checkpoint503 nel confine Admin: PR114 integrata, migrazione
-20260926164349 applicata una volta; registry145/precedenti144hash preservati,
-zero commerce. Worker beb94e1e e codice runtime a805d640 invariati.
-Emulatore Android e simulatore iOS autenticati personalmente e verificati sullo stesso profilo/shop.
-Convergenza non attestata: iPhone Retry fallisce per envelope catalog mancante,
-con16sessioni storiche compresse che attivano il gate nativo di recupero.
-Nessuna modifica ai sorgenti o dati ordinari nativi.
-Mac nuovamente bloccato e sessione Mini scaduta prima del picker: sblocco e
-riaccesso personale richiesti per ritest sync, immagini, relazioni e offline.
-Il report canonico distingue prova autentica, locale, residui e recupero.
-Stato REVIEW del fix / BLOCKED_EXTERNAL del runtime, owner utente; nessun DONE.
+Pairing e login personale distinto verificati. DevTools: 17 scenari lettura e
+13 casi catalogo PASS con SELECT indipendenti; le stesse 5 fixture conservate.
+Rinomina e sostituzione/archiviazione di categoria e fornitore completate;
+History del prodotto coincide con 5 audit canonici. Fix sync Admin PR114
+verificato nel runtime: checkpoint 200 e watermark 12425→12430 concorde con
+gli eventi dello shop. Offline e convergenza Android/iOS restano non attestati.
+Auth Mini e mutazioni ON solo per il target TEST; enrollment/altri flag OFF.
+Registry 145, Worker beb94e1e e codice runtime a805d640 invariati.
+Immagine selezionata nel picker reale ma fallita prima dell’anteprima: zero
+intent/versioni backend, journal riconciliato NO_WRITE, report FAIL preservato.
+Diagnostica delle API JPEG riuscita; causa nel percorso app ancora da localizzare.
+Android: recupero UI fallito con rollback per device identity mancante dopo
+verifica cache vuota; iOS: decoder catalog e gate storia compressa bloccano
+il recupero. Accessi Google validi; sorgenti e dati ordinari nativi invariati.
+Mac bloccato e sessione Mini scaduta: sblocco e login personali richiesti per
+continuare il debugger e il collaudo disponibile. Nessun DONE; REVIEW del fix,
+LIVE_VALIDATED parziale, PHONE_VALIDATED NO. Il report canonico dettaglia i residui.
 Le sezioni datate precedenti sono storiche.
 
 ## 2026-09-25 — Residui immagini in REVIEW, accettazione BLOCKED_EXTERNAL
