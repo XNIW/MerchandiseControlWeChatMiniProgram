@@ -1,16 +1,16 @@
 # Matrice funzionale corrente — WECHAT-010
 
-2026-09-25. Fonte di stato: [report canonico](testing/WECHAT-010-REPORT.md). Il confronto nativo e le classificazioni precedenti sono [storici](testing/archive/PARITY_MATRIX-before-20260925.md). I contratti Admin sono canonici; Android/iOS non sono stati modificati né certificati live in questa esecuzione.
+2026-09-26. Fonte di stato: [report canonico](testing/WECHAT-010-REPORT.md). Il confronto nativo e le classificazioni precedenti sono [storici](testing/archive/PARITY_MATRIX-before-20260925.md). I contratti Admin sono canonici; Android/iOS non sono stati modificati né certificati live in questa esecuzione.
 
-Il report canonico contiene inoltre la matrice sintetica completa A–G e le prove nuove sui sei residui immagini. Stato D: anteprima/permessi,50miniature, rinnovo limitato e replay incerto VERIFIED_LOCAL; autenticazione, comportamento nativo e telefono NOT_RUN.
+Il report canonico contiene inoltre la matrice sintetica completa A–G e le prove nuove sui sei residui immagini. Stato D: anteprima/permessi,50miniature, rinnovo limitato e replay incerto VERIFIED_LOCAL; collaudo immagini autenticato, comportamento nativo e telefono NOT_RUN.
 
 Legenda: VERIFIED_LOCAL = regressione automatica locale, mai live; IMPLEMENTED_UNVERIFIED = codice raggiungibile ma prova reale mancante; EXTERNAL_ACTION_REQUIRED = dipendenza materiale/personale; OUT_OF_SCOPE = esclusione esplicita. DevTools e telefono indicati separatamente. Endpoint relativi alla base Admin `/api/mini-program/v1`, salvo auth/image.
 
 | Requisito | Schermata / azione | Client → endpoint/RPC | Permesso | Stato / test | DevTools | Telefono | Residuo |
 |---|---|---|---|---|---|---|---|
 | Compilazione/gate OFF | cinque tab, Account Retry | template WXML/runtime flags | nessuna auth | VERIFIED_LOCAL; fix compiler ufficiale | VERIFIED_LIVE OFF5/5,0 eccezioni; business escluso | NOT_RUN delta | nessuna attestazione business |
-| Pairing diretto | Account→pairing, due consensi | auth-client→auth/wechat/mini→pair/proof | personale + allowlist | FIX_DEPLOYED;55 pgTAP + component + workerd | Due tentativi personali400 prima del fix; ritest autentico da eseguire | NOT_RUN | Sblocco Mac e nuovo pairing personale |
-| Login distinto/sessione/revoca | Home/Account | auth-client/session-store→direct_issue/session_resolve | mapping attivo/device/generation | VERIFIED_LOCAL | NOT_RUN | NOT_RUN | Tencent autentico |
+| Pairing diretto | Account→pairing, due consensi | auth-client→auth/wechat/mini→pair/proof | personale + allowlist | VERIFIED_LIVE_PAIRING; due prove Tencent consumate e mapping canonico | PASS personale + readback indipendente | NOT_RUN | Pairing concluso; caricamento readonly e login distinto separati |
+| Login distinto/sessione/revoca | Home/Account | auth-client/session-store→direct_issue/session_resolve | mapping attivo/device/generation | VERIFIED_LOCAL; mapping autentico disponibile | NOT_RUN | NOT_RUN | Sblocco Mac, caricamento readonly e login Home personale |
 | Profilo/provider/shop | Account, selettore | sales-api→account/shops→account_profile/authorized_shops_v2 | membership attiva | VERIFIED_LOCAL | NOT_RUN | NOT_RUN | readback account designato |
 | Privacy/cancellazione | Account link pubblico | contenuto incluso/versionato | nessuna auth | VERIFIED_LOCAL |47 prove storiche invarianti | apertura/scroll ZH storico limitato | nessun nuovo delta privacy |
 | F01 prezzi CLP/quantità | form/catalogo/detail/prezzi/vendite | catalog-numbers; wire numerico | scrittura capability server | VERIFIED_LOCAL; parsing/limiti/roundtrip | NOT_RUN | NOT_RUN | layout/input reali |

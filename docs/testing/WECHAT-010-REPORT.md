@@ -1,6 +1,56 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-Stato corrente: **fix del trasporto integrato e distribuito; ritest autentico in attesa dello sblocco Mac**. Report operativo canonico, matrice locale/DevTools/telefono separata. Nessun DONE auto-approvato.
+Stato corrente: **pairing autentico verificato; enrollment chiuso, login Mini readonly attivo sul server e build pronta; caricamento DevTools in attesa dello sblocco Mac**. Il login distinto e il collaudo business non sono ancora eseguiti. Report operativo canonico, matrice locale/DevTools/telefono separata. Nessun DONE auto-approvato.
+
+## Pairing autentico e attivazione readonly — 2026-09-26
+
+L'utente ha sbloccato il Mac, effettuato personalmente il nuovo trasferimento Mini,
+confrontato account/numero e approvato Admin; ha poi confermato nel Mini con un
+nuovo login WeChat. La UI mostra Linked. Il readback canonico limitato al target
+designato, alle15:01:14UTC, conferma un pairing completato, un mapping attivo,
+un evento audit linked e due prove Tencent verificate e consumate: pair_claim e
+pair_confirm. La seconda è successiva all'approvazione Admin; il completamento
+precede la scadenza. Nessun mapping SQL artificiale, sessione iniettata o dato
+di autenticazione conservato nella ricevuta. **TEST exchange PASS / pairing PASS**.
+
+La transizione metadata revisionata chiude enrollment e abilita soltanto
+WECHAT_AUTH_MINI_PROGRAM_ENABLED. Worker **15ad37e9-6176-4410-baab-28a67615211f**,
+rollout100%, codice della release selettiva a805d640 invariato; etag sorgente,
+runtime, altri binding, ambito singleton e tracing OFF preservati. Altri sei
+flag OFF, incluse mutazioni e linking. Il primo controllo pubblico ha visto
+ancora lo stato precedente: riconciliazione in sola lettura dopo propagazione,
+senza ripetere PATCH; status ready/mini_program true, enrollment false confermati.
+Review indipendente helper APPROVED, SHA256
+f35197ced2317a685b314ad54934704034bee8516f0d2af8a66e02f4b328eae9.
+ROTATION NOT_PERFORMED / ACCEPTED_FOR_TEST_ONLY rimangono invariati.
+
+Nuovo readback: registry144 identico per versione/nome/MD5 degli statement alla
+baseline immagini approvata; nessuna migrazione commerce o tabella commerce.
+Profilo, utente canonico, membership shop_owner e shop designato risultano attivi.
+Build readonly dal Mini07e1e342/Admin db5bb83a, Node26.7 verify149/149 e build PASS;
+readinessV2 basata su prove effettive, mutazioni client OFF e urlCheck true.
+Manifest dist SHA256
+da0b67ff36811b2e305eafe67c104403122fab2c88bd979e0b39c1d034e53bec
+(path ordinato + NUL + byte + NUL).
+
+Il runtime DevTools osservato prima del caricamento conserva la precedente build
+enrollment: pagina Linked, featureReady false, nessuna sessione/shop. Durante il
+comando di ricompilazione Computer Use segnala nuovamente Mac bloccato; sblocco
+manuale richiesto, nessun tentativo di aggirarlo tramite CLI o SDK.
+**BLOCKED_EXTERNAL, owner utente:** sbloccare il Mac; poi caricare la build readonly
+e premere personalmente il login Home distinto dal pairing. Il runner attende
+quel gesto, verifica profilo/shop e confronta i dati con letture SQL indipendenti.
+Login distinto, letture business, mutazioni, telefono e prestazioni reali NOT_RUN.
+Nessuna fixture business creata o modifica al pairing personale legittimo.
+
+Runner privato aggiornato per confronto esatto delle144migrazioni; nessun tap
+automatico del login. Anteprima immagini confermata tramite UI prima di attendere
+upload, con confronto versione UI/readback e interruzione su annullamento/cambio
+sessione anche durante il readback.37test locali PASS: preparazione, non accettazione autenticata.
+La ripresa deve aggiornare le attestazioni metadata scadute prima della run.
+LIVE_VALIDATED NO, PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO; nessun DONE.
+
+Le sezioni successive sono ricevute storiche precedenti al pairing riuscito.
 
 ## Ricevuta fix Workers — 2026-09-25T20:49:14.938Z
 
