@@ -64,6 +64,21 @@ export interface MiniProgramPlatform {
   setStorage(key: string, value: string): void;
 }
 
+const arrayBufferByteLength = Object.getOwnPropertyDescriptor(
+  ArrayBuffer.prototype,
+  "byteLength",
+)?.get;
+
+function isArrayBuffer(value: unknown): value is ArrayBuffer {
+  // Native WeChat callbacks can return buffers from another JavaScript realm.
+  // The intrinsic getter checks the buffer's internal slot without trusting tags.
+  try {
+    return typeof arrayBufferByteLength?.call(value) === "number";
+  } catch {
+    return false;
+  }
+}
+
 export function createWeChatPlatform(): MiniProgramPlatform {
   return {
     chooseImage: (source = "camera") =>
@@ -157,7 +172,7 @@ export function createWeChatPlatform(): MiniProgramPlatform {
           fail: () => reject(new Error("image_read_failed")),
           filePath,
           success: (result) =>
-            result.data instanceof ArrayBuffer
+            isArrayBuffer(result.data)
               ? resolve(result.data)
               : reject(new Error("image_read_failed")),
         });

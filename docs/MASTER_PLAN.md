@@ -12,12 +12,14 @@ Auth Mini e mutazioni ON solo per il target TEST; enrollment/altri flag OFF.
 Registry 145, Worker beb94e1e e codice runtime a805d640 invariati.
 Immagine selezionata nel picker reale ma fallita prima dell’anteprima: zero
 intent/versioni backend, journal riconciliato NO_WRITE, report FAIL preservato.
-Diagnostica delle API JPEG riuscita; causa nel percorso app ancora da localizzare.
+Debugger: buffer nativo cross-realm rifiutato da instanceof. Fix mirato in
+EXECUTION, regressione riprodotta e validazione locale completata; ritest live da eseguire.
 Android: recupero UI fallito con rollback per device identity mancante dopo
 verifica cache vuota; iOS: decoder catalog e gate storia compressa bloccano
 il recupero. Accessi Google validi; sorgenti e dati ordinari nativi invariati.
-Mac bloccato e sessione Mini scaduta: sblocco e login personali richiesti per
-continuare il debugger e il collaudo disponibile. Nessun DONE; REVIEW del fix,
+Mac nuovamente accessibile. L’utente autorizza esplicitamente il riaccesso
+WeChat autonomo dopo scadenza e le operazioni autonome nel perimetro TEST.
+Nessun DONE; REVIEW del fix,
 LIVE_VALIDATED parziale, PHONE_VALIDATED NO. Il report canonico dettaglia i residui.
 Le sezioni datate precedenti sono storiche.
 

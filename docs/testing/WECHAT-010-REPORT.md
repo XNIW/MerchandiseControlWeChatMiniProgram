@@ -63,8 +63,8 @@ riconciliazione RECONCILED_NO_WRITE, con intent/context/shop/prodotto e hash
 dei readback protetti; non certifica upload riuscito né autorizza replay.
 Diagnostica tramite API native reali: JPEG 900×1200, compressione/miniatura
 288×384, SHA-256 e byte ArrayBuffer con marcatori JPEG validi. Non è una prova
-del percorso app: causa ancora non localizzata, nessun fix speculativo.
-Breakpoint mirato nel debugger pronto; nuova prova richiede sessione personale.
+del percorso app: in quel momento la causa non era localizzata. La successiva
+diagnosi e il fix sono registrati nella sezione cross-realm qui sotto.
 
 ## Difetto sync corretto e integrazione
 
@@ -127,19 +127,39 @@ compressed_legacy_history_requires_remediation. Nessun payload storico esposto.
 Dati ordinari e sorgenti nativi invariati; niente reset, import o remediation arbitraria.
 Correzione decoder/remediation nativa richiede un mandato distinto per quelle superfici.
 
-**BLOCKED_EXTERNAL, owner utente:** il Mac risulta nuovamente bloccato; sblocco e
-Sign in with WeChat personale dalla Home richiesti per la sessione Mini scaduta.
-Emulatore Android/simulatore iOS non richiedono un nuovo login. Rimangono possibili review e
-integrazione offline; la GUI non viene aggirata via SDK mentre il Mac è bloccato.
+## Fix lettura immagine cross-realm — 18:09UTC
+
+Il Mac è nuovamente accessibile. L’utente autorizza esplicitamente Codex a
+premere «Sign in with WeChat» dopo scadenza e a proseguire autonomamente le
+operazioni del pilot TEST. Riaccesso effettuato tramite il pulsante reale:
+sessione attiva, stesso shop; nessun token/sessione iniettato o blocco aggirato.
+
+Debugger sulla stessa build: il primo fallimento è nel catch readFile durante
+la preparazione. Secondo breakpoint nell’adattatore: callback readFile:ok,
+ArrayBuffer63760byte, instanceof ArrayBuffer false, getter intrinseco
+byteLength.call sul medesimo valore63760. La causa è il buffer da un diverso
+contesto JavaScript, non JPEG invalido, rete o scadenza. Entrambi i nuovi
+tentativi diagnostici sono riconciliati NO_WRITE con zero intent/versioni;
+nessun upload o anteprima confermati. Breakpoint disattivati e runtime ripreso.
+
+Fix minimo: riconoscere il buffer tramite il getter intrinseco byteLength,
+che controlla lo slot interno anche tra contesti e rifiuta oggetti/tag falsi;
+regole JPEG, SHA-256, dimensioni, permessi e confine server invariati.
+[Specifica ECMAScript](https://tc39.es/ecma262/multipage/structured-data.html#sec-get-arraybuffer.prototype.bytelength).
+Regressione locale prima: cross-realm rifiutato e oggetto con prototipo finto
+accettato; dopo:3/3PASS, inclusi negativi stringhe/view/shared/proxy/tag falsi.
+Node26.7 verify152PASS (110TS+42MJS), tutti i gate richiesti inclusi. Il primo
+verify del delta si era fermato per formattazione, corretta prima del rerun.
+Ritest app immagine dopo questo fix ancora NOT_RUN; nessun PHONE_PASS.
 
 ## Matrice A–G e limiti delle prove
 
 | Mandato | Evidenza disponibile | Residuo effettivo |
 |---|---|---|
-| A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Riaccesso dopo ultima scadenza, foreground/logout/pending; negativi isolati separati |
+| A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Foreground/logout/pending; negativi isolati separati; riaccesso autonomo autorizzato ed eseguito |
 | B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto con5audit | Ulteriori filtri/sort/pagine; edge case solo isolati |
 | C Catalogo/prezzi |13casi reali,5fixture, rinomina e sostituzione/archiviazione categoria/fornitore, CLP interi e quantità1,25 | Conflitti live, storico multipagina e legacy invariati |
-| D Immagini | Picker reale; errore prima dell’anteprima, NO_WRITE riconciliato; API JPEG diagnostiche riuscite | Localizzare e correggere il percorso app; anteprima/upload/album/versione/rimozione/rete e telefono |
+| D Immagini | Picker reale; errore prima dell’anteprima, NO_WRITE riconciliato; API JPEG diagnostiche riuscite | Ritest del fix cross-realm; anteprima/upload/album/versione/rimozione/rete e telefono |
 | E Offline/sync | Fix lease integrato; checkpoint200, watermark12425→12430 concorde con5eventi scoped | Salvataggio offline→online senza navigazione, aggiornamento schermate e lifecycle |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
 | G Usabilità/lingue | Rendering prima pagina e percorsi inglesi reali | Ispezione autenticata4lingue, CTA/bozze/offline |
@@ -157,11 +177,12 @@ Pairing personale preservato. AppSecret/sessioni/codici/URLfirmati non sono evid
 **CODE_COMPLETE** limitato ai delta approvati; **LIVE_VALIDATED parziale**;
 **PHONE_VALIDATED NO; PUBLIC_RELEASE_READY NO**. Il pilot completo non è accettato.
 
-Verifica della continuazione documentale: Node26.7.0 `npm run verify` PASS,
+Ricevuta precedente al fix, sola continuazione documentale PR27: Node26.7.0 `npm run verify` PASS,
 110test TypeScript e39test MJS, governance/privacy/secret scan/typecheck/lint/
 build inclusi; `git diff --check` PASS. Runner privato continuazione12test PASS;
 checkpoint immagini validato contro lo schema originale dopo riconciliazione.
-Nessun codice applicativo, distribuzione Worker o migrazione aggiunti in questo delta.
+Nessun codice applicativo, distribuzione Worker o migrazione aggiunti da PR27.
+Il successivo delta cross-realm e i suoi152test sono descritti separatamente sopra.
 
 Le sezioni seguenti sono ricevute storiche, non stato o blocchi correnti.
 
