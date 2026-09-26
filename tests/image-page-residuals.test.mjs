@@ -5,6 +5,96 @@ import test from "node:test";
 const require = createRequire(import.meta.url);
 const id = (n) => `10000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
 
+function showDetail(page) {
+  const load = page.load;
+  page.load = async () => {};
+  page.onShow();
+  page.load = load;
+}
+
+test("native picker return displays a fresh preview and waits for explicit confirmation", async () => {
+  const { a, p } = fixture("product-detail");
+  p.onLoad({ id: id(2) });
+  showDetail(p);
+  p.data.canManageImages = true;
+  let finishPreparation, decision;
+  a.imageClient.selectAndReplace = async (_s, _p, _source, preview) => {
+    await new Promise((resolve) => {
+      finishPreparation = resolve;
+    });
+    decision = await preview({ mainPath: "main", thumbPath: "thumb" });
+  };
+  p.load = async () => {};
+  a.sensitiveCaches.invalidate = () => {};
+  const pending = p.replaceImage({ currentTarget: { dataset: { source: "camera" } } });
+  p.onHide();
+  p.onShow();
+  finishPreparation();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(p.data.imagePreviewUrl, "main");
+  assert.equal(p.data.imagePreviewThumb, "thumb");
+  assert.equal(decision, undefined);
+  p.confirmImagePreview();
+  await pending;
+  assert.equal(decision, true);
+  assert.equal(p.data.imagePreviewUrl, "");
+  assert.equal(p.data.imageBusy, false);
+});
+
+test("picker results cannot open after unload or a changed account, shop or product", async () => {
+  for (const change of ["unload", "account", "shop", "product"]) {
+    const { a, p } = fixture("product-detail");
+    p.onLoad({ id: id(2) });
+    showDetail(p);
+    p.data.canManageImages = true;
+    let finishPreparation, decision;
+    a.imageClient.selectAndReplace = async (_s, _p, _source, preview) => {
+      await new Promise((resolve) => {
+        finishPreparation = resolve;
+      });
+      decision = await preview({ mainPath: "main", thumbPath: "thumb" });
+    };
+    const pending = p.replaceImage({ currentTarget: { dataset: { source: "album" } } });
+    p.onHide();
+    if (change === "unload") p.onUnload();
+    else {
+      if (change === "account") a.sessionStore.generation++;
+      if (change === "shop") a.activeShop = { shop_id: id(3) };
+      if (change === "product") p.productId = id(4);
+      showDetail(p);
+    }
+    finishPreparation();
+    await pending;
+    assert.equal(decision, false, change);
+    assert.equal(p.data.imagePreviewUrl, "", change);
+  }
+});
+
+test("a displayed preview cannot authorize upload after hide even if already confirmed", async () => {
+  for (const confirmBeforeHide of [false, true]) {
+    const { a, p } = fixture("product-detail");
+    p.onLoad({ id: id(2) });
+    showDetail(p);
+    p.data.canManageImages = true;
+    let decision;
+    a.imageClient.selectAndReplace = async (_s, _p, _source, preview) => {
+      decision = await preview({ mainPath: "main", thumbPath: "thumb" });
+    };
+    a.sensitiveCaches.invalidate = () => {};
+    p.load = async () => {};
+    const pending = p.replaceImage({ currentTarget: { dataset: { source: "camera" } } });
+    assert.equal(p.data.imagePreviewUrl, "main");
+    if (confirmBeforeHide) p.confirmImagePreview();
+    p.onHide();
+    p.onShow();
+    p.confirmImagePreview();
+    await pending;
+    assert.equal(decision, false);
+    assert.equal(p.data.imagePreviewUrl, "");
+    assert.equal(p.data.imageBusy, false);
+  }
+});
+
 test("thumbnail renewal survives page append but cannot update an unloaded page", async () => {
   for (const unload of [false, true]) {
     const { a, p } = fixture();
@@ -41,6 +131,7 @@ test("thumbnail renewal survives page append but cannot update an unloaded page"
 test("late image preparation after hide cancels instead of opening a stranded preview", async () => {
   const { a, p } = fixture("product-detail");
   p.onLoad({ id: id(2) });
+  showDetail(p);
   p.data.canManageImages = true;
   let complete, decision;
   const {
@@ -66,6 +157,7 @@ test("late image preparation after hide cancels instead of opening a stranded pr
 test("new shop context releases busy state after cancelling old preview", async () => {
   const { a, p } = fixture("product-detail");
   p.onLoad({ id: id(2) });
+  showDetail(p);
   p.data.canManageImages = true;
   p.context = `1:${id(1)}:${id(2)}`;
   const {
@@ -215,6 +307,7 @@ test("detail renews an expired image once and ignores old-version callbacks", as
 test("image preview requires explicit confirmation and cancels on page departure", async () => {
   const { a, p } = fixture("product-detail");
   p.onLoad({ id: id(2) });
+  showDetail(p);
   p.data.canManageImages = true;
   let confirmed;
   const {

@@ -150,7 +150,50 @@ Regressione locale prima: cross-realm rifiutato e oggetto con prototipo finto
 accettato; dopo:3/3PASS, inclusi negativi stringhe/view/shared/proxy/tag falsi.
 Node26.7 verify152PASS (110TS+42MJS), tutti i gate richiesti inclusi. Il primo
 verify del delta si era fermato per formattazione, corretta prima del rerun.
-Ritest app immagine dopo questo fix ancora NOT_RUN; nessun PHONE_PASS.
+Alla chiusura del solo fix buffer il ritest era NOT_RUN; il successivo tentativo
+autentico descritto sotto supera il buffer ma rileva il difetto lifecycle. Nessun PHONE_PASS.
+
+Integrazione: [Mini PR28](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/28),
+head834a93e45b01e278e63ec84529114ea45d116b6e, due review APPROVED,
+CI36261996217 PASS; merge8347df51add659714f5fa23d27863a48f84c0d25,
+postmerge36262050372 PASS. Precedente report PR27 integrato7160922,
+CI36261203508/post36261559258 PASS. Nessun deploy Worker o DDL aggiuntivo.
+
+Build TEST18:20:01UTC da main8347df51, Node26.7: cambia solo lib/platform.js;
+configurazione compilata identica37d94cf4. JS compilato SHA256
+ef61d94b92ce09395899292eda306481833d52259ab3ea15b4f3eaae2a2de488;
+manifest dist acae03c61e362423b2c034d6d13e5fd5a864caa3ea554d92cf0f12bd6b9f85ec.
+Mac temporaneamente bloccato alle18:20; accessibile alle18:22. Ricompilazione
+ufficiale e riaccesso autonomo osservati, nuovo runtime effettivamente caricato.
+
+Continuazione privata images-buffer con nuova directory una tantum:18test PASS
+e review indipendente APPROVED. Pin del sorgente e del JS compilato; nessun
+tap camera/album con intento immagini pendente del medesimo account/shop,
+compresi record senza indice. Report falliti e fixture precedenti conservati;
+nessun replay o nuova creazione. Il tentativo images-buffer è FAIL
+ACTUAL_GUI_OR_DEVICE_ACTION_REQUIRED perché la ricevuta di coordinamento GUI è
+arrivata dopo60s; conserva0casi PASS. Separatamente la UI mostra cancellazione
+dell’immagine prima dell’anteprima. Journal riconciliato NO_WRITE con SELECT
+scoped:0intenti/0versioni; nessun replay del tentativo. Offline/locales restano da eseguire.
+
+## Correzione lifecycle picker — in esecuzione
+
+Alle18:29 nuovo intento diagnostico registrato prima del solo gesto camera.
+Debugger ufficiale: image_operation_cancelled da product-image-mutation-client.js:290,
+dopo preparazione, perché confirmPrepared restituisce false. previewEpoch1→2,
+generation1 invariata, pagina mounted, nessuna anteprima. Dopo resume: imageBusyfalse,
+outbox0, nessun tentativo immagine durevole. SELECT18:33:43UTC sul solo prodotto
+della run:0intenti/0versioni. Intento diagnostico RECONCILED_NO_WRITE; nessun PASS immagini.
+
+Il picker nasconde e mostra la pagina. Il fix conserva lo snapshot originario
+account/shop/prodotto, richiede pagina visibile prima della nuova anteprima e
+cattura l’epoca alla sua presentazione. Hide/unload continuano ad annullarla;
+conferma esplicita e tutti i guardrail immagine/server restano necessari.
+Regressione isolata hide→show riprodotta prima del fix (1FAIL/9); dopo il fix
+10/10 includendo la race conferma→hide→show. Verify Node26.7:155PASS
+(110TS+45MJS), governance/privacy/secrets/typecheck/lint/build e diffcheck PASS;
+review indipendenti pendenti.
+Nessuna affermazione di upload autentico riuscito prima del ritest.
 
 ## Matrice A–G e limiti delle prove
 
@@ -159,7 +202,7 @@ Ritest app immagine dopo questo fix ancora NOT_RUN; nessun PHONE_PASS.
 | A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Foreground/logout/pending; negativi isolati separati; riaccesso autonomo autorizzato ed eseguito |
 | B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto con5audit | Ulteriori filtri/sort/pagine; edge case solo isolati |
 | C Catalogo/prezzi |13casi reali,5fixture, rinomina e sostituzione/archiviazione categoria/fornitore, CLP interi e quantità1,25 | Conflitti live, storico multipagina e legacy invariati |
-| D Immagini | Picker reale; errore prima dell’anteprima, NO_WRITE riconciliato; API JPEG diagnostiche riuscite | Ritest del fix cross-realm; anteprima/upload/album/versione/rimozione/rete e telefono |
+| D Immagini | Picker reale; errore prima dell’anteprima, NO_WRITE riconciliato; API JPEG diagnostiche riuscite | Ritest del fix lifecycle, dopo preparazione cross-realm superata; anteprima/upload/album/versione/rimozione/rete e telefono |
 | E Offline/sync | Fix lease integrato; checkpoint200, watermark12425→12430 concorde con5eventi scoped | Salvataggio offline→online senza navigazione, aggiornamento schermate e lifecycle |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
 | G Usabilità/lingue | Rendering prima pagina e percorsi inglesi reali | Ispezione autenticata4lingue, CTA/bozze/offline |
