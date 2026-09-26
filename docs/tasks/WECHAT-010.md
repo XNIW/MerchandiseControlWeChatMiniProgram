@@ -1,14 +1,16 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
-## Stato corrente — fix distribuito, ritest in attesa dello sblocco Mac
+## Stato corrente — pairing verificato, build readonly pronta
 
-AppSecret presente, enrollment ON sul solo target TEST e altri6flag OFF.
-Worker246797b4-75cf-4423-ae23-acf8e58d73d7, release selettiva a805d640;
-PR112/23 integrate, trasporto Workers corretto e HTTP pubblico5/5PASS.
-Tencent/mapping/login/business non ancora verificati: Mac bloccato, sblocco
-manuale richiesto all'utente. Poi nuovo pairing personale nel flusso canonico.
-Nessun input AppSecret aggiuntivo, fixture business, DONE o PASS telefono.
-Stato dettagliato e ricevute nel report canonico; note successive storiche.
+Il pairing personale è riuscito: due prove Tencent consumate/verificate, mapping
+canonico attivo e audit linked confermati. Enrollment chiuso; solo login Mini ON
+sul Worker15ad37e9-6176-4410-baab-28a67615211f, altri6flag OFF. Codice della release
+selettiva a805d640, ambito singleton e tracing preservati; registry144 invariato.
+Build readonly verify149/149 PASS, ma caricamento DevTools bloccato dal Mac
+nuovamente locked: sblocco manuale richiesto. Poi login Home personale distinto
+e collaudo business; questi restano NOT_RUN. Rotazione NOT_PERFORMED, eccezione
+TEST invariata. Nessuna fixture business o DONE. Report canonico aggiornato;
+le note datate successive sono storiche.
 
 ## 2026-09-25 — Residui immagini in REVIEW, accettazione BLOCKED_EXTERNAL
 

@@ -129,3 +129,5 @@ Official DevTools postmerge smoke found WXML compiler rejection of encoded logic
 | 2026-09-25 | WECHAT-010 | Causa riprodotta in workerd1.20260811.1: redirect:error rifiutato prima della rete; manual accetta la RPC e non segue3xx | Fix minimo nei due trasporti Admin; diagnostica pubblica provvisoria non integrata; nessuna prova Tencent ancora |
 
 | 2026-09-25T20:49:14.938Z | WECHAT-010 | PR112/23 integrate; fix Workers selettivo a805d640 distribuito come246797b4, binding/runtime/settings preservati; HTTP pubblico5/5PASS | Enrollment ON/6OFF; ritest autentico fermo sul Mac bloccato, sblocco richiesto; nessun business/telefono o DONE |
+
+| 2026-09-26 | WECHAT-010 | Pairing personale riuscito; readback15:01UTC:1mapping,1audit linked, due prove consumate, ordine/scadenza validi. Enrollment chiuso e readonly server ON come Worker15ad37e9, altri6OFF; propagazione riconciliata senza retry. | Registry144 esatto; build readonly149PASS. Mac nuovamente bloccato prima del caricamento; sblocco richiesto. Login distinto/business/telefono NOT_RUN, nessuna fixture o DONE. |
