@@ -1,16 +1,22 @@
 # Active task
 
-## Stato corrente — pairing verificato, build readonly pronta
+## Stato corrente — collaudo autentico parziale, correzione sync TEST integrata
 
-Il pairing personale è riuscito: due prove Tencent consumate/verificate, mapping
-canonico attivo e audit linked confermati. Enrollment chiuso; solo login Mini ON
-sul Worker15ad37e9-6176-4410-baab-28a67615211f, altri6flag OFF. Codice della release
-selettiva a805d640, ambito singleton e tracing preservati; registry144 invariato.
-Build readonly verify149/149 PASS, ma caricamento DevTools bloccato dal Mac
-nuovamente locked: sblocco manuale richiesto. Poi login Home personale distinto
-e collaudo business; questi restano NOT_RUN. Rotazione NOT_PERFORMED, eccezione
-TEST invariata. Nessuna fixture business o DONE. Report canonico aggiornato;
-le note datate successive sono storiche.
+Pairing e login personale distinto verificati. DevTools:16casi lettura e9casi
+catalogo PASS con readback indipendente;5fixture proprie e9intent VERIFIED.
+Auth Mini e mutazioni ON solo per il target TEST autorizzato; enrollment OFF.
+Corretto il checkpoint503 nel confine Admin: PR114 integrata, migrazione
+20260926164349 applicata una volta; registry145/precedenti144hash preservati,
+zero commerce. Worker beb94e1e e codice runtime a805d640 invariati.
+Emulatore Android e simulatore iOS autenticati personalmente e verificati sullo stesso profilo/shop.
+Convergenza non attestata: iPhone Retry fallisce per envelope catalog mancante,
+con16sessioni storiche compresse che attivano il gate nativo di recupero.
+Nessuna modifica ai sorgenti o dati ordinari nativi.
+Mac nuovamente bloccato e sessione Mini scaduta prima del picker: sblocco e
+riaccesso personale richiesti per ritest sync, immagini, relazioni e offline.
+Il report canonico distingue prova autentica, locale, residui e recupero.
+Stato REVIEW del fix / BLOCKED_EXTERNAL del runtime, owner utente; nessun DONE.
+Le sezioni datate precedenti sono storiche.
 
 ## 2026-09-25 — Residui immagini in REVIEW, accettazione BLOCKED_EXTERNAL
 
