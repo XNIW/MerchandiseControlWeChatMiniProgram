@@ -25,6 +25,7 @@ type PriceRow = PriceHistoryEntry & {
 };
 
 interface DetailRuntime {
+  visible: boolean;
   previewEpoch?: number;
   finishPreview?: ((confirmed: boolean) => void) | undefined;
   imageRetryKey?: string | undefined;
@@ -97,10 +98,12 @@ Page({
   },
   onLoad(options: Record<string, string | undefined>) {
     runtime(this).mounted = true;
+    runtime(this).visible = false;
     runtime(this).productId = options.id ?? "";
     runtime(this).archiveAttempt = null;
   },
   onShow() {
+    runtime(this).visible = true;
     this.setData({ text: translationsFor(app.locale) });
     wx.setNavigationBarTitle({ title: this.data.text.product });
     runtime(this).unsubscribeSync?.();
@@ -110,12 +113,14 @@ Page({
     void this.load();
   },
   onHide() {
+    runtime(this).visible = false;
     runtime(this).previewEpoch = (runtime(this).previewEpoch ?? 0) + 1;
     this.cancelImagePreview();
     runtime(this).unsubscribeSync?.();
     runtime(this).unsubscribeSync = undefined;
   },
   onUnload() {
+    runtime(this).visible = false;
     this.cancelImagePreview();
     runtime(this).mounted = false;
     runtime(this).loadSequence = (runtime(this).loadSequence ?? 0) + 1;
@@ -385,7 +390,6 @@ Page({
   },
   async replaceImage(event: WechatMiniprogram.BaseEvent) {
     const valid = actionContext(this);
-    const previewEpoch = runtime(this).previewEpoch;
     const source = event.currentTarget.dataset.source === "album" ? "album" : "camera";
     if (this.data.imageBusy || !this.data.canManageImages || !app.activeShop) return;
     if (!app.imageClient) {
@@ -407,12 +411,18 @@ Page({
         runtime(this).productId,
         source,
         async (preview) => {
-          if (!valid() || runtime(this).previewEpoch !== previewEpoch) return false;
+          if (!valid() || !runtime(this).visible) return false;
+          const previewEpoch = runtime(this).previewEpoch;
           this.setData({ imagePreviewUrl: preview.mainPath, imagePreviewThumb: preview.thumbPath });
           const confirmed = await new Promise<boolean>((resolve) => {
             runtime(this).finishPreview = resolve;
           });
-          return confirmed && valid() && runtime(this).previewEpoch === previewEpoch;
+          return (
+            confirmed &&
+            valid() &&
+            runtime(this).visible &&
+            runtime(this).previewEpoch === previewEpoch
+          );
         },
       );
       if (!valid()) return;

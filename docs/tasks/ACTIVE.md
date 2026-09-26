@@ -12,14 +12,16 @@ Auth Mini e mutazioni ON solo per il target TEST; enrollment/altri flag OFF.
 Registry 145, Worker beb94e1e e codice runtime a805d640 invariati.
 Immagine selezionata nel picker reale ma fallita prima dell’anteprima: zero
 intent/versioni backend, journal riconciliato NO_WRITE, report FAIL preservato.
-Debugger: buffer nativo cross-realm rifiutato da instanceof. Fix mirato in
-EXECUTION, regressione riprodotta e validazione locale completata; ritest live da eseguire.
+Debugger: buffer nativo cross-realm rifiutato da instanceof. Fix PR28 integrato,
+152test e CI verde; nuova build TEST caricata con riaccesso autonomo.
+Il ritest reale rileva un secondo difetto: picker hide/show invalida l’anteprima
+prima della conferma. Diagnosi NO_WRITE riconciliata; fix lifecycle in EXECUTION.
 Android: recupero UI fallito con rollback per device identity mancante dopo
 verifica cache vuota; iOS: decoder catalog e gate storia compressa bloccano
 il recupero. Accessi Google validi; sorgenti e dati ordinari nativi invariati.
-Mac nuovamente accessibile. L’utente autorizza esplicitamente il riaccesso
-WeChat autonomo dopo scadenza e le operazioni autonome nel perimetro TEST.
-Nessun DONE; REVIEW del fix,
+L’utente autorizza il riaccesso WeChat autonomo dopo scadenza e le operazioni
+autonome nel perimetro TEST; riaccesso UI riuscito. Mac accessibile alle18:22UTC.
+Nessun DONE; nuovo fix in EXECUTION,
 LIVE_VALIDATED parziale, PHONE_VALIDATED NO. Il report canonico dettaglia i residui.
 Le sezioni datate precedenti sono storiche.
 
