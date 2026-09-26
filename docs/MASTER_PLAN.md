@@ -15,13 +15,16 @@ intent/versioni backend, journal riconciliato NO_WRITE, report FAIL preservato.
 Debugger: buffer nativo cross-realm rifiutato da instanceof. Fix PR28 integrato,
 152test e CI verde; nuova build TEST caricata con riaccesso autonomo.
 Il ritest reale rileva un secondo difetto: picker hide/show invalida l’anteprima
-prima della conferma. Diagnosi NO_WRITE riconciliata; fix lifecycle in EXECUTION.
+prima della conferma. Diagnosi NO_WRITE riconciliata; fix lifecycle PR29 integrato
+60392f8d con155test e CI/head/main PASS. Build TEST modifica soltanto il dettaglio
+prodotto, config invariata; nuova ricompilazione DevTools/ritest ancora necessari.
 Android: recupero UI fallito con rollback per device identity mancante dopo
 verifica cache vuota; iOS: decoder catalog e gate storia compressa bloccano
 il recupero. Accessi Google validi; sorgenti e dati ordinari nativi invariati.
 L’utente autorizza il riaccesso WeChat autonomo dopo scadenza e le operazioni
-autonome nel perimetro TEST; riaccesso UI riuscito. Mac accessibile alle18:22UTC.
-Nessun DONE; nuovo fix in EXECUTION,
+autonome nel perimetro TEST; riaccesso UI riuscito. Mac bloccato di nuovo alle18:40UTC:
+BLOCKED_EXTERNAL runtime, owner utente, sblocco OS manuale richiesto dal controllo UI.
+Nessun DONE; codice revisionato e integrato, accettazione runtime ancora incompleta,
 LIVE_VALIDATED parziale, PHONE_VALIDATED NO. Il report canonico dettaglia i residui.
 Le sezioni datate precedenti sono storiche.
 
