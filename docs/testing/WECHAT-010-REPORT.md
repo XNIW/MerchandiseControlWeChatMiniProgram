@@ -176,7 +176,7 @@ arrivata dopo60s; conserva0casi PASS. Separatamente la UI mostra cancellazione
 dell’immagine prima dell’anteprima. Journal riconciliato NO_WRITE con SELECT
 scoped:0intenti/0versioni; nessun replay del tentativo. Offline/locales restano da eseguire.
 
-## Correzione lifecycle picker — in esecuzione
+## Correzione lifecycle picker — integrata, ritest da eseguire
 
 Alle18:29 nuovo intento diagnostico registrato prima del solo gesto camera.
 Debugger ufficiale: image_operation_cancelled da product-image-mutation-client.js:290,
@@ -192,8 +192,35 @@ conferma esplicita e tutti i guardrail immagine/server restano necessari.
 Regressione isolata hide→show riprodotta prima del fix (1FAIL/9); dopo il fix
 10/10 includendo la race conferma→hide→show. Verify Node26.7:155PASS
 (110TS+45MJS), governance/privacy/secrets/typecheck/lint/build e diffcheck PASS;
-review indipendenti pendenti.
+due review indipendenti APPROVED sul diff SHA256
+820f0dc3d6ae36a3d84f4044e649a1fd7e30eba922ea48dd552a29f2d2360a08.
 Nessuna affermazione di upload autentico riuscito prima del ritest.
+
+[Mini PR29](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/29)
+integrata: head6ac459b2261cde0a3054f5ca0ae4d0c0897abb7e,
+CI36263334935 PASS; merge60392f8d4095f256decdd248f5dc629ef4db03d1,
+postmerge36263379570 PASS. Checkout Mini principale pulito/allineato;
+Admin mainfe4907adc51ff842720e1c7eb36aa05e0fa53cb8 invariato.
+
+Build TEST18:41:12UTC da60392f8d, Node26.7: solo pages/product-detail/index.js
+cambiato, SHA256c47548ab4f258bb49b0fa120303cc329eb0cc855142ca9a5b11e20afd81d3100.
+Config37d94cf4 e platformef61d94b invariati; manifest
+81b769dfa1d947a11b298a7a1751451b093a5ffff1e6facfca086d0a1a8a35a2.
+Il controllo UI alle18:40 e18:41 trova il Mac bloccato: **BLOCKED_EXTERNAL**,
+owner utente, sblocco OS manuale. La build su disco non prova la ricompilazione
+ufficiale o il successo del nuovo percorso: immagini-lifecycle NOT_RUN,
+offline/locales NOT_RUN. Non aggirato il blocco UI tramite SDK.
+
+Worker letto nuovamente alle18:40:05UTC: versione beb94e1e, scope/flag esatti.
+Nuovo helper privato images-lifecycle:21test PASS, review indipendente APPROVED,
+SHAb1747f9f77b6fe2c4f3c001a54569ee98b1934868684bbb8f05b08cd21d085ab.
+Richiede entrambi i sorgenti e compilati esatti, tutte le riconciliazioni NO_WRITE
+e assenza di intenti pendenti; directory una tantum non ancora creata.
+Alla ripresa: verificare accessibilità, ricompilare ufficialmente, riaccedere WeChat
+autonomamente, aggiornare metadata preflight scaduti, eseguire il nuovo scenario
+sulle stesse fixture. Non ripetere images o images-buffer. Nessun telefono disponibile
+o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
+
 
 ## Matrice A–G e limiti delle prove
 
