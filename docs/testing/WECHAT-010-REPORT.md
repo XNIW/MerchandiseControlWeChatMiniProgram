@@ -5,7 +5,7 @@ Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
 tre operazioni immagini PASS; offline applicato una volta; feedback UI corretto e integrato, ritest bloccato dal Mac;
 convergenza nativa e telefono restano aperti.** Nessun DONE auto-approvato.
 
-## Aggiornamento 2026-09-27 — recupero offline integrato e residui lingue
+## Aggiornamento 2026-09-27 — offline e lingue integrati, ritest bloccato dal Mac
 
 Fix feedback offline integrato con PR35: head 36ad793, merge 71d5f117,
 review indipendenti 2/2 APPROVED sulla patch b99e339d. Verify 187 PASS;
@@ -25,8 +25,12 @@ Nessuna modifica a capability, consensi, dati finanziari, privacy o configurazio
 Verify 191 PASS (110 TS + 81 MJS); quattro regressioni aggiunte e harness nativi
 aggiornati. La review ha esteso il controllo al logout con pending: etichette
 spagnole Guardar/Eliminar entro limite, scelte distinte e test del consenso.
-Review e integrazione del delta lingue ancora pendenti; il collaudo
-visivo autenticato nelle quattro lingue resta NOT_RUN_OS_LOCKED.
+Delta lingue integrato con PR36: head49c5225, merge70cec1bd; due review APPROVED
+sulla patch e7557b8e, CI head36290284596 e main36290330031 SUCCESS.
+Build TEST03:04UTC: dieci file previsti aggiornati, configurazione byte-identica,
+manifest completo4519388b verificato. Runner feedback/locales approvato2/2 con
+32test PASS; nuova build non ricompilata nel simulatore per il blocco OS.
+Il collaudo visivo autenticato nelle quattro lingue resta NOT_RUN_OS_LOCKED.
 
 Restano tre operazioni immagini DevTools PASS e icone 5/5 verificate; due cleanup
 immagini pending nell'ultimo readback. Offline backend applicato esattamente una
@@ -40,7 +44,13 @@ Ricevute offline: [PR35](https://github.com/XNIW/MerchandiseControlWeChatMiniPro
 [CI merge](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36289849010).
 Build PR35 verificata: `aa82277447040175a78379e7b6df5e2658d172991fc6043c0fa2954a0eb85a49`;
 config `37d94cf427edb67d5f2dc3fa7eced1968cd69c6c53fd6aa7cf2a2e8ce4367d32`.
-Il futuro delta lingue richiede il nuovo manifest revisionato prima del runner.
+Build cumulativa PR35+PR36 verificata:
+`4519388b3b125fa4306b077e2b2f650508395fa568201216a6ee5e721e27c10a`.
+Modulo feedback revisionato:
+`c2ee1d1cb2a431aee4827f81f87ca4dc5ed8211b2a9dc952a01e5c1f2acfbff0`.
+Ricevute lingue: [PR36](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/36),
+[CI head](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36290284596),
+[CI merge](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36290330031).
 
 ## Aggiornamento 2026-09-27 — immagini completate in DevTools, feedback offline in correzione
 
@@ -404,7 +414,7 @@ o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
 | D Immagini | Tre operazioni DevTools PASS: camera, sostituzione galleria, rimozione; orientamento/thumbnail osservati | Due cleanup pending; rete/lifecycle immagine e telefono non attestati |
 | E Offline/sync | Checkpoint/watermark verificati; salvataggio offline→online sulla stessa pagina applicato una volta, History5→6; feedback corretto PR35 | Ritest feedback Saved post-fix bloccato dal Mac; aggiornamento altre schermate/lifecycle restano distinti |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
-| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow in review,191test locali | Collaudo visivo4lingue e conferme autenticate dopo integrazione; Mac bloccato |
+| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow integrati PR36,191test locali | Collaudo visivo4lingue e conferme autenticate post-fix; Mac bloccato |
 | Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
 Le durate scenari45.566/14.486/6.602/6.468ms includono readback/orchestrazione,

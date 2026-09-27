@@ -186,3 +186,5 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 2026-09-27 — WECHAT-010: immagini DevTools tre operazioni PASS, telefono non provato. Offline backend esattamente una volta, feedback form FAIL. Correzione circoscritta in EXECUTION con root unico writer e due reviewer read-only previsti; niente DONE.
 
 2026-09-27 — WECHAT-010: recupero feedback offline PR35 integrato e CI head/main SUCCESS; ritest autentico BLOCKED_EXTERNAL OS lock, owner utente. Residui G titoli/conferme/leggibilità in EXECUTION, root unico writer. Nessun DONE.
+
+2026-09-27 — WECHAT-010: PR35/36 integrate, review2/2 e CI head/main verdi;191test locali. Ricevuta sola documentazione per build cumulativa e limiti live. Accettazione runtime BLOCKED_EXTERNAL da Mac bloccato, owner utente/sblocco manuale già richiesto; nessun DONE.
