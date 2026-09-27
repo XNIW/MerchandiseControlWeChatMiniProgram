@@ -24,23 +24,33 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "首页",
+        "iconPath": "assets/tabs/home.png",
+        "selectedIconPath": "assets/tabs/home-selected.png"
       },
       {
         "pagePath": "pages/sales/index",
-        "text": "销售"
+        "text": "销售",
+        "iconPath": "assets/tabs/sales.png",
+        "selectedIconPath": "assets/tabs/sales-selected.png"
       },
       {
         "pagePath": "pages/database/index",
-        "text": "数据库"
+        "text": "数据库",
+        "iconPath": "assets/tabs/catalog.png",
+        "selectedIconPath": "assets/tabs/catalog-selected.png"
       },
       {
         "pagePath": "pages/history/index",
-        "text": "历史"
+        "text": "历史",
+        "iconPath": "assets/tabs/activity.png",
+        "selectedIconPath": "assets/tabs/activity-selected.png"
       },
       {
         "pagePath": "pages/account/index",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "assets/tabs/account.png",
+        "selectedIconPath": "assets/tabs/account-selected.png"
       }
     ]
   },

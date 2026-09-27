@@ -1,6 +1,24 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-## Stato corrente — collaudo autentico parziale, sync Mini verificato
+## Aggiornamento 2026-09-27 — icone e ritest immagini
+
+Dopo lo sblocco, ricompilazione ufficiale e login WeChat autonomo eseguiti.
+Il ritest images-lifecycle supera preparazione/anteprima, poi fallisce
+IMAGE_UPLOAD_ERROR. SELECT indipendente:1intento e1versione failed con
+jpeg_metadata_forbidden, cleanup pending, prodotto senza immagine primaria.
+Tentativo riconciliato come fallimento con cleanup pendente, non NO_WRITE o PASS.
+Una diagnosi successiva PREVIEW_ONLY è fermata nel picker dal nuovo blocco del Mac;
+prima di proseguire occorre annullarla e riconciliarla, senza confermare upload.
+
+L’utente chiede verifica icone: UI e app.json confermano assenza delle5icone tab.
+Delta circoscritto:10PNG locali normali/selezionati, generator asset opzionale e
+copia PNG nella build. Verify155PASS e controlli formato/copia asset PASS;
+verifica visiva nel runtime aggiornato ancora da eseguire dopo review/integrazione.
+Mac bloccato di nuovo: owner utente, sblocco OS manuale richiesto; login autonomo
+già autorizzato. Restano17letture/13casi catalogo PASS; nessun nuovo PASS immagini,
+telefono o convergenza. Le ricevute datate precedenti restano storiche.
+
+## Ricevuta precedente 2026-09-26 — collaudo parziale e sync verificato
 
 Pairing e login personale distinto verificati. DevTools: 17 scenari lettura e
 13 casi catalogo PASS con SELECT indipendenti; le stesse 5 fixture conservate.
