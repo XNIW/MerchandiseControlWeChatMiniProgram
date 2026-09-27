@@ -396,16 +396,16 @@ Page({
       this.setData({ errorMessage: this.data.text.imageManagementUnavailable });
       return;
     }
-    if (this.data.product?.primary_image_version_id) {
-      const confirmation = await wx.showModal({
-        cancelText: this.data.text.cancel,
-        confirmText: this.data.text.replaceImage,
-        content: this.data.text.replaceImageConfirm,
-      });
-      if (!confirmation.confirm || !valid()) return;
-    }
     this.setData({ errorMessage: "", imageBusy: true, imagePermissionDenied: false });
     try {
+      if (this.data.product?.primary_image_version_id) {
+        const confirmation = await wx.showModal({
+          cancelText: this.data.text.cancel,
+          confirmText: this.data.text.imageConfirm,
+          content: this.data.text.replaceImageConfirm,
+        });
+        if (!confirmation.confirm || !valid()) return;
+      }
       await app.imageClient.selectAndReplace(
         app.activeShop.shop_id,
         runtime(this).productId,
@@ -499,14 +499,14 @@ Page({
       this.setData({ errorMessage: this.data.text.imageManagementUnavailable });
       return;
     }
-    const confirmation = await wx.showModal({
-      cancelText: this.data.text.cancel,
-      confirmText: this.data.text.removeImage,
-      content: this.data.text.removeImageConfirm,
-    });
-    if (!confirmation.confirm || !valid()) return;
     this.setData({ errorMessage: "", imageBusy: true });
     try {
+      const confirmation = await wx.showModal({
+        cancelText: this.data.text.cancel,
+        confirmText: this.data.text.imageConfirm,
+        content: this.data.text.removeImageConfirm,
+      });
+      if (!confirmation.confirm || !valid()) return;
       await app.imageClient.remove(app.activeShop.shop_id, runtime(this).productId, versionId);
       if (!valid()) return;
       app.sensitiveCaches.invalidate();

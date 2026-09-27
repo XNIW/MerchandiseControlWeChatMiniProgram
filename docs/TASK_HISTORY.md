@@ -178,3 +178,5 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 | 2026-09-27T01:49:00Z | WECHAT-010 | Due review indipendenti rilevano la Promise cleanup rigettata conservata; corretto retry su nuova selezione esplicita con errore tipizzato | Regressione aggiunta,178test; nuovo snapshot in review; Mac nuovamente bloccato, ritest reale attende sblocco utente |
 
 | 2026-09-27T01:50:17+00:00 | WECHAT-010 | Correzione JPEG PR32 integrata dopo178test e due review finali; CI head/main verdi; build TEST pronta con config invariata | head16a6d80,mergef070a5a,CI36286588193/36286645051; runner24PASS; ricompilazione e upload post-fix NOT_RUN_OS_LOCKED, owner utente |
+
+| 2026-09-27T02:20:26+00:00 | WECHAT-010 | Upload camera DevTools PASS; sostituzione bloccata dal limite native confirmText e riconciliata senza nuova scrittura | Manifest529dd790; SELECT02:17:44UTC,2intenti/2versioni, nuova ready primaria; fix etichetta/catch/doppio tap,180testPASS; review e ritest pendenti; nessun DONE |

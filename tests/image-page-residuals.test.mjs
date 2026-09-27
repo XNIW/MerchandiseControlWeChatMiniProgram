@@ -12,6 +12,72 @@ function showDetail(page) {
   page.load = load;
 }
 
+test("image confirmations fit native limits in every locale and preserve explicit consent", async () => {
+  const { translationsFor } = require("../dist-test/miniprogram/locales/index.js");
+  for (const locale of ["en", "es", "it", "zh-Hans"]) {
+    for (const action of ["replaceImage", "removeImage"]) {
+      for (const confirmed of [false, true]) {
+        const { a, p } = fixture("product-detail");
+        p.onLoad({ id: id(2) });
+        showDetail(p);
+        p.data.text = translationsFor(locale);
+        p.data.canManageImages = true;
+        p.data.product = { primary_image_version_id: id(3) };
+        p.load = async () => {};
+        a.sensitiveCaches.invalidate = () => {};
+        let calls = 0,
+          dialogs = 0,
+          finish;
+        a.imageClient.selectAndReplace = async () => calls++;
+        a.imageClient.remove = async () => calls++;
+        globalThis.wx.showModal = (options) => {
+          dialogs++;
+          for (const label of [options.cancelText, options.confirmText]) {
+            const width = [...label].reduce((n, c) => n + (c.charCodeAt(0) > 127 ? 2 : 1), 0);
+            assert.ok(width <= 8, `${locale}: ${label} exceeds the native limit`);
+          }
+          assert.equal(
+            options.content,
+            p.data.text[action === "replaceImage" ? "replaceImageConfirm" : "removeImageConfirm"],
+          );
+          return new Promise((resolve) => {
+            finish = resolve;
+          });
+        };
+        const event = { currentTarget: { dataset: { source: "album" } } };
+        const pending = p[action](event);
+        assert.equal(calls, 0);
+        await p[action](event);
+        assert.equal(dialogs, 1, "double tap must not open a second confirmation");
+        finish({ confirm: confirmed });
+        await pending;
+        assert.equal(calls, confirmed ? 1 : 0);
+        assert.equal(p.data.imageBusy, false);
+      }
+    }
+  }
+});
+
+test("native image dialog failure releases busy state and performs no mutation", async () => {
+  for (const action of ["replaceImage", "removeImage"]) {
+    const { a, p } = fixture("product-detail");
+    p.onLoad({ id: id(2) });
+    showDetail(p);
+    p.data.canManageImages = true;
+    p.data.product = { primary_image_version_id: id(3) };
+    let calls = 0;
+    a.imageClient.selectAndReplace = async () => calls++;
+    a.imageClient.remove = async () => calls++;
+    globalThis.wx.showModal = async () => {
+      throw new Error("native dialog unavailable");
+    };
+    await p[action]({ currentTarget: { dataset: { source: "album" } } });
+    assert.equal(calls, 0);
+    assert.equal(p.data.imageBusy, false);
+    assert.ok(p.data.errorMessage);
+  }
+});
+
 test("native picker return displays a fresh preview and waits for explicit confirmation", async () => {
   const { a, p } = fixture("product-detail");
   p.onLoad({ id: id(2) });

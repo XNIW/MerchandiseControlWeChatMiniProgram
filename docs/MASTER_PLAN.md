@@ -1,5 +1,27 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+## Aggiornamento 2026-09-27 — primo upload immagini autentico riuscito
+
+Dopo lo sblocco, build PR32 ricompilata e login WeChat distinto completato.
+images-jpeg sul manifest529dd790: fotocamera del simulatore → picker reale della
+fixture → anteprima principale/miniatura → conferma → upload/finalize PASS.
+SELECT indipendente02:17:44UTC conferma2intenti/2versioni: la nuova è ready e
+finalizzata, primaria del prodotto; la precedente failed/cleanup pending resta
+preservata. Screenshot verificano freccia verso l’alto, geometria e miniatura.
+È prova DevTools, non fotocamera fisica o accettazione telefono.
+
+Il report originale del run resta FAIL: la successiva sostituzione galleria non
+mostra la conferma. Diagnosi dell’API ufficiale con le opzioni reali della pagina:
+`showModal:fail confirmText length should not larger than 4 Chinese characters`.
+Il secondo intento è riconciliato senza ulteriore scrittura; UI senza pending,
+outbox o busy. Nessun replay del primo upload.
+
+Fix circoscritto: etichetta breve di conferma immagini nelle quattro lingue,
+contenuto completo invariato; errori nativi gestiti e doppio tap bloccato durante
+la conferma. Verify180PASS (110TS+70MJS). Review/integrazione e ritest di
+sostituzione/rimozione ancora necessari. Restano17letture/13casi catalogo PASS,
+icone5/5, offline/convergenza/telefono aperti; nessun DONE. Le note sotto sono storiche.
+
 ## Aggiornamento 2026-09-27 — icone e correzione JPEG integrate
 
 Le5icone tab e i rispettivi stati selezionati sono verificati nel runtime autentico
