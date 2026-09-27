@@ -1,5 +1,35 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
+## Aggiornamento 2026-09-27 — immagini completate in DevTools, feedback offline in correzione
+
+Dopo lo sblocco e la ricompilazione della build PR34, riaccesso WeChat riuscito.
+Sostituzione da galleria e rimozione completate attraverso le conferme native.
+Insieme al precedente caricamento camera, sono tre operazioni immagini PASS con
+readback indipendente. Screenshot reali verificano orientamento e miniatura;
+UI finale senza immagine primaria, pending o outbox. Le sorgenti camera/galleria
+sono picker DevTools della fixture: nessuna prova su fotocamera o telefono fisici.
+SELECT 02:29:09 UTC: tre intenti/versioni; precedente failed e versione camera
+superseded hanno cleanup pending, versione galleria removed ha cleanup complete.
+Nessuna cancellazione Storage forzata; report originali e fixture preservati.
+
+Prova offline tramite controllo rete nativo del simulatore: stato none verificato,
+stessa pagina, ritorno WiFi senza navigazione o pulsante Sync. Stessa operazione
+ritentata con chiave/corpo invariati; un solo aggiornamento canonico e History da
+5 a 6 eventi. Il modulo però resta dirty con errore Offline dopo il successo:
+backend PASS, feedback UI FAIL; il percorso complessivo non è ancora accettato.
+I 7 ms del runner partono dopo la ricevuta di coordinamento GUI, non dal ritorno
+rete: esclusi dalle misure di latenza reale e da p50/p95.
+
+Delta circoscritto in EXECUTION: osservazione read-only della ricevuta completa
+dell'intento, rilettura prodotto autorizzata e aggiornamento dello stesso modulo.
+Nessun successo dedotto dalla sola coda vuota; tutte le fasi devono essere
+confermate. Callback tardive recintate per sessione/shop/visibilità/caricamento;
+nessun nuovo invio o navigazione automatica dal callback di recupero.
+Sette regressioni aggiunte, verify 187 PASS (110 TS + 77 MJS), inclusi governance,
+privacy, secret scan, typecheck, lint e build; diffcheck PASS. Review indipendenti,
+integrazione e ritest autentico post-fix ancora pendenti. Corretto finding P2
+della review: la rilettura conserva la distinzione tra diniego, offline e timeout. Restano convergenza nativa, lingue e telefono; nessun DONE.
+
 ## Aggiornamento 2026-09-27 — primo upload immagini autentico riuscito
 
 Dopo lo sblocco, build PR32 ricompilata e login WeChat distinto completato.
@@ -18,9 +48,18 @@ outbox o busy. Nessun replay del primo upload.
 
 Fix circoscritto: etichetta breve di conferma immagini nelle quattro lingue,
 contenuto completo invariato; errori nativi gestiti e doppio tap bloccato durante
-la conferma. Verify180PASS (110TS+70MJS). Review/integrazione e ritest di
-sostituzione/rimozione ancora necessari. Restano17letture/13casi catalogo PASS,
-icone5/5, offline/convergenza/telefono aperti; nessun DONE. Le note sotto sono storiche.
+la conferma. Verify 180 PASS (110 TS + 70 MJS), due review indipendenti APPROVED
+sulla patch 380f3781. PR34 integrata: head fed196b, merge a68bd286; CI head
+36288360907 e CI main 36288419063 SUCCESS. Build TEST aggiornata nei soli due
+moduli locali/dettaglio, configurazione byte-identica, manifest f7182cca verificato.
+Runner images-confirmation revisionato da entrambi i reviewer dopo la correzione
+del controllo contesto successivo al readback; 28 test PASS. Riprende solo
+sostituzione/rimozione, senza replay del caricamento camera.
+
+Mac nuovamente bloccato prima della ricompilazione DevTools: ritest immagini
+NOT_RUN_OS_LOCKED; owner utente, sblocco manuale richiesto dal controllo UI.
+Restano 17 letture/13 casi catalogo PASS, primo upload camera DevTools PASS,
+icone 5/5; offline/convergenza/telefono aperti. Nessun DONE. Note sotto storiche.
 
 ## Aggiornamento 2026-09-27 — icone e correzione JPEG integrate
 

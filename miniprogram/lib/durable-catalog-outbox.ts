@@ -250,6 +250,23 @@ export class DurableCatalogOutbox {
     };
   }
 
+  /** A missing journal alone is not success: every stage must have an acknowledged outcome. */
+  completedIntentResult(
+    shopId: string,
+    intentId: string,
+    generation: number,
+  ): CatalogMutationResult | null {
+    const session = this.#sessions.load();
+    if (!session || generation !== this.#sessions.generation) return null;
+    const key = `${session.accountFingerprint}:${shopId}:${intentId}`;
+    if (
+      !this.#completedIntents.has(key) ||
+      this.pendingForCurrentShop(shopId).some((entry) => entry.intentId === intentId)
+    )
+      return null;
+    return this.#outcomes.get(key) ?? null;
+  }
+
   enqueue(input: CatalogMutationInput, identifiers: CatalogMutationAttemptIdentifiers): string {
     const session = this.#sessions.load();
     if (!session) throw new Error("session_expired");

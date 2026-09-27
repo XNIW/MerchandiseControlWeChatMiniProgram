@@ -37,6 +37,10 @@ interface ProductFormRuntime {
   generation: number;
   shopId: string;
   loadSequence: number;
+  visible: boolean;
+  reconcilingSave: boolean;
+  reconcileSequence: number;
+  unsubscribeOutbox?: () => void;
 }
 function runtime(page: unknown): ProductFormRuntime {
   return page as ProductFormRuntime;
@@ -102,6 +106,7 @@ Page({
     purchasePrice: "",
     retailPrice: "",
     saving: false,
+    saveStatus: "",
     secondProductName: "",
     stockQuantity: "",
     supplierId: "",
@@ -119,6 +124,14 @@ Page({
     const sequence = (holder.loadSequence ?? 0) + 1;
     holder.loadSequence = sequence;
     holder.saveAction = undefined;
+    holder.visible = true;
+    holder.reconcilingSave = false;
+    holder.reconcileSequence = (holder.reconcileSequence ?? 0) + 1;
+    holder.unsubscribeOutbox?.();
+    holder.unsubscribeOutbox = app.outbox?.subscribe?.(() => {
+      // Success receipts are completed after the durable queue notification.
+      void Promise.resolve().then(() => this.reconcileSavedIntent());
+    });
     const mode = options.mode === "edit" ? "edit" : "create";
     const productId = options.id ?? "";
     this.setData({
@@ -128,6 +141,7 @@ Page({
       productId,
       text: translationsFor(app.locale),
       formReady: false,
+      saveStatus: "",
     });
     wx.setNavigationBarTitle({
       title: mode === "edit" ? this.data.text.editProduct : this.data.text.newProduct,
@@ -219,6 +233,7 @@ Page({
     }
   },
   onShow() {
+    runtime(this).visible = true;
     if (runtime(this).shopId && !current(this))
       this.setData({
         formReady: false,
@@ -228,11 +243,20 @@ Page({
         purchasePrice: "",
         retailPrice: "",
         stockQuantity: "",
+        saveStatus: "",
       });
+    void this.reconcileSavedIntent();
+  },
+  onHide() {
+    runtime(this).visible = false;
+    runtime(this).reconcileSequence++;
+    runtime(this).reconcilingSave = false;
   },
   onUnload() {
     runtime(this).mounted = false;
     runtime(this).loadSequence = (runtime(this).loadSequence ?? 0) + 1;
+    runtime(this).unsubscribeOutbox?.();
+    delete runtime(this).unsubscribeOutbox;
     if (this.data.dirty) wx.disableAlertBeforeUnload();
   },
   markDirty(values: Record<string, unknown>) {
@@ -241,7 +265,7 @@ Page({
       this.setData({ errorMessage: this.data.text.retryableError });
       return;
     }
-    this.setData({ ...values, dirty: true, errorMessage: "" });
+    this.setData({ ...values, dirty: true, errorMessage: "", saveStatus: "" });
     wx.enableAlertBeforeUnload({ message: this.data.text.unsavedChanges });
   },
   changeBarcode(event: WechatMiniprogram.Input) {
@@ -441,8 +465,54 @@ Page({
         this.setData({ errorMessage: this.data.text[readErrorTranslationKey(error)] });
     }
   },
+  async reconcileSavedIntent() {
+    const holder = runtime(this),
+      action = holder.saveAction;
+    if (
+      !current(this) ||
+      !holder.visible ||
+      this.data.saving ||
+      holder.reconcilingSave ||
+      !action ||
+      !app.salesClient
+    )
+      return;
+    holder.reconcilingSave = true;
+    const sequence = ++holder.reconcileSequence;
+    const valid = () =>
+      current(this) &&
+      holder.visible &&
+      holder.reconcileSequence === sequence &&
+      holder.saveAction === action;
+    try {
+      const result = app.outbox.completedIntentResult(
+        holder.shopId,
+        action.intentId,
+        holder.generation,
+      );
+      if (!result) return;
+      const product = await app.salesClient.productDetail(holder.shopId, result.targetId);
+      if (!valid()) return;
+      if (!product) throw new CatalogMutationContractError("invalid_state");
+      this.applyServerProduct(product, false);
+      app.sensitiveCaches.invalidate();
+      this.setData({ mode: "edit", productId: result.targetId, saveStatus: this.data.text.saved });
+      wx.setNavigationBarTitle({ title: this.data.text.editProduct });
+    } catch (error) {
+      if (valid()) this.setData({ errorMessage: this.data.text[readErrorTranslationKey(error)] });
+    } finally {
+      if (holder.reconcileSequence === sequence) holder.reconcilingSave = false;
+    }
+  },
   async save() {
-    if (this.data.saving || !app.activeShop || !current(this) || !this.data.formReady) return;
+    if (
+      this.data.saving ||
+      runtime(this).reconcilingSave ||
+      !app.activeShop ||
+      !current(this) ||
+      !this.data.formReady
+    )
+      return;
     const validation = validateProductForm(
       {
         barcode: this.data.barcode,
@@ -469,7 +539,7 @@ Page({
       this.setData({ errorMessage: this.data.text.unavailable });
       return;
     }
-    this.setData({ errorMessage: "", saving: true });
+    this.setData({ errorMessage: "", saving: true, saveStatus: "" });
     try {
       const plan = planProductSave({
         canChangePrices: hasCatalogCapability(app.activeShop, "can_change_prices"),
@@ -571,7 +641,10 @@ Page({
           : "retryableError";
       this.setData({ errorMessage: this.data.text[key] });
     } finally {
-      if (current(this)) this.setData({ saving: false });
+      if (current(this)) {
+        this.setData({ saving: false });
+        void this.reconcileSavedIntent();
+      }
     }
   },
   retryLoad() {
