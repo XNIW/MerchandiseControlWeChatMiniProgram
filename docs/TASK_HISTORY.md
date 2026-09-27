@@ -180,3 +180,7 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 | 2026-09-27T01:50:17+00:00 | WECHAT-010 | Correzione JPEG PR32 integrata dopo178test e due review finali; CI head/main verdi; build TEST pronta con config invariata | head16a6d80,mergef070a5a,CI36286588193/36286645051; runner24PASS; ricompilazione e upload post-fix NOT_RUN_OS_LOCKED, owner utente |
 
 | 2026-09-27T02:20:26+00:00 | WECHAT-010 | Upload camera DevTools PASS; sostituzione bloccata dal limite native confirmText e riconciliata senza nuova scrittura | Manifest529dd790; SELECT02:17:44UTC,2intenti/2versioni, nuova ready primaria; fix etichetta/catch/doppio tap,180testPASS; review e ritest pendenti; nessun DONE |
+
+| 2026-09-27T02:25:54+00:00 | WECHAT-010 | Integrata PR34 dopo due review e CI; nuova build TEST pronta, ritest fermato dal blocco OS | head fed196b, merge a68bd286; CI36288360907/36288419063 SUCCESS; manifest f7182cca; runner c52a0484 revisionato,28testPASS; sblocco manuale richiesto; nessun DONE |
+
+2026-09-27 — WECHAT-010: immagini DevTools tre operazioni PASS, telefono non provato. Offline backend esattamente una volta, feedback form FAIL. Correzione circoscritta in EXECUTION con root unico writer e due reviewer read-only previsti; niente DONE.

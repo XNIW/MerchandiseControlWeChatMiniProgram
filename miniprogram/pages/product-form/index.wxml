@@ -1,6 +1,7 @@
 <view class="page">
   <text wx:if="{{loading}}" class="muted">{{text.loading}}</text>
   <text wx:if="{{errorMessage}}" class="error">{{errorMessage}}</text>
+  <text wx:if="{{saveStatus}}" class="muted">{{saveStatus}}</text>
   <view wx:if="{{!loading && formReady}}" class="form-card">
     <label class="field"><text>{{text.barcode}} *</text><input maxlength="96" value="{{barcode}}" bindinput="changeBarcode"/></label>
     <label class="field"><text>{{text.itemNumber}}</text><input maxlength="120" value="{{itemNumber}}" bindinput="changeItemNumber"/></label>

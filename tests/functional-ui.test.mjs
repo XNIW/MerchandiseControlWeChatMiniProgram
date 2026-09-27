@@ -809,3 +809,231 @@ test("F02 automatic relation refresh keeps the loaded 250-row window with bounde
     assert.equal(p.data.hasMore, false);
   }
 });
+
+async function offlineProductForm({ create = false, phases = 1 } = {}) {
+  const platform = new FakePlatform();
+  const sessions = new SessionStore(platform, () => 1000);
+  session(sessions);
+  let now = 10000;
+  const outbox = new DurableCatalogOutbox(platform, sessions, () => now);
+  const client = new CatalogMutationClient(
+    new HttpClient("https://admin.example.test", platform),
+    sessions,
+  );
+  const product = {
+    product_id: id(create ? 101 : 2),
+    barcode: "P2",
+    product_name: "Saved product",
+    category_id: null,
+    supplier_id: null,
+    item_number: null,
+    second_product_name: null,
+    purchase_price: 10,
+    retail_price: 20,
+    stock_quantity: 1,
+    updated_at: "2026-09-25T12:01:00Z",
+  };
+  const a = app({
+    categories: async () => [],
+    suppliers: async () => [],
+    productDetail: async () => product,
+  });
+  Object.assign(a, { sessionStore: sessions, outbox, catalogClient: client });
+  const p = page("product-form", a);
+  await p.onLoad(create ? { mode: "create" } : { mode: "edit", id: id(2) });
+  let navigations = 0;
+  globalThis.wx.navigateBack = () => navigations++;
+  const inputs = Array.from({ length: phases }, (_, index) =>
+    index === 0
+      ? create
+        ? {
+            operation: "product_create",
+            shopId: id(1),
+            payload: { barcode: "P2", productName: "Saved product" },
+          }
+        : input()
+      : {
+          operation: "product_price_update",
+          shopId: id(1),
+          targetId: id(2),
+          expectedUpdatedAt: product.updated_at,
+          payload: { price: index === 1 ? 10 : 20, priceType: index === 1 ? "PURCHASE" : "RETAIL" },
+        },
+  );
+  const identifiers = inputs.map((_, index) => ids(100 + index * 10));
+  const intent = outbox.enqueueSequence(inputs, identifiers);
+  p.saveAction = { fingerprint: "original draft", intentId: intent };
+  Object.assign(p.data, {
+    dirty: true,
+    productName: "Local draft",
+    errorMessage: p.data.text.offline,
+  });
+  platform.queuedResponses.push(new Error("offline"));
+  await outbox.flush(client, id(1));
+  await tick();
+  return {
+    a,
+    p,
+    outbox,
+    platform,
+    sessions,
+    product,
+    identifiers,
+    intent,
+    navigations: () => navigations,
+    advance: () => {
+      now += 100000;
+    },
+    flush: () => outbox.flush(client, id(1)),
+    queueSuccess: (index = 0) =>
+      platform.queuedResponses.push(success(identifiers[index], create ? 101 : 2)),
+  };
+}
+
+test("offline form clears its stale error only after every save stage and canonical readback", async () => {
+  const h = await offlineProductForm({ phases: 3 });
+  h.advance();
+  h.queueSuccess(0);
+  h.platform.queuedResponses.push(new Error("offline"));
+  await h.flush();
+  await tick();
+  assert.equal(h.p.data.dirty, true);
+  assert.equal(h.outbox.completedIntentResult(id(1), h.intent, h.sessions.generation), null);
+  h.advance();
+  h.queueSuccess(1);
+  h.queueSuccess(2);
+  await h.flush();
+  await tick();
+  assert.equal(h.p.data.errorMessage, "");
+  assert.equal(h.p.data.saveStatus, h.p.data.text.saved);
+  assert.equal(h.p.data.dirty, false);
+  assert.equal(h.p.data.productName, h.product.product_name);
+  assert.equal(h.p.data.updatedAt, h.product.updated_at);
+  assert.equal(h.p.saveAction, undefined);
+  assert.equal(h.navigations(), 0);
+  assert.equal(h.platform.requests.length, 5, "two failed attempts plus three acknowledgements");
+  h.p.changeProductName({ detail: { value: "Next draft" } });
+  await h.p.reconcileSavedIntent();
+  assert.equal(h.p.data.productName, "Next draft");
+  assert.equal(h.p.data.dirty, true);
+  assert.equal(h.p.data.saveStatus, "");
+  assert.equal(h.outbox.completedIntentResult(id(3), h.intent, h.sessions.generation), null);
+  assert.equal(h.outbox.completedIntentResult(id(1), h.intent, h.sessions.generation - 1), null);
+  h.sessions.clear();
+  assert.equal(h.outbox.completedIntentResult(id(1), h.intent, h.sessions.generation), null);
+});
+
+test("discarding an offline intent never displays Saved or clears its draft", async () => {
+  const h = await offlineProductForm();
+  h.outbox.discardIntent(id(1), h.intent);
+  await tick();
+  assert.equal(h.p.data.dirty, true);
+  assert.equal(h.p.data.productName, "Local draft");
+  assert.equal(h.p.data.saveStatus, "");
+  assert.equal(h.outbox.completedIntentResult(id(1), h.intent, h.sessions.generation), null);
+});
+
+test("offline save readback failure preserves draft and retries on show without another write", async () => {
+  const h = await offlineProductForm();
+  h.a.salesClient.productDetail = async () => {
+    throw new Error("unavailable");
+  };
+  h.advance();
+  h.queueSuccess();
+  await h.flush();
+  await tick();
+  assert.equal(h.p.data.dirty, true);
+  assert.equal(h.p.data.saveStatus, "");
+  assert.equal(h.p.data.errorMessage, h.p.data.text.retryableError);
+  h.a.salesClient.productDetail = async () => h.product;
+  h.p.onShow();
+  await tick();
+  assert.equal(h.p.data.dirty, false);
+  assert.equal(h.p.data.errorMessage, "");
+  assert.equal(h.platform.requests.length, 2);
+  assert.equal(h.navigations(), 0);
+});
+
+test("late offline readback is ignored after hide, unload, shop or account replacement", async () => {
+  for (const boundary of ["hide", "unload", "shop", "account"]) {
+    const h = await offlineProductForm();
+    let finish;
+    h.a.salesClient.productDetail = () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      });
+    h.advance();
+    h.queueSuccess();
+    await h.flush();
+    await tick();
+    assert.equal(typeof finish, "function");
+    if (boundary === "hide") h.p.onHide();
+    if (boundary === "unload") h.p.onUnload();
+    if (boundary === "shop") h.a.activeShop = { ...shop, shop_id: id(3) };
+    if (boundary === "account") h.sessions.clear();
+    const before = structuredClone(h.p.data);
+    finish(h.product);
+    await tick();
+    assert.deepEqual(h.p.data, before, boundary);
+    assert.equal(h.navigations(), 0);
+  }
+});
+
+test("show starts fresh reconciliation and an older hidden callback cannot release its guard", async () => {
+  const h = await offlineProductForm();
+  const finishes = [];
+  h.a.salesClient.productDetail = () => new Promise((resolve) => finishes.push(resolve));
+  h.advance();
+  h.queueSuccess();
+  await h.flush();
+  await tick();
+  h.p.onHide();
+  h.p.onShow();
+  await tick();
+  assert.equal(finishes.length, 2);
+  finishes[0](h.product);
+  await tick();
+  assert.equal(h.p.reconcilingSave, true);
+  assert.equal(h.p.data.dirty, true);
+  await h.p.save();
+  assert.equal(h.platform.requests.length, 2);
+  finishes[1](h.product);
+  await tick();
+  assert.equal(h.p.reconcilingSave, false);
+  assert.equal(h.p.data.dirty, false);
+});
+
+test("recovered creation adopts the server target for subsequent edits without navigating", async () => {
+  const h = await offlineProductForm({ create: true });
+  h.advance();
+  h.queueSuccess();
+  await h.flush();
+  await tick();
+  assert.equal(h.p.data.mode, "edit");
+  assert.equal(h.p.data.productId, id(101));
+  assert.equal(h.p.data.dirty, false);
+  assert.equal(h.p.data.saveStatus, h.p.data.text.saved);
+  assert.equal(h.navigations(), 0);
+});
+
+test("offline completion readback preserves membership and network error meanings", async () => {
+  for (const [code, translation] of [
+    ["membership_missing", "membershipRemoved"],
+    ["offline", "offline"],
+    ["timeout", "requestTimeout"],
+  ]) {
+    const h = await offlineProductForm();
+    h.a.salesClient.productDetail = async () => {
+      throw Object.assign(new Error(code), { code });
+    };
+    h.advance();
+    h.queueSuccess();
+    await h.flush();
+    await tick();
+    assert.equal(h.p.data.errorMessage, h.p.data.text[translation]);
+    assert.equal(h.p.data.dirty, true);
+    assert.equal(h.p.data.productName, "Local draft");
+    assert.equal(h.p.data.saveStatus, "");
+    assert.equal(h.platform.requests.length, 2);
+  }
+});
