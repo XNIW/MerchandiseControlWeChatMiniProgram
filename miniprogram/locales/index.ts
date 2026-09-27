@@ -1,7 +1,7 @@
 export type LocaleKey = "en" | "es" | "it" | "zh-Hans";
 
 export type TranslationKey =
-  | "imageConfirm"
+  | "confirmAction"
   | "discount"
   | "camera"
   | "gallery"
@@ -336,7 +336,7 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     recentlyUpdated: "Recently updated",
     reapplyManually: "Reapply my draft",
     reloadServer: "Reload server data",
-    imageConfirm: "OK",
+    confirmAction: "OK",
     replaceImage: "Replace image",
     replaceImageConfirm: "Replace the current product image?",
     removeImage: "Remove image",
@@ -511,8 +511,8 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     pendingSignOutDetail:
       "Hay cambios pendientes de catálogo o imagen. ¿Quieres conservarlos para esta cuenta o descartarlos antes de cerrar sesión?",
     pendingSignOutTitle: "Cambios pendientes",
-    retainPending: "Conservar",
-    discardPending: "Descartar",
+    retainPending: "Guardar",
+    discardPending: "Eliminar",
     productCount: "Productos activos",
     productImage: "Imagen del producto",
     productName: "Nombre del producto",
@@ -521,7 +521,7 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     recentlyUpdated: "Actualizados recientemente",
     reapplyManually: "Volver a aplicar mi borrador",
     reloadServer: "Cargar datos del servidor",
-    imageConfirm: "Sí",
+    confirmAction: "Sí",
     replaceImage: "Sustituir imagen",
     replaceImageConfirm: "¿Sustituir la imagen actual del producto?",
     removeImage: "Eliminar imagen",
@@ -708,7 +708,7 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     recentlyUpdated: "Aggiornati di recente",
     reapplyManually: "Riapplica la mia bozza",
     reloadServer: "Carica i dati del server",
-    imageConfirm: "Sì",
+    confirmAction: "Sì",
     replaceImage: "Sostituisci immagine",
     replaceImageConfirm: "Sostituire l’immagine corrente del prodotto?",
     removeImage: "Rimuovi immagine",
@@ -887,7 +887,7 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     recentlyUpdated: "最近更新",
     reapplyManually: "手动重新应用我的草稿",
     reloadServer: "重新加载服务器数据",
-    imageConfirm: "确认",
+    confirmAction: "确认",
     replaceImage: "更换图片",
     replaceImageConfirm: "确认更换当前商品图片？",
     removeImage: "移除图片",

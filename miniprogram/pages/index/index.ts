@@ -68,6 +68,7 @@ Page({
     runtime(this).generation = (runtime(this).generation ?? 0) + 1;
     this.stopAutomaticRefresh();
     this.setData({ text: translationsFor(app.locale) });
+    wx.setNavigationBarTitle({ title: this.data.text.home });
     if (!app.featureReady) return;
     if (app.sessionStore.load() !== null) {
       void this.bootstrap();

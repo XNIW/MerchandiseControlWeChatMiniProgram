@@ -89,6 +89,7 @@ test("sales page runs bounded refresh only while visible", async () => {
     registeredPage = definition as RegisteredPage;
   };
   globals.wx = {
+    setNavigationBarTitle() {},
     navigateTo() {},
     stopPullDownRefresh() {},
   };

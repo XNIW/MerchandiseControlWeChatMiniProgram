@@ -253,7 +253,8 @@ test("gateway requests refuse redirects for challenge, exchange and authenticate
 
 test("Home clears prior account and sales when another tab logs out or the session expires", async () => {
   const globals = globalThis as unknown as Record<string, unknown>;
-  const previous = { Page: globals.Page, getApp: globals.getApp };
+  const previous = { Page: globals.Page, getApp: globals.getApp, wx: globals.wx };
+  globals.wx = { setNavigationBarTitle() {} };
   interface PageInstance {
     data: Record<string, unknown>;
     onHide(): void;

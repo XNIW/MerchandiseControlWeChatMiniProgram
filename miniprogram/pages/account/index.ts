@@ -56,6 +56,7 @@ Page({
       shops: [],
       text: translationsFor(app.locale),
     });
+    wx.setNavigationBarTitle({ title: this.data.text.account });
     if (!app.featureReady) return;
     unsubscribeOutbox?.();
     unsubscribeOutbox = app.outbox?.subscribe(() => this.refreshPending());
@@ -127,6 +128,8 @@ Page({
     const locale = locales[Number(event.detail.value)] ?? "zh-Hans";
     app.setLocale(locale);
     this.setData({ localeIndex: Number(event.detail.value), text: translationsFor(locale) });
+    wx.setNavigationBarTitle({ title: this.data.text.account });
+    this.refreshPending();
   },
   refreshPending() {
     if (!app.sessionStore.load() || !app.activeShop || !app.outbox) {
@@ -170,7 +173,7 @@ Page({
     const confirmation = await wx.showModal({
       title: this.data.text.pendingChanges,
       content: this.data.text.discardOperationConfirm,
-      confirmText: this.data.text.discardPending,
+      confirmText: this.data.text.confirmAction,
       cancelText: this.data.text.cancel,
     });
     if (
@@ -195,7 +198,7 @@ Page({
     const confirmation = await wx.showModal({
       title: this.data.text.retryExhausted,
       content: this.data.text.retryableError,
-      confirmText: this.data.text.retry,
+      confirmText: this.data.text.confirmAction,
       cancelText: this.data.text.cancel,
     });
     if (
@@ -218,7 +221,7 @@ Page({
     const confirmation = await wx.showModal({
       title: this.data.text.pendingChanges,
       content: this.data.text.recoverChanges,
-      confirmText: this.data.text.retry,
+      confirmText: this.data.text.confirmAction,
       cancelText: this.data.text.cancel,
     });
     if (

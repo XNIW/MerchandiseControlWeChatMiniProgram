@@ -136,7 +136,7 @@ Page({
     if (existing?.attempt.state.lifecycle !== "retryable_error") {
       const confirmation = await wx.showModal({
         cancelText: this.data.text.cancel,
-        confirmText: this.data.text.restore,
+        confirmText: this.data.text.confirmAction,
         content: this.data.text.restoreConfirm,
       });
       if (!confirmation.confirm || !valid()) return;

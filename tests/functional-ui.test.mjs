@@ -1037,3 +1037,53 @@ test("offline completion readback preserves membership and network error meaning
     assert.equal(h.platform.requests.length, 2);
   }
 });
+
+test("native Home, Sales and Account titles follow the active locale", () => {
+  const { translationsFor } = require("../dist-test/miniprogram/locales/index.js");
+  for (const locale of ["zh-Hans", "en", "es", "it"]) {
+    for (const [name, key] of [
+      ["index", "home"],
+      ["sales", "sales"],
+      ["account", "account"],
+    ]) {
+      const a = app({});
+      a.locale = locale;
+      a.featureReady = false;
+      const p = page(name, a);
+      let title;
+      globalThis.wx.setNavigationBarTitle = (options) => {
+        title = options.title;
+      };
+      p.onShow();
+      assert.equal(title, translationsFor(locale)[key]);
+    }
+  }
+});
+
+test("changing Account language updates native title and visible pending messages", () => {
+  const a = app({});
+  a.setLocale = (locale) => {
+    a.locale = locale;
+  };
+  a.outbox = {
+    pendingForCurrentShop: () => [
+      {
+        entityType: "product",
+        payload: { productName: "P" },
+        state: "retry_wait",
+        errorCode: "offline",
+      },
+    ],
+    storageUnavailableForShop: () => false,
+  };
+  const p = page("account", a);
+  let title;
+  globalThis.wx.setNavigationBarTitle = (options) => {
+    title = options.title;
+  };
+  for (const index of [0, 1, 2, 3]) {
+    p.chooseLocale({ detail: { value: index } });
+    assert.equal(title, p.data.text.account);
+    assert.equal(p.data.pending[0].stateLabel, p.data.text.offline);
+  }
+});

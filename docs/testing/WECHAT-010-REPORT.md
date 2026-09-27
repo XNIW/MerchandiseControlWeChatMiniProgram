@@ -2,8 +2,45 @@
 
 Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
 13 casi catalogo verificati in DevTools. Checkpoint e watermark sync verificati;
-tre operazioni immagini PASS; offline applicato una volta ma feedback UI difettoso;
+tre operazioni immagini PASS; offline applicato una volta; feedback UI corretto e integrato, ritest bloccato dal Mac;
 convergenza nativa e telefono restano aperti.** Nessun DONE auto-approvato.
+
+## Aggiornamento 2026-09-27 — recupero offline integrato e residui lingue
+
+Fix feedback offline integrato con PR35: head 36ad793, merge 71d5f117,
+review indipendenti 2/2 APPROVED sulla patch b99e339d. Verify 187 PASS;
+CI head 36289794509 e CI main 36289849010 SUCCESS. Build TEST verificata
+sui tre soli file outbox/form, config invariata; manifest aa822774.
+Il nuovo ritest una tantum sync-offline-feedback è revisionato (32 test PASS),
+ma il Mac si è bloccato nuovamente: ricompilazione e prova post-fix NOT_RUN_OS_LOCKED.
+Owner utente, sblocco manuale richiesto; nessun aggiramento del blocco OS.
+
+Controllo usabilità: titoli nativi Home/Account/Sales/dettaglio vendita non
+seguivano la lingua; etichette di conferma come Reintentar, Restaurar o Ripristina
+superano il limite nativo già riprodotto sulle immagini; codici lunghi debordano
+dalla scheda prodotto. Delta circoscritto: titoli localizzati, conferma breve
+comune alle quattro lingue con descrizione completa invariata, aggiornamento
+messaggi pending al cambio lingua, a capo di codici/CTA nel dettaglio.
+Nessuna modifica a capability, consensi, dati finanziari, privacy o configurazione.
+Verify 191 PASS (110 TS + 81 MJS); quattro regressioni aggiunte e harness nativi
+aggiornati. La review ha esteso il controllo al logout con pending: etichette
+spagnole Guardar/Eliminar entro limite, scelte distinte e test del consenso.
+Review e integrazione del delta lingue ancora pendenti; il collaudo
+visivo autenticato nelle quattro lingue resta NOT_RUN_OS_LOCKED.
+
+Restano tre operazioni immagini DevTools PASS e icone 5/5 verificate; due cleanup
+immagini pending nell'ultimo readback. Offline backend applicato esattamente una
+volta; feedback post-fix ancora da collaudare. Android/iOS restano bloccati nei
+rispettivi recovery già documentati, senza modifiche ai sorgenti nativi.
+CODE_COMPLETE limitato ai delta revisionati, LIVE_VALIDATED parziale,
+PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO; nessun DONE.
+
+Ricevute offline: [PR35](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/35),
+[CI head](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36289794509),
+[CI merge](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36289849010).
+Build PR35 verificata: `aa82277447040175a78379e7b6df5e2658d172991fc6043c0fa2954a0eb85a49`;
+config `37d94cf427edb67d5f2dc3fa7eced1968cd69c6c53fd6aa7cf2a2e8ce4367d32`.
+Il futuro delta lingue richiede il nuovo manifest revisionato prima del runner.
 
 ## Aggiornamento 2026-09-27 — immagini completate in DevTools, feedback offline in correzione
 
@@ -357,17 +394,17 @@ sulle stesse fixture. Non ripetere images o images-buffer. Nessun telefono dispo
 o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
 
 
-## Matrice A–G e limiti delle prove
+## Matrice A–G e limiti delle prove — aggiornata 2026-09-27
 
 | Mandato | Evidenza disponibile | Residuo effettivo |
 |---|---|---|
 | A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Foreground/logout/pending; negativi isolati separati; riaccesso autonomo autorizzato ed eseguito |
-| B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto con5audit | Ulteriori filtri/sort/pagine; edge case solo isolati |
+| B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto5auditUI;6nel readback dopooffline | Ulteriori filtri/sort/pagine; edge case solo isolati |
 | C Catalogo/prezzi |13casi reali,5fixture, rinomina e sostituzione/archiviazione categoria/fornitore, CLP interi e quantità1,25 | Conflitti live, storico multipagina e legacy invariati |
-| D Immagini | Buffer e preview superati nel ritest; upload rifiutato,1versione failed per metadata JPEG | Sanificazione client da diagnosticare; cleanup versione failed; nuovo ritest camera/album/versione/rimozione/rete e telefono |
-| E Offline/sync | Fix lease integrato; checkpoint200, watermark12425→12430 concorde con5eventi scoped | Salvataggio offline→online senza navigazione, aggiornamento schermate e lifecycle |
+| D Immagini | Tre operazioni DevTools PASS: camera, sostituzione galleria, rimozione; orientamento/thumbnail osservati | Due cleanup pending; rete/lifecycle immagine e telefono non attestati |
+| E Offline/sync | Checkpoint/watermark verificati; salvataggio offline→online sulla stessa pagina applicato una volta, History5→6; feedback corretto PR35 | Ritest feedback Saved post-fix bloccato dal Mac; aggiornamento altre schermate/lifecycle restano distinti |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
-| G Usabilità/lingue | Rendering inglese; assenza icone tab riprodotta e10PNG preparati | Ritest icone dopo integrazione;4lingue, CTA/bozze/offline |
+| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow in review,191test locali | Collaudo visivo4lingue e conferme autenticate dopo integrazione; Mac bloccato |
 | Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
 Le durate scenari45.566/14.486/6.602/6.468ms includono readback/orchestrazione,
