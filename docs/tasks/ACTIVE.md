@@ -1,6 +1,6 @@
 # Active task
 
-## Aggiornamento 2026-09-27 — recupero offline integrato e residui lingue
+## Aggiornamento 2026-09-27 — offline e lingue integrati, ritest bloccato dal Mac
 
 Fix feedback offline integrato con PR35: head 36ad793, merge 71d5f117,
 review indipendenti 2/2 APPROVED sulla patch b99e339d. Verify 187 PASS;
@@ -20,8 +20,12 @@ Nessuna modifica a capability, consensi, dati finanziari, privacy o configurazio
 Verify 191 PASS (110 TS + 81 MJS); quattro regressioni aggiunte e harness nativi
 aggiornati. La review ha esteso il controllo al logout con pending: etichette
 spagnole Guardar/Eliminar entro limite, scelte distinte e test del consenso.
-Review e integrazione del delta lingue ancora pendenti; il collaudo
-visivo autenticato nelle quattro lingue resta NOT_RUN_OS_LOCKED.
+Delta lingue integrato con PR36: head49c5225, merge70cec1bd; due review APPROVED
+sulla patch e7557b8e, CI head36290284596 e main36290330031 SUCCESS.
+Build TEST03:04UTC: dieci file previsti aggiornati, configurazione byte-identica,
+manifest completo4519388b verificato. Runner feedback/locales approvato2/2 con
+32test PASS; nuova build non ricompilata nel simulatore per il blocco OS.
+Il collaudo visivo autenticato nelle quattro lingue resta NOT_RUN_OS_LOCKED.
 
 Restano tre operazioni immagini DevTools PASS e icone 5/5 verificate; due cleanup
 immagini pending nell'ultimo readback. Offline backend applicato esattamente una
