@@ -4,23 +4,34 @@ Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
 13 casi catalogo verificati in DevTools. Checkpoint e watermark sync verificati;
 immagini, offline e convergenza restano aperti.** Nessun DONE auto-approvato.
 
-## Aggiornamento 2026-09-27 01:40UTC — icone verificate e fix JPEG
+## Aggiornamento 2026-09-27 — icone e correzione JPEG integrate
 
 Le5icone tab e i rispettivi stati selezionati sono verificati nel runtime autentico
-su main28c9d3b (PR31). La diagnosi PREVIEW_ONLY è annullata e riconciliata:
-SELECT01:25UTC conferma ancora1intento/1versione failed, cleanup pending,
-nessuna primaria. Identificato APP2 ICC sRGB identico al profilo Skia verificato,
-aggiunto dalla compressione nativa a main e thumbnail.
+su main28c9d3b (PR31). Le diagnosi PREVIEW_ONLY sono annullate e riconciliate:
+SELECT01:25UTC conferma1intento/1versione failed, cleanup pending, nessuna primaria.
+Identificato APP2 ICC sRGB identico al profilo Skia verificato, aggiunto dalla
+compressione nativa a main e thumbnail.
 
-Delta in EXECUTION: normalizzazione stretta del solo ICC noto, copie locali
-possedute, rilettura hash/dimensioni e conservazione dei journal incerti.
-Nessuna modifica server.178test locali PASS (110TS+68MJS), validator Admin
-invariato accetta i due JPEG normalizzati. Review/integrazione e nuovo upload
-reale ancora da completare; nessun nuovo PASS immagini o telefono.
-17letture/13casi catalogo restano PASS; offline/convergenza nativa restano aperti.
-Le sezioni precedenti sono ricevute storiche, non stato corrente. Nessun DONE.
+Correzione integrata con PR32: head16a6d80, mergef070a5a, due review indipendenti
+APPROVED sullo snapshotd071d6a7.178test locali PASS (110TS+68MJS), CI PR36286588193
+e CI main36286645051 SUCCESS. Validator Admin invariato accetta i due JPEG
+normalizzati. Build TEST preparata01:49UTC: config byte-identica, cambiano solo
+4moduli immagine; manifest529dd790 validato dal runner revisionato (24testPASS).
 
-Dettaglio tecnico e limiti: [normalizzazione JPEG](WECHAT-010-JPEG.md).
+Mac nuovamente bloccato: ricompilazione DevTools e upload autentico post-fix
+NOT_RUN_OS_LOCKED; owner utente, sblocco manuale già richiesto. Nessun nuovo PASS
+immagini/telefono.17letture/13casi catalogo e icone5/5 restano PASS;
+offline/convergenza nativa restano aperti. Nessun DONE. Ricevute precedenti storiche.
+
+Ricevute integrazione: [PR32](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/32),
+[CI head](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36286588193),
+[CI merge](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36286645051).
+Dettaglio tecnico: [normalizzazione JPEG](WECHAT-010-JPEG.md).
+Manifest completo sorgenti102/dist101:
+`529dd790dc61792253f3589027fec71ac07eefde35b25c24fc47c93994230129`.
+Nuova modalità una tantum images-jpeg pronta: stesso prodotto del run, versione
+failed precedente preservata, preflight freschi obbligatori e nessun tentativo
+durevole prima del picker. Non è stata eseguita mentre il Mac è bloccato.
 
 ## Ripresa 2026-09-27 — icone tab e nuovo esito immagini
 

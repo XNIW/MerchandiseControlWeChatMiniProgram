@@ -77,3 +77,11 @@ main63286byte/thumb12374byte, da verificare nel nuovo runtime.
 
 Profili diversi restano non supportati; nessuna attestazione su telefoni fisici,
 nessuna modifica al server, nessuna attenuazione del controllo metadati.
+
+## Ricevuta di integrazione
+
+PR32 integrata normalmente01:48:22UTC, head16a6d80/mergef070a5a, due review finali
+APPROVED su patchd071d6a7.178test locali e CI head36286588193/main36286645051 PASS.
+Build TEST01:49UTC: solo quattro moduli immagine modificati, configurazione e
+altri file byte-identici; manifest del runner529dd790 verificato. Ricompilazione
+DevTools/upload autentico ancora NOT_RUN_OS_LOCKED; nessun telefono validato.
