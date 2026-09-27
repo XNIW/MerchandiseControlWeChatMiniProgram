@@ -1,6 +1,7 @@
 import { createCatalogMutationAttemptIdentifiers } from "./catalog-mutation-client";
 import { CatalogMutationContractError } from "./contracts";
 import type { HttpClient } from "./http-client";
+import { normalizeJpeg } from "./jpeg-normalization";
 import type { MiniProgramPlatform, PlatformImageInfo, PlatformResponse } from "./platform";
 import type { SessionStore } from "./session-store";
 
@@ -318,6 +319,7 @@ export class ProductImageMutationClient {
   readonly #retainedIntentAttempts = new Map<string, ProductImageIntentAttempt>();
   readonly #sessions: SessionStore;
   readonly #trustedOrigins: ReadonlySet<string>;
+  #fileCleanup: Promise<void> | undefined;
 
   constructor(
     http: HttpClient,
@@ -392,25 +394,29 @@ export class ProductImageMutationClient {
     }
     if (attempt === undefined) {
       const prepared = await this.#prepareSelectedImage(source);
-      this.#assertSession(session);
-      if (
-        confirmPrepared &&
-        !(await confirmPrepared({
-          mainPath: prepared.main.filePath,
-          thumbPath: prepared.thumb.filePath,
-        }))
-      )
-        fail("image_operation_cancelled");
-      this.#assertSession(session);
-      const identifiers = await createCatalogMutationAttemptIdentifiers(this.#platform);
-      this.#assertSession(session);
-      attempt = await this.#persistAttempt(
-        session.accountFingerprint,
-        validatedShopId,
-        validatedProductId,
-        identifiers,
-        prepared,
-      );
+      try {
+        this.#assertSession(session);
+        if (
+          confirmPrepared &&
+          !(await confirmPrepared({
+            mainPath: prepared.main.filePath,
+            thumbPath: prepared.thumb.filePath,
+          }))
+        )
+          fail("image_operation_cancelled");
+        this.#assertSession(session);
+        const identifiers = await createCatalogMutationAttemptIdentifiers(this.#platform);
+        this.#assertSession(session);
+        attempt = await this.#persistAttempt(
+          session.accountFingerprint,
+          validatedShopId,
+          validatedProductId,
+          identifiers,
+          prepared,
+        );
+      } finally {
+        await Promise.all([...prepared.ownedFiles].map((path) => this.#removeSavedFile(path)));
+      }
       this.#assertSession(session);
       this.#retainedIntentAttempts.set(targetKey, attempt);
     }
@@ -615,10 +621,21 @@ export class ProductImageMutationClient {
     shopId: string,
     productId: string,
     identifiers: { readonly correlationId: string; readonly idempotencyKey: string },
-    prepared: { readonly main: PreparedVariant; readonly thumb: PreparedVariant },
+    prepared: {
+      readonly main: PreparedVariant;
+      readonly thumb: PreparedVariant;
+      readonly ownedFiles: Set<string>;
+    },
   ): Promise<ProductImageIntentAttempt> {
     let mainPath: string | null = null;
     let thumbPath: string | null = null;
+    const key = durableAttemptStorageKey(accountFingerprint, shopId, productId);
+    let encoded: string | undefined;
+    let writingJournal = false;
+    const adopt = () => {
+      prepared.ownedFiles.delete(prepared.main.filePath);
+      prepared.ownedFiles.delete(prepared.thumb.filePath);
+    };
     try {
       mainPath = await this.#platform.saveFile(prepared.main.filePath);
       thumbPath = await this.#platform.saveFile(prepared.thumb.filePath);
@@ -634,15 +651,27 @@ export class ProductImageMutationClient {
         shopId,
         thumb: { filePath: thumb.filePath, metadata: thumb.metadata },
       };
-      const encoded = JSON.stringify(stored);
+      encoded = JSON.stringify(stored);
       if (encoded.length > durableAttemptMaximumBytes) fail("image_invalid");
-      this.#platform.setStorage(
-        durableAttemptStorageKey(accountFingerprint, shopId, productId),
-        encoded,
-      );
       this.#addDurableAttemptScope(durableAttemptScope(accountFingerprint, shopId, productId));
+      writingJournal = true;
+      this.#platform.setStorage(key, encoded);
+      adopt();
       return { accountFingerprint, ...identifiers, main, thumb };
     } catch (error) {
+      if (writingJournal) {
+        let uncertain = true;
+        try {
+          const readback = this.#platform.getStorage(key);
+          uncertain = readback !== undefined && readback !== "";
+        } catch {
+          /* retain on uncertain read */
+        }
+        if (uncertain) {
+          adopt();
+          fail("image_invalid");
+        }
+      }
       if (mainPath !== null) await this.#removeSavedFile(mainPath);
       if (thumbPath !== null) await this.#removeSavedFile(thumbPath);
       if (error instanceof ProductImageMutationError) throw error;
@@ -656,14 +685,17 @@ export class ProductImageMutationClient {
     productId: string,
   ): Promise<ProductImageIntentAttempt | undefined> {
     const key = durableAttemptStorageKey(accountFingerprint, shopId, productId);
-    const stored = this.#parseStoredAttempt(this.#platform.getStorage(key));
+    const raw = this.#platform.getStorage(key);
+    const stored = this.#parseStoredAttempt(raw);
     if (
       stored === null ||
       stored.accountFingerprint !== accountFingerprint ||
       stored.shopId !== shopId ||
       stored.productId !== productId
     ) {
-      if (this.#platform.getStorage(key) !== undefined) this.#platform.removeStorage(key);
+      // A damaged receipt must not turn an uncertain prior upload into a new
+      // picker/idempotency identity. Explicit discard remains available.
+      if (raw !== undefined && raw !== "") fail("image_invalid");
       this.#removeDurableAttemptScope(durableAttemptScope(accountFingerprint, shopId, productId));
       return undefined;
     }
@@ -680,13 +712,9 @@ export class ProductImageMutationClient {
         thumb,
       };
     } catch {
-      this.#platform.removeStorage(key);
-      this.#removeDurableAttemptScope(durableAttemptScope(accountFingerprint, shopId, productId));
-      await Promise.all([
-        this.#removeSavedFile(stored.main.filePath),
-        this.#removeSavedFile(stored.thumb.filePath),
-      ]);
-      return undefined;
+      // Native I/O failures can be transient. Preserve the original journal and
+      // files instead of accidentally authorizing a second remote intent.
+      fail("image_invalid");
     }
   }
 
@@ -820,71 +848,114 @@ export class ProductImageMutationClient {
   }
 
   async #prepareSelectedImage(source: "camera" | "album") {
-    let selected: Awaited<ReturnType<MiniProgramPlatform["chooseImage"]>>;
+    this.#fileCleanup ??= this.#cleanOrphanImageFiles();
+    const cleanup = this.#fileCleanup;
     try {
-      selected = await this.#platform.chooseImage(source);
-    } catch (error) {
-      if (error instanceof Error && error.message === "image_selection_cancelled") {
-        fail("image_operation_cancelled");
-      }
-      if (error instanceof Error && error.message === "image_permission_denied")
-        fail("image_permission_denied");
-      fail("image_invalid");
-    }
-    if (
-      selected.fileType !== "image" ||
-      !Number.isSafeInteger(selected.size) ||
-      selected.size < 1 ||
-      selected.tempFilePath.length < 1
-    ) {
-      fail("image_invalid");
-    }
-    if (selected.size > inputMaximumBytes) fail("image_too_large");
-
-    let sourceInfo: PlatformImageInfo;
-    try {
-      sourceInfo = await this.#platform.getImageInfo(selected.tempFilePath);
+      await cleanup;
     } catch {
+      // Share the in-flight sweep, but a transient I/O failure must not poison
+      // every later explicit selection for the lifetime of this client.
+      if (this.#fileCleanup === cleanup) this.#fileCleanup = undefined;
       fail("image_invalid");
     }
-    if (sourceInfo.type !== "jpeg" || !checkedPixelCount(sourceInfo.width, sourceInfo.height)) {
-      // wx.compressImage does not guarantee conversion of non-JPEG sources on
-      // every supported platform (notably iOS), so unsupported input fails closed.
-      fail("image_invalid");
-    }
+    const ownedFiles = new Set<string>();
+    try {
+      let selected: Awaited<ReturnType<MiniProgramPlatform["chooseImage"]>>;
+      try {
+        selected = await this.#platform.chooseImage(source);
+      } catch (error) {
+        if (error instanceof Error && error.message === "image_selection_cancelled") {
+          fail("image_operation_cancelled");
+        }
+        if (error instanceof Error && error.message === "image_permission_denied")
+          fail("image_permission_denied");
+        fail("image_invalid");
+      }
+      if (
+        selected.fileType !== "image" ||
+        !Number.isSafeInteger(selected.size) ||
+        selected.size < 1 ||
+        selected.tempFilePath.length < 1
+      ) {
+        fail("image_invalid");
+      }
+      if (selected.size > inputMaximumBytes) fail("image_too_large");
 
-    const main = await this.#encodeWithinBudget(
-      selected.tempFilePath,
-      logicalImageInfo(sourceInfo),
-      {
-        hardMaximumBytes: mainMaximumBytes,
-        maximumSide: mainMaximumSide,
-        minimumSide: 640,
-        qualities: [82, 76, 70],
-        targetBytes: mainTargetBytes,
-      },
-    );
-    const thumb = await this.#encodeWithinBudget(main.filePath, main.imageInfo, {
-      hardMaximumBytes: thumbMaximumBytes,
-      maximumSide: thumbMaximumSide,
-      minimumSide: 128,
-      qualities: [75, 68, 60, 52],
-      targetBytes: thumbMaximumBytes,
-    });
-    if (
-      Math.abs(
-        main.metadata.width / main.metadata.height - thumb.metadata.width / thumb.metadata.height,
-      ) > 0.02
-    ) {
+      let sourceInfo: PlatformImageInfo;
+      try {
+        sourceInfo = await this.#platform.getImageInfo(selected.tempFilePath);
+      } catch {
+        fail("image_invalid");
+      }
+      if (sourceInfo.type !== "jpeg" || !checkedPixelCount(sourceInfo.width, sourceInfo.height)) {
+        // wx.compressImage does not guarantee conversion of non-JPEG sources on
+        // every supported platform (notably iOS), so unsupported input fails closed.
+        fail("image_invalid");
+      }
+
+      const main = await this.#encodeWithinBudget(
+        selected.tempFilePath,
+        logicalImageInfo(sourceInfo),
+        {
+          hardMaximumBytes: mainMaximumBytes,
+          maximumSide: mainMaximumSide,
+          minimumSide: 640,
+          qualities: [82, 76, 70],
+          targetBytes: mainTargetBytes,
+        },
+        ownedFiles,
+      );
+      const thumb = await this.#encodeWithinBudget(
+        main.filePath,
+        main.imageInfo,
+        {
+          hardMaximumBytes: thumbMaximumBytes,
+          maximumSide: thumbMaximumSide,
+          minimumSide: 128,
+          qualities: [75, 68, 60, 52],
+          targetBytes: thumbMaximumBytes,
+        },
+        ownedFiles,
+      );
+      if (
+        Math.abs(
+          main.metadata.width / main.metadata.height - thumb.metadata.width / thumb.metadata.height,
+        ) > 0.02
+      ) {
+        fail("image_invalid");
+      }
+      return { main, thumb, ownedFiles };
+    } catch (error) {
+      await Promise.all([...ownedFiles].map((path) => this.#removeSavedFile(path)));
+      if (error instanceof ProductImageMutationError) throw error;
       fail("image_invalid");
     }
-    return { main, thumb };
+  }
+
+  async #cleanOrphanImageFiles(): Promise<void> {
+    // Raw keys are authoritative even when an index write was interrupted.
+    // Never sweep if any journal cannot be inspected safely.
+    if (!this.#platform.getStorageKeys) return;
+    const retained: string[] = [];
+    try {
+      for (const key of this.#platform.getStorageKeys()) {
+        if (!key.startsWith("mc.productImageAttempts.v1.") || key === durableAttemptIndexKey)
+          continue;
+        const stored = this.#parseStoredAttempt(this.#platform.getStorage(key));
+        if (!stored) return;
+        retained.push(stored.main.filePath, stored.thumb.filePath);
+      }
+    } catch {
+      return;
+    }
+    await this.#platform.cleanImageFiles(retained);
   }
 
   async #encodeWithinBudget(
     sourcePath: string,
     sourceInfo: PlatformImageInfo,
     policy: EncodingPolicy,
+    ownedFiles: Set<string>,
   ): Promise<PreparedVariant> {
     const sourceLongestSide = Math.max(sourceInfo.width, sourceInfo.height);
     const sides = outputSideSchedule(sourceLongestSide, policy.maximumSide, policy.minimumSide);
@@ -938,6 +1009,32 @@ export class ProductImageMutationClient {
         }
         if (bytes.byteLength !== fileInfo.size || !isJpegBytes(bytes)) {
           fail("image_invalid");
+        }
+        const normalized = normalizeJpeg(bytes);
+        if (normalized !== bytes) {
+          filePath = await this.#platform.writeImageFile(normalized);
+          ownedFiles.add(filePath);
+          const [info, stat, readback] = await Promise.all([
+            this.#platform.getImageInfo(filePath),
+            this.#platform.getFileInfo(filePath),
+            this.#platform.readFile(filePath),
+          ]);
+          const expected = new Uint8Array(normalized),
+            actual = new Uint8Array(readback);
+          if (
+            info.type !== "jpeg" ||
+            info.orientation !== "up" ||
+            info.width !== imageInfo.width ||
+            info.height !== imageInfo.height ||
+            stat.size !== expected.length ||
+            !sha256Pattern.test(stat.sha256.toLowerCase()) ||
+            actual.length !== expected.length ||
+            !actual.every((v, i) => v === expected[i])
+          )
+            fail("image_invalid");
+          bytes = readback;
+          fileInfo = stat;
+          imageInfo = info;
         }
         const candidate: PreparedVariant = {
           bytes,

@@ -29,10 +29,14 @@ const THUMB_PATH = "/tmp/thumb.jpg";
 const NOW = Date.parse("2026-08-13T12:00:00Z");
 const EXPIRES_AT = "2026-08-13T12:05:00Z";
 
-function jpegBytes(length = 8): ArrayBuffer {
+function jpegBytes(length = 64): ArrayBuffer {
   const bytes = new Uint8Array(length);
   bytes[0] = 0xff;
   bytes[1] = 0xd8;
+  // Framed JPEG envelope for transport tests; real decoded JPEGs are covered by
+  // the normalization regression fixtures, separately from these platform fakes.
+  bytes.set([255, 192, 0, 17, 8, 0, 2, 0, 2, 3, 1, 17, 0, 2, 17, 0, 3, 17, 0], 2);
+  bytes.set([255, 218, 0, 6, 1, 1, 0, 0], 21);
   bytes[length - 2] = 0xff;
   bytes[length - 1] = 0xd9;
   return bytes.buffer;
@@ -95,8 +99,8 @@ function prepareJpeg(platform: FakePlatform): void {
   platform.compressedImagePaths.push(MAIN_PATH, THUMB_PATH);
   platform.imageInfos.set(MAIN_PATH, imageInfo(1600, 1200));
   platform.imageInfos.set(THUMB_PATH, imageInfo(384, 288));
-  platform.fileInfos.set(MAIN_PATH, { sha256: "a".repeat(64), size: 8 });
-  platform.fileInfos.set(THUMB_PATH, { sha256: "b".repeat(64), size: 8 });
+  platform.fileInfos.set(MAIN_PATH, { sha256: "a".repeat(64), size: 64 });
+  platform.fileInfos.set(THUMB_PATH, { sha256: "b".repeat(64), size: 64 });
   platform.fileBytes.set(MAIN_PATH, jpegBytes());
   platform.fileBytes.set(THUMB_PATH, jpegBytes());
 }
@@ -116,10 +120,10 @@ function prepareSecondSessionJpeg(platform: FakePlatform): void {
   platform.compressedImagePaths.push(mainPath, thumbPath);
   platform.imageInfos.set(mainPath, imageInfo(1200, 900));
   platform.imageInfos.set(thumbPath, imageInfo(384, 288));
-  platform.fileInfos.set(mainPath, { sha256: "c".repeat(64), size: 10 });
-  platform.fileInfos.set(thumbPath, { sha256: "d".repeat(64), size: 12 });
-  platform.fileBytes.set(mainPath, jpegBytes(10));
-  platform.fileBytes.set(thumbPath, jpegBytes(12));
+  platform.fileInfos.set(mainPath, { sha256: "c".repeat(64), size: 70 });
+  platform.fileInfos.set(thumbPath, { sha256: "d".repeat(64), size: 72 });
+  platform.fileBytes.set(mainPath, jpegBytes(70));
+  platform.fileBytes.set(thumbPath, jpegBytes(72));
 }
 
 function intentUploadResponse(
@@ -597,7 +601,7 @@ test("logout and replacement login discard retained image bytes, body, and ident
   );
   assertEqual(
     (secondMainUpload?.data as ArrayBuffer | undefined)?.byteLength,
-    10,
+    70,
     "new session uploads newly prepared bytes",
   );
   assert(

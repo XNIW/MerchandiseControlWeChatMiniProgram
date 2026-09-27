@@ -1,3 +1,10 @@
+import {
+  cleanOwnedImages,
+  isOwnedImageFile,
+  unlinkOwnedImage,
+  writeOwnedImage,
+} from "./owned-image-files";
+
 export interface PlatformResponse<T> {
   readonly data: T;
   readonly statusCode: number;
@@ -50,6 +57,8 @@ export interface PlatformFileInfo {
 export interface MiniProgramPlatform {
   chooseImage(source?: "camera" | "album"): Promise<PlatformSelectedImage>;
   compressImage(request: PlatformImageCompression): Promise<string>;
+  cleanImageFiles(retained: readonly string[]): Promise<void>;
+  writeImageFile(bytes: ArrayBuffer): Promise<string>;
   getFileInfo(filePath: string): Promise<PlatformFileInfo>;
   getImageInfo(filePath: string): Promise<PlatformImageInfo>;
   getStorage(key: string): unknown;
@@ -81,6 +90,8 @@ function isArrayBuffer(value: unknown): value is ArrayBuffer {
 
 export function createWeChatPlatform(): MiniProgramPlatform {
   return {
+    cleanImageFiles: cleanOwnedImages,
+    writeImageFile: writeOwnedImage,
     chooseImage: (source = "camera") =>
       new Promise((resolve, reject) => {
         wx.chooseMedia({
@@ -178,13 +189,15 @@ export function createWeChatPlatform(): MiniProgramPlatform {
         });
       }),
     removeSavedFile: (filePath) =>
-      new Promise((resolve, reject) => {
-        wx.getFileSystemManager().removeSavedFile({
-          fail: () => reject(new Error("image_saved_file_remove_failed")),
-          filePath,
-          success: () => resolve(),
-        });
-      }),
+      isOwnedImageFile(filePath)
+        ? unlinkOwnedImage(filePath)
+        : new Promise((resolve, reject) => {
+            wx.getFileSystemManager().removeSavedFile({
+              fail: () => reject(new Error("image_saved_file_remove_failed")),
+              filePath,
+              success: () => resolve(),
+            });
+          }),
     removeStorage: (key) => wx.removeStorageSync(key),
     request: <T>(request: PlatformRequest) =>
       new Promise<PlatformResponse<T>>((resolve, reject) => {
@@ -209,14 +222,18 @@ export function createWeChatPlatform(): MiniProgramPlatform {
           url: request.url,
         });
       }),
+    // Owned normalized files are already persistent. Confirmation adopts the
+    // same bytes/path; native saveFile is only for native temporary paths.
     saveFile: (tempFilePath) =>
-      new Promise((resolve, reject) => {
-        wx.getFileSystemManager().saveFile({
-          fail: () => reject(new Error("image_saved_file_failed")),
-          tempFilePath,
-          success: (result) => resolve(result.savedFilePath),
-        });
-      }),
+      isOwnedImageFile(tempFilePath)
+        ? Promise.resolve(tempFilePath)
+        : new Promise((resolve, reject) => {
+            wx.getFileSystemManager().saveFile({
+              fail: () => reject(new Error("image_saved_file_failed")),
+              tempFilePath,
+              success: (result) => resolve(result.savedFilePath),
+            });
+          }),
     setStorage: (key, value) => wx.setStorageSync(key, value),
   };
 }
