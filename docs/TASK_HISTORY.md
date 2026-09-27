@@ -172,3 +172,7 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 | 2026-09-26T18:42Z | WECHAT-010 | Lifecycle PR29 integrata60392f8d,155test e CI/head/main PASS. Build TEST solo product-detail.js, config/Worker invariati. Helper21test/review PASS. | Mac bloccato al controllo UI; owner utente/sblocco OS richiesto. Nuovo ritest immagini, offline/locales non eseguiti; nessun aggiramento SDK, nessun DONE. |
 
 | 2026-09-27T00:14Z | WECHAT-010 | Ripresa ufficiale e login autonomo; immagini superano preview, server rifiuta metadata JPEG. Icone tab mancanti riprodotte;10PNG e build copy aggiunti,155test PASS. | 1versione failed/cleanup pending, primarynull; esito FAIL riconciliato. Diagnosi preview successiva ferma nel picker per OS lock; annullamento richiesto alla ripresa. Nessun PASS immagini/DONE. |
+
+| 2026-09-27T01:40:00Z | WECHAT-010 | Icone5/5 e stato selezionato verificati in DevTools; preview diagnostiche annullate senza altre scritture; causa ICC identificata e fix locale in EXECUTION |177test PASS; validator Admin invariato accetta baseline/progressive normalizzati; upload reale nuovo non eseguito;1versione precedente failed/cleanup pending |
+
+| 2026-09-27T01:49:00Z | WECHAT-010 | Due review indipendenti rilevano la Promise cleanup rigettata conservata; corretto retry su nuova selezione esplicita con errore tipizzato | Regressione aggiunta,178test; nuovo snapshot in review; Mac nuovamente bloccato, ritest reale attende sblocco utente |

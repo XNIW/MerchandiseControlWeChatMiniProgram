@@ -24,6 +24,10 @@ export class FakePlatform implements MiniProgramPlatform {
   queuedResponses: Array<Error | PlatformResponse<unknown>> = [];
   selectedImage: PlatformSelectedImage | null = null;
   savedFileCount = 0;
+  async cleanImageFiles(_retained: readonly string[]): Promise<void> {}
+  async writeImageFile(_bytes: ArrayBuffer): Promise<string> {
+    throw new Error("unconfigured_fake_image_write");
+  }
 
   async chooseImage(): Promise<PlatformSelectedImage> {
     this.chooseImageCalls += 1;

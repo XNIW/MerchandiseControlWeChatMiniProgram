@@ -4,6 +4,24 @@ Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
 13 casi catalogo verificati in DevTools. Checkpoint e watermark sync verificati;
 immagini, offline e convergenza restano aperti.** Nessun DONE auto-approvato.
 
+## Aggiornamento 2026-09-27 01:40UTC — icone verificate e fix JPEG
+
+Le5icone tab e i rispettivi stati selezionati sono verificati nel runtime autentico
+su main28c9d3b (PR31). La diagnosi PREVIEW_ONLY è annullata e riconciliata:
+SELECT01:25UTC conferma ancora1intento/1versione failed, cleanup pending,
+nessuna primaria. Identificato APP2 ICC sRGB identico al profilo Skia verificato,
+aggiunto dalla compressione nativa a main e thumbnail.
+
+Delta in EXECUTION: normalizzazione stretta del solo ICC noto, copie locali
+possedute, rilettura hash/dimensioni e conservazione dei journal incerti.
+Nessuna modifica server.178test locali PASS (110TS+68MJS), validator Admin
+invariato accetta i due JPEG normalizzati. Review/integrazione e nuovo upload
+reale ancora da completare; nessun nuovo PASS immagini o telefono.
+17letture/13casi catalogo restano PASS; offline/convergenza nativa restano aperti.
+Le sezioni precedenti sono ricevute storiche, non stato corrente. Nessun DONE.
+
+Dettaglio tecnico e limiti: [normalizzazione JPEG](WECHAT-010-JPEG.md).
+
 ## Ripresa 2026-09-27 — icone tab e nuovo esito immagini
 
 L’utente segnala Mac sbloccato e chiede controllo delle icone. Screenshot reale:
