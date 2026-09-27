@@ -13,7 +13,7 @@ import { extname, join, relative } from "node:path";
 const repositoryRoot = new URL("..", import.meta.url).pathname;
 const sourceRoot = join(repositoryRoot, "miniprogram");
 const outputRoot = join(repositoryRoot, "dist");
-const copiedExtensions = new Set([".json", ".wxml", ".wxss"]);
+const copiedExtensions = new Set([".json", ".wxml", ".wxss", ".png"]);
 
 rmSync(outputRoot, { force: true, recursive: true });
 const typeScript = spawnSync(

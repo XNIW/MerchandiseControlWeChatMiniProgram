@@ -4,6 +4,39 @@ Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
 13 casi catalogo verificati in DevTools. Checkpoint e watermark sync verificati;
 immagini, offline e convergenza restano aperti.** Nessun DONE auto-approvato.
 
+## Ripresa 2026-09-27 — icone tab e nuovo esito immagini
+
+L’utente segnala Mac sbloccato e chiede controllo delle icone. Screenshot reale:
+le5voci native mostrano solo testo; app.json non definisce iconPath/selectedIconPath.
+Il delta aggiunge10PNG trasparenti81×81 sotto40KB, colori tab esistenti e tratto
+selezionato più marcato, e copia esplicita dei PNG nella build. Generatore Pillow
+solo opzionale per rigenerazione asset; nessuna dipendenza runtime/build aggiunta.
+Verificati PNG, dimensioni, alpha, budget, parità byte sorgente/dist e contact sheet.
+Node26.7 verify155PASS (110TS+45MJS), diffcheck PASS. Review e integrazione sono
+tracciate dalla PR associata al delta; verifica delle icone nel simulatore ancora pendente. Il logo del profilo nel portale WeChat
+è distinto dalle icone di navigazione e non è stato verificato o modificato.
+
+Nuova sessione autentica dopo ricompilazione ufficiale della build PR29 su
+main73ae7520; scope canonico verificato dal runner, Workerbeb94e1e invariato.
+Preflight backend/Worker rinnovati00:05UTC: registry145 e allowlist/flag esatti.
+images-lifecycle una tantum: selezione camera tramite picker ufficiale, preview
+rilevata e confermata dal controllo reale; fallimento IMAGE_UPLOAD_ERROR,0casi PASS.
+Il server ha registrato una versione alle00:06:51UTC e l’ha rifiutata con
+jpeg_metadata_forbidden: statusfailed, finalizedfalse, cleanup_statuspending,
+primary immagine null. Letture indipendenti00:07–00:12 e stato UI confermano
+1intento/1versione, outbox0 e nessun tentativo immagine locale durevole.
+Journal VERIFIED significa esito conosciuto, non operazione riuscita.
+Ricevuta privata reconciliation-failed-version.json; reportFAIL immutabile.
+Non ripetere images-lifecycle; cleanup backend ancora da verificare.
+
+Diagnosi minima avviata successivamente con nuovo intento PREVIEW_ONLY:
+apertura picker per leggere soltanto marker/lunghezze del JPEG compresso e
+annullare l’anteprima, senza upload. Il Mac si blocca prima della scelta del file.
+Diagnosi PREVIEW_ONLY_PENDING_CANCEL, da annullare e riconciliare allo sblocco.
+Nessuna nuova mutazione dopo il fallimento noto e nessun aggiramento del blocco.
+Il fix metadata non è ancora implementato: identificare prima i segmenti effettivi,
+senza rimuovere ciecamente ICC/Adobe o indebolire il validator server.
+
 ## Evidenza autentica e runtime — 2026-09-26
 
 Pairing personale verificato separatamente dal login Home: Tencent accetta la
@@ -229,10 +262,10 @@ o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
 | A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Foreground/logout/pending; negativi isolati separati; riaccesso autonomo autorizzato ed eseguito |
 | B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto con5audit | Ulteriori filtri/sort/pagine; edge case solo isolati |
 | C Catalogo/prezzi |13casi reali,5fixture, rinomina e sostituzione/archiviazione categoria/fornitore, CLP interi e quantità1,25 | Conflitti live, storico multipagina e legacy invariati |
-| D Immagini | Picker reale; errore prima dell’anteprima, NO_WRITE riconciliato; API JPEG diagnostiche riuscite | Ritest del fix lifecycle, dopo preparazione cross-realm superata; anteprima/upload/album/versione/rimozione/rete e telefono |
+| D Immagini | Buffer e preview superati nel ritest; upload rifiutato,1versione failed per metadata JPEG | Sanificazione client da diagnosticare; cleanup versione failed; nuovo ritest camera/album/versione/rimozione/rete e telefono |
 | E Offline/sync | Fix lease integrato; checkpoint200, watermark12425→12430 concorde con5eventi scoped | Salvataggio offline→online senza navigazione, aggiornamento schermate e lifecycle |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
-| G Usabilità/lingue | Rendering prima pagina e percorsi inglesi reali | Ispezione autenticata4lingue, CTA/bozze/offline |
+| G Usabilità/lingue | Rendering inglese; assenza icone tab riprodotta e10PNG preparati | Ritest icone dopo integrazione;4lingue, CTA/bozze/offline |
 | Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
 Le durate scenari45.566/14.486/6.602/6.468ms includono readback/orchestrazione,
@@ -241,8 +274,10 @@ nessun percentile o rispetto budget dedotto. Login/prima pagina/save/immagini/
 convergenza richiedono misure comparabili. Zero campioni significa NON_MISURATO.
 
 Cinque fixture della run conservate con marker e ID nel packet; nessun cleanup
-automatico. Intent riconciliati, incluso il tentativo immagini FAIL/NO_WRITE; runner lock assente;
-controllare nuovamente outbox e journal prima di riprendere o archiviare fixture.
+automatico. Le precedenti diagnosi NO_WRITE e il fallimento upload noto sono riconciliati;
+la versione immagine failed ha cleanup backend pendente e la diagnosi successiva
+PREVIEW_ONLY_PENDING_CANCEL richiede annullamento/riconciliazione allo sblocco.
+Runner lock assente; controllare outbox e journal prima di riprendere o archiviare fixture.
 Pairing personale preservato. AppSecret/sessioni/codici/URLfirmati non sono evidenza.
 **CODE_COMPLETE** limitato ai delta approvati; **LIVE_VALIDATED parziale**;
 **PHONE_VALIDATED NO; PUBLIC_RELEASE_READY NO**. Il pilot completo non è accettato.
