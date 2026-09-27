@@ -79,6 +79,7 @@ Page({
     runtime(this).lifecycle = lifecycle;
     this.stopAutomaticRefresh();
     this.setData({ text: translationsFor(app.locale) });
+    wx.setNavigationBarTitle({ title: this.data.text.sales });
     if (!app.featureReady) return;
     void this.refreshFilters().finally(async () => {
       if (!runtime(this).visible || runtime(this).lifecycle !== lifecycle) return;

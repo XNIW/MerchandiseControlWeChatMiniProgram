@@ -196,6 +196,7 @@ test("server enrollment_required survives HTTP parsing into a recoverable Home s
     definition = page;
   };
   globals.wx = {
+    setNavigationBarTitle() {},
     navigateTo(options: { url: string }) {
       destination = options.url;
     },

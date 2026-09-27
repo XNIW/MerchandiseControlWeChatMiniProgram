@@ -307,7 +307,7 @@ Page({
       }
       const preview = await wx.showModal({
         cancelText: this.data.text.cancel,
-        confirmText: this.data.text.manage,
+        confirmText: this.data.text.confirmAction,
         content: `${this.data.text.name}: ${current.name}\n${this.data.text.productCount}: ${current.productCount}\n${this.data.text.modified}: ${current.updatedAt}`,
         title: this.data.text.conflictTitle,
       });
@@ -441,7 +441,7 @@ Page({
     if (!retryingSameAction) {
       const confirmation = await wx.showModal({
         cancelText: this.data.text.cancel,
-        confirmText: this.data.text.archive,
+        confirmText: this.data.text.confirmAction,
         content: this.data.text.archiveConfirm,
       });
       if (!confirmation.confirm || !this.contextCurrent()) return;

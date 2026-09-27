@@ -1,5 +1,35 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
+## Aggiornamento 2026-09-27 — recupero offline integrato e residui lingue
+
+Fix feedback offline integrato con PR35: head 36ad793, merge 71d5f117,
+review indipendenti 2/2 APPROVED sulla patch b99e339d. Verify 187 PASS;
+CI head 36289794509 e CI main 36289849010 SUCCESS. Build TEST verificata
+sui tre soli file outbox/form, config invariata; manifest aa822774.
+Il nuovo ritest una tantum sync-offline-feedback è revisionato (32 test PASS),
+ma il Mac si è bloccato nuovamente: ricompilazione e prova post-fix NOT_RUN_OS_LOCKED.
+Owner utente, sblocco manuale richiesto; nessun aggiramento del blocco OS.
+
+Controllo usabilità: titoli nativi Home/Account/Sales/dettaglio vendita non
+seguivano la lingua; etichette di conferma come Reintentar, Restaurar o Ripristina
+superano il limite nativo già riprodotto sulle immagini; codici lunghi debordano
+dalla scheda prodotto. Delta circoscritto: titoli localizzati, conferma breve
+comune alle quattro lingue con descrizione completa invariata, aggiornamento
+messaggi pending al cambio lingua, a capo di codici/CTA nel dettaglio.
+Nessuna modifica a capability, consensi, dati finanziari, privacy o configurazione.
+Verify 191 PASS (110 TS + 81 MJS); quattro regressioni aggiunte e harness nativi
+aggiornati. La review ha esteso il controllo al logout con pending: etichette
+spagnole Guardar/Eliminar entro limite, scelte distinte e test del consenso.
+Review e integrazione del delta lingue ancora pendenti; il collaudo
+visivo autenticato nelle quattro lingue resta NOT_RUN_OS_LOCKED.
+
+Restano tre operazioni immagini DevTools PASS e icone 5/5 verificate; due cleanup
+immagini pending nell'ultimo readback. Offline backend applicato esattamente una
+volta; feedback post-fix ancora da collaudare. Android/iOS restano bloccati nei
+rispettivi recovery già documentati, senza modifiche ai sorgenti nativi.
+CODE_COMPLETE limitato ai delta revisionati, LIVE_VALIDATED parziale,
+PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO; nessun DONE.
+
 ## Aggiornamento 2026-09-27 — immagini completate in DevTools, feedback offline in correzione
 
 Dopo lo sblocco e la ricompilazione della build PR34, riaccesso WeChat riuscito.

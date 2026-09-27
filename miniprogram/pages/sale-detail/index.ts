@@ -25,6 +25,8 @@ Page({
     text: translationsFor(app.locale),
   },
   async onLoad(options: Record<string, string | undefined>) {
+    this.setData({ text: translationsFor(app.locale) });
+    wx.setNavigationBarTitle({ title: this.data.text.saleDetail });
     const id = options.id;
     const shop = app.activeShop;
     if (!id || !shop || !app.salesClient) {

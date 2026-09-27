@@ -184,3 +184,5 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 | 2026-09-27T02:25:54+00:00 | WECHAT-010 | Integrata PR34 dopo due review e CI; nuova build TEST pronta, ritest fermato dal blocco OS | head fed196b, merge a68bd286; CI36288360907/36288419063 SUCCESS; manifest f7182cca; runner c52a0484 revisionato,28testPASS; sblocco manuale richiesto; nessun DONE |
 
 2026-09-27 — WECHAT-010: immagini DevTools tre operazioni PASS, telefono non provato. Offline backend esattamente una volta, feedback form FAIL. Correzione circoscritta in EXECUTION con root unico writer e due reviewer read-only previsti; niente DONE.
+
+2026-09-27 — WECHAT-010: recupero feedback offline PR35 integrato e CI head/main SUCCESS; ritest autentico BLOCKED_EXTERNAL OS lock, owner utente. Residui G titoli/conferme/leggibilità in EXECUTION, root unico writer. Nessun DONE.

@@ -440,7 +440,7 @@ Page({
       }
       const preview = await wx.showModal({
         cancelText: this.data.text.cancel,
-        confirmText: this.data.text.manage,
+        confirmText: this.data.text.confirmAction,
         content: `${this.data.text.productName}: ${product.product_name ?? ""}\n${this.data.text.barcode}: ${product.barcode}\n${this.data.text.modified}: ${product.updated_at}`,
         title: this.data.text.conflictTitle,
       });
