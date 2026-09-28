@@ -167,3 +167,12 @@ Official DevTools postmerge smoke found WXML compiler rejection of encoded logic
 2026-09-28T14:21:06Z — DevTools build4519388b/config37d94cf caricata; scope TEST e registry145 invariati. Post-fix offline mostra Saved, dirtyfalse/outbox0 e readback6→7; report445551f2 resta FAIL/UI_SCOPE_CHANGED senza PASS o causalitàoperationId dedotta. Ricevuta SIDE_EFFECT_RECONCILED_CASE_NOT_ACCEPTED e backup checkpoint; nessun replay. Coordinator180s/cleanup e fresh-session>=600s revisionati2/2,35test miratiPASS. Nuovo login14:16; Mac lock al comando rete, prova fresca0intenti interrotta senza save. Verify191PASS, diffcheckPASS. Solo evidenze/docs aggiornate; ownerutente per sblocco, niente bypassOS, nessun DONE.
 
 2026-09-28T16:57Z — WECHAT-010: offline autenticato PASS1caso, History7→8/una scrittura causale, Saved e finalscope valido; report precedenti preservati. LingueFAIL per attesa evento mancante nel runner; controllo separato mostra cinese corretto. Overflow catalogo autentico concodicelungo: delta WXML/WXSS circoscritto in EXECUTION, verify191PASS; review/ritest richiesti, nessun DONE.
+
+2026-09-28T17:15Z — WECHAT-010: PR39 integrata ec62e47b, review 2/2 APPROVED,
+verify 191 PASS, CI head36455394919/main36455631640 SUCCESS. Build TEST83eec45d
+visibile con config invariata; nuovo login autentico. Runner lingua revisionato
+2/2,41test PASS: quattro viste catalogo OPERATOR_OBSERVED,0intenti/eccezioni,
+report8002f843 (PARTIAL aggregate); screenshot/hash revisionati indipendentemente.
+Il precedente FAIL resta preservato. Offline PASS distinto sulla build4519388b.
+Solo evidenze documentali in questa chiusura; altre coperture runtime, convergenza
+nativa, telefono e misure restano aperti. REVIEW, nessun DONE.

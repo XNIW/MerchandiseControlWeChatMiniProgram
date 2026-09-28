@@ -1,5 +1,27 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
+## Stato al 2026-09-28 17:15 UTC — offline e catalogo multilingua verificati
+
+Il recupero offline sulla stessa schermata è PASS in DevTools: feedback Saved,
+coda vuota, una sola scrittura causale e sessione valida al controllo finale.
+La correzione del layout catalogo è integrata con PR39, merge `ec62e47b`:
+review indipendenti 2/2 APPROVED, verify 191 PASS, CI head e main SUCCESS.
+La build TEST `83eec45d` è stata osservata nel simulatore con configurazione invariata.
+
+Il nuovo collaudo autenticato del catalogo termina con quattro casi
+OPERATOR_OBSERVED (zh-Hans, en, es, it): titolo nativo, contenuti e cinque tab
+localizzati, icone leggibili, codici lunghi a capo, placeholder stabile e prezzo
+entro la scheda. Zero intenti di scrittura e zero eccezioni runtime; report
+aggregato PARTIAL, distinto dal precedente tentativo FAIL conservato.
+Non è una prova completa di tutte le schermate nelle quattro lingue.
+
+WECHAT-010 resta in REVIEW, con blocchi esterni per convergenza nativa e telefono;
+restano inoltre le coperture runtime specifiche elencate nella matrice A–G e le
+misure prestazionali. CODE_COMPLETE limitato ai delta approvati,
+LIVE_VALIDATED parziale, PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO; nessun DONE.
+Evidenze e limiti sono nel report canonico `docs/testing/WECHAT-010-REPORT.md`.
+Gli aggiornamenti datati sottostanti conservano gli stati storici delle singole prove.
+
 ## Aggiornamento 2026-09-28 — recupero offline PASS, correzione layout catalogo
 
 Prova autentica16:52UTC completata con sessione valida fino al controllo finale:
