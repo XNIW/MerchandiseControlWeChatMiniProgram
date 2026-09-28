@@ -1,6 +1,18 @@
 export type LocaleKey = "en" | "es" | "it" | "zh-Hans";
 
 export type TranslationKey =
+  | "saleType"
+  | "saleKindSale"
+  | "saleKindRefund"
+  | "saleKindVoid"
+  | "saleStatusAccepted"
+  | "saleStatusDuplicate"
+  | "saleStatusConflict"
+  | "saleStatusRejected"
+  | "paymentCash"
+  | "paymentCard"
+  | "paymentTransfer"
+  | "paymentOther"
   | "confirmAction"
   | "discount"
   | "camera"
@@ -15,6 +27,8 @@ export type TranslationKey =
   | "discardOperationConfirm"
   | "account"
   | "accountSuspended"
+  | "accountDisabled"
+  | "accountReview"
   | "active"
   | "activeShop"
   | "actor"
@@ -191,6 +205,18 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     category: "Category",
     categoryChanged: "Category changed",
     cashier: "Cashier",
+    saleType: "Type",
+    saleKindSale: "Sale",
+    saleKindRefund: "Refund",
+    saleKindVoid: "Void",
+    saleStatusAccepted: "Accepted",
+    saleStatusDuplicate: "Duplicate",
+    saleStatusConflict: "Conflict",
+    saleStatusRejected: "Rejected",
+    paymentCash: "Cash",
+    paymentCard: "Card",
+    paymentTransfer: "Transfer",
+    paymentOther: "Other",
     comparison: "vs previous day",
     created: "Created",
     consent:
@@ -279,6 +305,8 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     updated: "Last updated",
     voids: "Voids",
     accountSuspended: "This account is suspended.",
+    accountDisabled: "Disabled",
+    accountReview: "Under review",
     active: "Active",
     actor: "Actor",
     addImage: "Add image",
@@ -375,6 +403,18 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     category: "Categoría",
     categoryChanged: "Categoría modificada",
     cashier: "Cajero",
+    saleType: "Tipo",
+    saleKindSale: "Venta",
+    saleKindRefund: "Devolución",
+    saleKindVoid: "Anulación",
+    saleStatusAccepted: "Aceptada",
+    saleStatusDuplicate: "Duplicada",
+    saleStatusConflict: "En conflicto",
+    saleStatusRejected: "Rechazada",
+    paymentCash: "Efectivo",
+    paymentCard: "Tarjeta",
+    paymentTransfer: "Transferencia",
+    paymentOther: "Otro",
     comparison: "vs. día anterior",
     created: "Creado",
     consent:
@@ -463,13 +503,15 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     updated: "Última actualización",
     voids: "Anulaciones",
     accountSuspended: "Esta cuenta está suspendida.",
+    accountDisabled: "Deshabilitado",
+    accountReview: "En revisión",
     active: "Activo",
     actor: "Actor",
     addImage: "Añadir imagen",
     archive: "Archivar",
     archiveConfirm: "¿Archivar este elemento? La acción quedará registrada en el historial.",
     archived: "Archivado",
-    archivedEntities: "Elementos archivados del catálogo",
+    archivedEntities: "Elementos archivados",
     barcodeAscending: "Código A–Z",
     cancel: "Cancelar",
     catalogHistory: "Historial del catálogo",
@@ -562,6 +604,18 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     category: "Categoria",
     categoryChanged: "Categoria modificata",
     cashier: "Cassiere",
+    saleType: "Tipo",
+    saleKindSale: "Vendita",
+    saleKindRefund: "Rimborso",
+    saleKindVoid: "Annullamento",
+    saleStatusAccepted: "Accettata",
+    saleStatusDuplicate: "Duplicata",
+    saleStatusConflict: "In conflitto",
+    saleStatusRejected: "Rifiutata",
+    paymentCash: "Contanti",
+    paymentCard: "Carta",
+    paymentTransfer: "Bonifico",
+    paymentOther: "Altro",
     comparison: "rispetto al giorno precedente",
     created: "Creato",
     consent:
@@ -651,6 +705,8 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     updated: "Ultimo aggiornamento",
     voids: "Annullamenti",
     accountSuspended: "Questo account è sospeso.",
+    accountDisabled: "Disabilitato",
+    accountReview: "In revisione",
     active: "Attivo",
     actor: "Autore",
     addImage: "Aggiungi immagine",
@@ -749,6 +805,18 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     category: "分类",
     categoryChanged: "分类已更改",
     cashier: "收银员",
+    saleType: "类型",
+    saleKindSale: "销售",
+    saleKindRefund: "退款",
+    saleKindVoid: "作废",
+    saleStatusAccepted: "已接受",
+    saleStatusDuplicate: "重复",
+    saleStatusConflict: "冲突",
+    saleStatusRejected: "已拒绝",
+    paymentCash: "现金",
+    paymentCard: "银行卡",
+    paymentTransfer: "转账",
+    paymentOther: "其他",
     comparison: "较前一日",
     created: "已创建",
     consent: "继续即表示将一次性微信登录码发送给 MerchandiseControl。不会请求支付信息。",
@@ -832,6 +900,8 @@ const translations: Record<LocaleKey, Record<TranslationKey, string>> = {
     updated: "最后更新",
     voids: "作废",
     accountSuspended: "此账户已暂停。",
+    accountDisabled: "已停用",
+    accountReview: "审核中",
     active: "启用中",
     actor: "操作人",
     addImage: "添加图片",

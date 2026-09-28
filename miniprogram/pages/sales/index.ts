@@ -7,6 +7,7 @@ import { resolveSalesRange, type SalesRangeKey, shiftDate } from "../../lib/date
 import { SessionBoundedCache } from "../../lib/sensitive-cache";
 import { translationsFor } from "../../locales/index";
 import { readErrorTranslationKey } from "../catalog-management";
+import { salesCodeLabel } from "../sales-labels";
 
 const app = getApp<MerchandiseControlApp>();
 interface SalesRuntime {
@@ -16,13 +17,25 @@ interface SalesRuntime {
   dateShop?: string;
   businessSequence?: number;
   filterSequence?: number;
+  loadedScope?: string | undefined;
 }
 function runtime(page: unknown): SalesRuntime {
   return page as SalesRuntime;
 }
+function currentResultScope(): string | undefined {
+  const shop = app.activeShop;
+  if (!shop || app.sessionStore.load() === null) return undefined;
+  return [
+    app.sessionStore.generation,
+    app.sensitiveCaches.generation,
+    shop.shop_id,
+    shop.role_key,
+  ].join(":");
+}
 const pageCache = new SessionBoundedCache<{
   days: readonly DailySalesSummary[];
   sales: readonly DailySale[];
+  hasMore: boolean;
 }>(4, app.sessionStore);
 app.sensitiveCaches.register(pageCache, ["sales"]);
 
@@ -47,19 +60,27 @@ Page({
     featureReady: app.featureReady,
     from: "",
     gross: "—",
+    hasMore: false,
     kindIndex: 0,
+    kindLabels: ["", "sale", "refund", "void"].map((code) =>
+      salesCodeLabel(code, "kind", translationsFor(app.locale)),
+    ),
     kinds: ["", "sale", "refund", "void"],
     loading: false,
     net: "—",
     paymentIndex: 0,
     paymentMethods: [""],
+    paymentLabels: [translationsFor(app.locale).all],
     range: "day" as SalesRangeKey,
     refunds: "—",
     saleNumber: "",
     saleCount: 0,
-    sales: [] as readonly (DailySale & { netText: string })[],
+    sales: [] as readonly (DailySale & { netText: string; kindLabel: string })[],
     staffIndex: 0,
     staffOptions: [] as readonly SalesFilterEntity[],
+    statusLabels: ["", "accepted", "duplicate", "conflict", "rejected"].map((code) =>
+      salesCodeLabel(code, "status", translationsFor(app.locale)),
+    ),
     statusIndex: 0,
     statuses: ["", "accepted", "duplicate", "conflict", "rejected"],
     text: translationsFor(app.locale),
@@ -74,16 +95,23 @@ Page({
     void this.refresh(true).finally(() => wx.stopPullDownRefresh());
   },
   onShow() {
+    this.clearStaleResultScope();
     runtime(this).visible = true;
     const lifecycle = (runtime(this).lifecycle ?? 0) + 1;
     runtime(this).lifecycle = lifecycle;
     this.stopAutomaticRefresh();
-    this.setData({ text: translationsFor(app.locale) });
+    const text = translationsFor(app.locale);
+    this.setData({
+      text,
+      kindLabels: this.data.kinds.map((code) => salesCodeLabel(code, "kind", text)),
+      statusLabels: this.data.statuses.map((code) => salesCodeLabel(code, "status", text)),
+      paymentLabels: this.data.paymentMethods.map((code) => salesCodeLabel(code, "payment", text)),
+    });
     wx.setNavigationBarTitle({ title: this.data.text.sales });
     if (!app.featureReady) return;
     void this.refreshFilters().finally(async () => {
       if (!runtime(this).visible || runtime(this).lifecycle !== lifecycle) return;
-      await this.refresh(false);
+      await this.refresh(false, true);
       if (app.sessionStore.load() !== null && app.salesClient) this.startAutomaticRefresh();
     });
   },
@@ -96,6 +124,7 @@ Page({
     if (holder.searchTimer !== undefined) clearTimeout(holder.searchTimer);
     runtime(this).lifecycle = (runtime(this).lifecycle ?? 0) + 1;
     this.stopAutomaticRefresh();
+    this.setData({ loading: false });
   },
   onUnload() {
     this.onHide();
@@ -140,12 +169,16 @@ Page({
     void this.refresh(true);
   },
   searchSale(event: WechatMiniprogram.Input) {
-    this.setData({ saleNumber: event.detail.value });
-    const holder = this as unknown as { searchTimer?: number };
+    const holder = this as unknown as { requestSequence?: number; searchTimer?: number };
+    holder.requestSequence = (holder.requestSequence ?? 0) + 1;
+    this.setData({ saleNumber: event.detail.value, sales: [], hasMore: false, loading: false });
     if (holder.searchTimer !== undefined) clearTimeout(holder.searchTimer);
     holder.searchTimer = setTimeout(() => void this.refresh(true), 350);
   },
   async applyRange(range: SalesRangeKey, anchor: string) {
+    const holder = this as unknown as { requestSequence?: number };
+    holder.requestSequence = (holder.requestSequence ?? 0) + 1;
+    this.setData({ loading: false, hasMore: false });
     const dates = resolveSalesRange(anchor, range);
     this.setData({ ...dates, range, sales: [] });
     await this.refreshFilters();
@@ -157,11 +190,13 @@ Page({
       app.clearSessionContext();
       this.setData({
         days: [],
+        hasMore: false,
         errorMessage: this.data.text.sessionExpired,
         gross: "—",
         net: "—",
         refunds: "—",
         saleCount: 0,
+        timeZone: "",
         sales: [],
       });
       return null;
@@ -203,6 +238,7 @@ Page({
     holder.dateShop = shop.shop_id;
   },
   async refreshFilters() {
+    this.clearStaleResultScope();
     const sequence = (runtime(this).filterSequence ?? 0) + 1;
     runtime(this).filterSequence = sequence;
     const shop = await this.ensureShop();
@@ -236,6 +272,9 @@ Page({
           : [],
         paymentIndex: 0,
         paymentMethods: ["", ...(filters?.payment_methods ?? [])],
+        paymentLabels: ["", ...(filters?.payment_methods ?? [])].map((code) =>
+          salesCodeLabel(code, "payment", this.data.text),
+        ),
         staffIndex: 0,
         staffOptions: filters?.staff.length
           ? [{ id: "", name: this.data.text.all }, ...filters.staff]
@@ -248,12 +287,48 @@ Page({
         app.activeShop?.shop_id !== shop.shop_id
       )
         return;
-      this.setData({ deviceOptions: [], paymentMethods: [""], staffOptions: [] });
+      this.setData({
+        deviceOptions: [],
+        paymentMethods: [""],
+        paymentLabels: [this.data.text.all],
+        staffOptions: [],
+      });
     }
   },
-  async refresh(force: boolean): Promise<boolean> {
-    const sequence = ((this as unknown as { requestSequence?: number }).requestSequence ?? 0) + 1;
-    (this as unknown as { requestSequence: number }).requestSequence = sequence;
+  clearStaleResultScope(): boolean {
+    if (runtime(this).loadedScope === currentResultScope()) return false;
+    const holder = this as unknown as { requestSequence?: number };
+    holder.requestSequence = (holder.requestSequence ?? 0) + 1;
+    this.setData({
+      loading: false,
+      sales: [],
+      days: [],
+      hasMore: false,
+      gross: "—",
+      net: "—",
+      refunds: "—",
+      saleCount: 0,
+      timeZone: "",
+    });
+    delete runtime(this).loadedScope;
+    return true;
+  },
+  async refresh(force: boolean, preserveWindow = false): Promise<boolean> {
+    const holder = this as unknown as { requestSequence?: number };
+    if (this.clearStaleResultScope()) preserveWindow = false;
+    if (preserveWindow && this.data.loading) return true;
+    const sequence = (holder.requestSequence ?? 0) + 1;
+    holder.requestSequence = sequence;
+    this.setData({ loading: true });
+    try {
+      return await this.refreshWindow(force, preserveWindow, sequence);
+    } finally {
+      if (holder.requestSequence === sequence) this.setData({ loading: false });
+    }
+  },
+  async refreshWindow(force: boolean, preserveWindow: boolean, sequence: number): Promise<boolean> {
+    const windowSize = preserveWindow ? Math.max(50, this.data.sales.length) : 50;
+    const verifyKnownEnd = preserveWindow && this.data.sales.length > 0 && !this.data.hasMore;
     const shop = await this.ensureShop();
     if (
       !shop ||
@@ -272,13 +347,25 @@ Page({
         (this as unknown as { requestSequence: number }).requestSequence !== sequence
       )
         return false;
+      const key = readErrorTranslationKey(error);
+      const retain =
+        preserveWindow &&
+        runtime(this).loadedScope === currentResultScope() &&
+        ["offline", "requestTimeout", "retryableError", "rateLimited"].includes(key);
       this.setData({
-        errorMessage: this.data.text[readErrorTranslationKey(error)],
-        gross: "—",
-        net: "—",
-        refunds: "—",
-        days: [],
-        sales: [],
+        errorMessage: this.data.text[key],
+        ...(!retain
+          ? {
+              gross: "—",
+              net: "—",
+              refunds: "—",
+              days: [],
+              sales: [],
+              hasMore: false,
+              saleCount: 0,
+              timeZone: "",
+            }
+          : {}),
       });
       return false;
     }
@@ -299,9 +386,10 @@ Page({
       this.data.staffOptions[this.data.staffIndex]?.id ?? "",
       this.data.deviceOptions[this.data.deviceIndex]?.id ?? "",
       this.data.saleNumber,
+      windowSize,
     ].join(":");
     const cached = force ? undefined : pageCache.get(cacheKey);
-    if (cached) {
+    if (cached && !(verifyKnownEnd && cached.hasMore)) {
       if (
         app.sensitiveCaches.generation !== cacheGeneration ||
         app.sessionStore.load() === null ||
@@ -310,33 +398,72 @@ Page({
         return false;
       }
       this.applyResult(cached.days, cached.sales, shop.currency_code);
+      runtime(this).loadedScope = currentResultScope();
+      this.setData({ errorMessage: "", hasMore: cached.hasMore });
       return true;
     }
     this.setData({ errorMessage: "", loading: true });
     try {
-      const [days, sales] = await Promise.all([
+      const contextCurrent = () =>
+        (this as unknown as { requestSequence: number }).requestSequence === sequence &&
+        app.sensitiveCaches.generation === cacheGeneration &&
+        app.sessionStore.load() !== null &&
+        app.activeShop?.shop_id === shop.shop_id;
+      const sales: DailySale[] = [];
+      let hasMore = false;
+      const query = {
+        from: this.data.from,
+        ...(this.data.kinds[this.data.kindIndex]
+          ? { kind: this.data.kinds[this.data.kindIndex] }
+          : {}),
+        limit: 50,
+        ...(this.data.paymentMethods[this.data.paymentIndex]
+          ? { paymentMethod: this.data.paymentMethods[this.data.paymentIndex] }
+          : {}),
+        ...(this.data.saleNumber ? { saleNumber: this.data.saleNumber } : {}),
+        ...(this.data.staffOptions[this.data.staffIndex]?.id
+          ? { staffId: this.data.staffOptions[this.data.staffIndex]?.id ?? "" }
+          : {}),
+        ...(this.data.statuses[this.data.statusIndex]
+          ? { status: this.data.statuses[this.data.statusIndex] }
+          : {}),
+        ...(this.data.deviceOptions[this.data.deviceIndex]?.id
+          ? { deviceId: this.data.deviceOptions[this.data.deviceIndex]?.id ?? "" }
+          : {}),
+        to: this.data.to,
+      };
+      const readWindow = async () => {
+        let last: DailySale | undefined;
+        for (let offset = 0; offset < windowSize; offset += 50) {
+          if (!contextCurrent() || !app.salesClient) return;
+          const batch = await app.salesClient.salesPage(shop.shop_id, {
+            ...query,
+            ...(last ? { beforeAt: last.occurred_at, beforeId: last.pos_sale_id } : {}),
+          });
+          if (!contextCurrent()) return;
+          const ids = new Set(sales.map((sale) => sale.pos_sale_id));
+          sales.push(...batch.filter((sale) => !ids.has(sale.pos_sale_id)));
+          hasMore = batch.length === 50;
+          if (!hasMore) break;
+          const next = batch[batch.length - 1];
+          if (!next || next.pos_sale_id === last?.pos_sale_id)
+            throw new Error("sales_cursor_invalid");
+          last = next;
+        }
+        if (verifyKnownEnd && hasMore && last && contextCurrent() && app.salesClient) {
+          const tail = await app.salesClient.salesPage(shop.shop_id, {
+            ...query,
+            beforeAt: last.occurred_at,
+            beforeId: last.pos_sale_id,
+            limit: 1,
+          });
+          if (!contextCurrent()) return;
+          hasMore = tail.length > 0;
+        }
+      };
+      const [days] = await Promise.all([
         app.salesClient.periodSummary(shop.shop_id, this.data.from, this.data.to),
-        app.salesClient.salesPage(shop.shop_id, {
-          from: this.data.from,
-          ...(this.data.kinds[this.data.kindIndex]
-            ? { kind: this.data.kinds[this.data.kindIndex] }
-            : {}),
-          limit: 50,
-          ...(this.data.paymentMethods[this.data.paymentIndex]
-            ? { paymentMethod: this.data.paymentMethods[this.data.paymentIndex] }
-            : {}),
-          ...(this.data.saleNumber ? { saleNumber: this.data.saleNumber } : {}),
-          ...(this.data.staffOptions[this.data.staffIndex]?.id
-            ? { staffId: this.data.staffOptions[this.data.staffIndex]?.id ?? "" }
-            : {}),
-          ...(this.data.statuses[this.data.statusIndex]
-            ? { status: this.data.statuses[this.data.statusIndex] }
-            : {}),
-          ...(this.data.deviceOptions[this.data.deviceIndex]?.id
-            ? { deviceId: this.data.deviceOptions[this.data.deviceIndex]?.id ?? "" }
-            : {}),
-          to: this.data.to,
-        }),
+        readWindow(),
       ]);
       if (
         (this as unknown as { requestSequence: number }).requestSequence !== sequence ||
@@ -346,23 +473,39 @@ Page({
       ) {
         return false;
       }
-      pageCache.set(cacheKey, { days, sales });
+      pageCache.set(cacheKey, { days, sales, hasMore });
+      this.setData({ hasMore });
       this.applyResult(days, sales, shop.currency_code);
+      runtime(this).loadedScope = currentResultScope();
       return true;
     } catch (error) {
       if (
         (this as unknown as { requestSequence: number }).requestSequence !== sequence ||
-        app.sensitiveCaches.generation !== cacheGeneration
+        app.sensitiveCaches.generation !== cacheGeneration ||
+        app.activeShop?.shop_id !== shop.shop_id ||
+        app.sessionStore.load() === null
       ) {
         return false;
       }
+      const key = readErrorTranslationKey(error);
+      const retain =
+        preserveWindow &&
+        runtime(this).loadedScope === currentResultScope() &&
+        ["offline", "requestTimeout", "retryableError", "rateLimited"].includes(key);
       this.setData({
-        errorMessage: this.data.text[readErrorTranslationKey(error)],
-        gross: "—",
-        net: "—",
-        refunds: "—",
-        days: [],
-        sales: [],
+        errorMessage: this.data.text[key],
+        ...(!retain
+          ? {
+              gross: "—",
+              net: "—",
+              refunds: "—",
+              days: [],
+              sales: [],
+              hasMore: false,
+              saleCount: 0,
+              timeZone: "",
+            }
+          : {}),
       });
       return false;
     } finally {
@@ -378,7 +521,7 @@ Page({
       baseDelayMilliseconds: runtimeConfig.autoRefreshMilliseconds,
       maximumDelayMilliseconds: runtimeConfig.autoRefreshMaximumMilliseconds,
       refresh: async () => {
-        if (!(await this.refresh(true))) throw new Error("sales_refresh_failed");
+        if (!(await this.refresh(true, true))) throw new Error("sales_refresh_failed");
       },
     });
     (this as unknown as { refreshController?: AdaptiveRefreshController }).refreshController =
@@ -399,6 +542,9 @@ Page({
         refunds: "—",
         sales: [],
         days: [],
+        hasMore: false,
+        saleCount: 0,
+        timeZone: "",
       });
       return;
     }
@@ -414,14 +560,25 @@ Page({
       net: format(total(days, "net_revenue_clp")),
       refunds: format(total(days, "refunds_clp")),
       saleCount: days.reduce((sum, day) => sum + day.sale_count, 0),
-      sales: sales.map((sale) => ({ ...sale, netText: formatCatalogNumber(sale.net_amount_clp) })),
+      sales: sales.map((sale) => ({
+        ...sale,
+        netText: formatCatalogNumber(sale.net_amount_clp),
+        kindLabel: salesCodeLabel(sale.business_kind, "kind", this.data.text),
+      })),
       timeZone: app.activeShop?.time_zone ?? "",
     });
   },
   async loadMore() {
     const shop = app.activeShop;
     const last = this.data.sales[this.data.sales.length - 1];
-    if (!shop || !last || !app.salesClient || app.sessionStore.load() === null) return;
+    if (
+      !shop ||
+      !last ||
+      !this.data.hasMore ||
+      !app.salesClient ||
+      app.sessionStore.load() === null
+    )
+      return;
     const cacheGeneration = app.sensitiveCaches.generation;
     const sequence = (this as unknown as { requestSequence?: number }).requestSequence;
     if (this.data.loading) return;
@@ -460,11 +617,16 @@ Page({
       if ((this as unknown as { requestSequence?: number }).requestSequence !== sequence) return;
       const ids = new Set(this.data.sales.map((sale) => sale.pos_sale_id));
       this.setData({
+        hasMore: next.length === 50,
         sales: [
           ...this.data.sales,
           ...next
             .filter((sale) => !ids.has(sale.pos_sale_id))
-            .map((sale) => ({ ...sale, netText: formatCatalogNumber(sale.net_amount_clp) })),
+            .map((sale) => ({
+              ...sale,
+              netText: formatCatalogNumber(sale.net_amount_clp),
+              kindLabel: salesCodeLabel(sale.business_kind, "kind", this.data.text),
+            })),
         ],
       });
     } catch (error) {

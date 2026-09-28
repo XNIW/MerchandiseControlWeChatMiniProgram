@@ -1,5 +1,31 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+## Checkpoint corrente — 2026-09-28 19:20 UTC
+
+WECHAT-010 **EXECUTION**: cleanup immagini run PASS tramite percorso canonico;
+Sales concorrenza/privacy/paginazione e testi/layout corretti, verify204PASS e
+review indipendenti2/2 APPROVED. Ritest DevTools quattro lingue/30giorni PASS;
+ultimi layout Account/archiviati e integrazione remota in corso.
+Android R-A05 ora classifica il rifiuto canonico; recovery ancora fermo su16
+History TOAST compresse. iOS richiede artefatto TEST con firma Keychain corretta,
+login e persistenza autentici da ritestare; dati locali preservati.
+Matrice e report canonico distinguono ogni residuo. Nessun DONE/pilot readiness.
+Gli stati datati sottostanti sono checkpoint storici, non lo stato corrente.
+
+## Mandato corrente — 2026-09-28, chiusura funzionale cross-client
+
+WECHAT-010 torna in **EXECUTION** per il mandato esplicito di completamento:
+ADB, XCTest/XCUITest/simctl e DevTools autorizzati; correzioni dimostrate in
+Mini/Admin/Android/iOS, commit, push, PR e merge con gate verificati. TEST soltanto.
+Il blocco di autorizzazione degli strumenti alternativi è risolto.
+
+Matrice operativa unica: [WECHAT-010-COMPLETION-MATRIX](testing/WECHAT-010-COMPLETION-MATRIX.md).
+I PASS precedenti restano validi per i componenti invariati; storico e prove nuove
+sono distinti. La chat «Correggi sync e parità Android/iOS» mantiene la scrittura
+nei client nativi, con coordinamento esplicitamente autorizzato dall'utente.
+Questo writer cura Mini/Admin e il collaudo autenticato sui simulatori dedicati.
+Nessun DONE, pubblicazione o readiness del pilot dedotti dai soli test automatici.
+
 ## Stato al 2026-09-28 17:15 UTC — offline e catalogo multilingua verificati
 
 Il recupero offline sulla stessa schermata è PASS in DevTools: feedback Saved,
