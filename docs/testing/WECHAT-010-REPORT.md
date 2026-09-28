@@ -350,6 +350,29 @@ del cursore dopo le modifiche verificato. Questa prova non attesta salvataggio
 offline, aggiornamento di ogni schermata, budget temporali o convergenza nativa.
 Ricevuta privata sync-delta-live-reconciliation.json con ambito esatto.
 
+## Ricontrollo dei simulatori — 2026-09-28 17:25–17:41 UTC
+
+Su nuova autorizzazione dell'utente, avviate le app esistenti da Android Studio e
+Xcode sui dispositivi già configurati: Medium Phone API35 e iPhone15ProMax/iOS26.1.
+Android Studio conferma installazione riuscita e processo attivo; Xcode mostra
+l'app in esecuzione. Configurazioni TEST e selezioni account/shop canoniche
+ricontrollate. Nessuna modifica ai sorgenti nativi o reset dei dati.
+
+Il nuovo avvio iOS registra device status active/success sullo shop autorizzato;
+non equivale a sync riuscita. Lo stato persistito resta recoveryRequired con
+keyNotFound(catalog), ma il timestamp dell'errore è ancora del26settembre:
+nessun nuovo retry fallito attestato. Android emette al nuovo avvio skip per
+business_scope_blocked/CHECKING; nessuna convergenza dedotta dal solo avvio.
+
+La prova UI è BLOCKED_TOOL_UI: Device Hub restituisce ripetutamente timeoutReached,
+anche dopo «Riprova ora» dell'utente e reinizializzazione CUA; Running Devices
+Android rimane vuoto con emulatore attivo e un tentativo a coordinate restituisce
+windowNotFoundAtPosition. Nessun controllo business UI segnato PASS. Chiesto uso
+esplicito di ADB e XCTest/simctl per i test interattivi alternativi, come richiesto
+dalle istruzioni del controllo UI. L'avvio e le letture diagnostiche sopra sono
+già eseguiti; retry UI e readback del catalogo sui client restano da completare.
+Le diagnosi del26settembre sottostanti rimangono distinte dal nuovo ricontrollo.
+
 ## Simulatori e blocchi concreti
 
 Android MediumPhone/API35, sorgente ca0a58d8: build riuscita, Google personale,

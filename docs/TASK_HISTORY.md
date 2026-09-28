@@ -201,3 +201,11 @@ report8002f843 (PARTIAL aggregate); screenshot/hash revisionati indipendentement
 Il precedente FAIL resta preservato. Offline PASS distinto sulla build4519388b.
 Solo evidenze documentali in questa chiusura; altre coperture runtime, convergenza
 nativa, telefono e misure restano aperti. REVIEW, nessun DONE.
+
+2026-09-28T17:41Z — WECHAT-010: su richiesta utente avviate app native TEST da
+Android Studio/Xcode; installazione Android e avvio iOS osservati, scope canonico
+ricontrollato. Nessun sorgente nativo modificato. CUA Device Hub timeout e vista
+Android vuota impediscono il nuovo retry UI; ricontrollo non attesta convergenza.
+Errore iOS persistito datato26settembre, non contato come nuovo FAIL. Richiesta
+indicazione esplicita ADB/XCTest per alternativa al controllo UI; test dipendenti
+pendenti, nessun DONE. Evidenze private native-runtime-*-20260928.
