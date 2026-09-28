@@ -1,5 +1,23 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
+## Aggiornamento 2026-09-28 — recupero offline PASS, correzione layout catalogo
+
+Prova autentica16:52UTC completata con sessione valida fino al controllo finale:
+stessa pagina, rete none→wifi, stessa operazione/chiave/corpo, una sola scrittura
+causale confermata e History7→8. Modulo Saved, dirty=false, errore vuoto, outbox0;
+checkpoint VERIFIED,1caso PASS. Report precedenti FAIL preservati; nessun replay.
+Build4519388b/config37d94cf; Worker beb94e1e e registry145 invariati.
+
+Prima verifica lingue interrotta senza PASS: il runner cambia scheda prima della
+conferma osservabile dell'evento lingua. Con eventi separati, cinese/tab/titolo
+catalogo risultano corretti. Difetto distinto riprodotto: codice lungo comprime
+la miniatura e spinge il prezzo fuori dalla scheda. Delta circoscritto in EXECUTION:
+miniatura stabile, testo a capo e prezzo sotto i dettagli nella colonna prodotto.
+Nessuna modifica a importi, traduzioni, capability o richieste server.
+Verify191PASS; review/integrazione e ritest visivo post-layout ancora pendenti.
+La prova completa4lingue, convergenza nativa, telefono e p50/p95 restano aperti.
+LIVE_VALIDATED parziale; nessun DONE o PUBLIC_RELEASE_READY.
+
 ## Aggiornamento 2026-09-28 — feedback Saved osservato, accettazione ancora parziale
 
 Build TEST4519388b ricompilata in DevTools ufficiale2.02.2609232; accesso WeChat
@@ -29,12 +47,10 @@ immagini3operazioni DevTools restano le prove precedenti; nessuna nuova attestaz
 telefono, convergenza Android/iOS o p50/p95. LIVE_VALIDATED parziale;
 PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO. REVIEW/BLOCKED_EXTERNAL; nessun DONE.
 
-Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
-13 casi catalogo verificati in DevTools. Checkpoint e watermark sync verificati;
-tre operazioni immagini PASS. Offline storico History5→6; nel ritest post-fix
-Saved osservato e History6→7, ma report FAIL preservato per scadenza al controllo
-finale di sessione. Prova fresca ferma prima del save per Mac bloccato; quattro
-lingue, convergenza nativa e telefono restano aperti.** Nessun DONE auto-approvato.
+Stato corrente: **pilot TEST parzialmente collaudato:17letture,13casi catalogo,
+3operazioni immagini e recupero offline con feedback finale PASS in DevTools.
+History8 nell'ultimo readback; lingue/layout in correzione. Convergenza nativa,
+telefono e prestazioni restano aperti.** Nessun DONE auto-approvato.
 
 ## Aggiornamento 2026-09-27 — offline e lingue integrati, ritest bloccato dal Mac
 
@@ -440,12 +456,12 @@ o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
 | Mandato | Evidenza disponibile | Residuo effettivo |
 |---|---|---|
 | A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Foreground/logout/pending; negativi isolati separati; riaccesso autonomo autorizzato ed eseguito |
-| B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto5auditUI;6nel readback storico post-offline;7nell’ultimo readback28settembre | Ulteriori filtri/sort/pagine; edge case solo isolati |
+| B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto5auditUI;6nel readback storico post-offline;8nell’ultimo readback28settembre16:52UTC | Ulteriori filtri/sort/pagine; edge case solo isolati |
 | C Catalogo/prezzi |13casi reali,5fixture, rinomina e sostituzione/archiviazione categoria/fornitore, CLP interi e quantità1,25 | Conflitti live, storico multipagina e legacy invariati |
 | D Immagini | Tre operazioni DevTools PASS: camera, sostituzione galleria, rimozione; orientamento/thumbnail osservati | Due cleanup pending; rete/lifecycle immagine e telefono non attestati |
-| E Offline/sync | Checkpoint/watermark verificati; salvataggio offline→online sulla stessa pagina applicato una volta, History5→6; feedback corretto PR35 | Saved osservato e History6→7; final scope fallisce per sessione scaduta, caso non accettato. Prova fresca0intenti bloccata dal Mac; altre schermate/lifecycle distinti |
+| E Offline/sync | Checkpoint/watermark verificati; salvataggio offline→online sulla stessa pagina applicato una volta, History5→6; feedback corretto PR35 | Nuova prova fresca PASS: Saved, coda vuota, una sola scrittura causale7→8 e final scope valido; altre schermate/lifecycle distinti |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
-| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow integrati PR36,191test locali | Dettaglio inglese osservato; collaudo completo4lingue e conferme post-fix bloccati dal Mac |
+| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow integrati PR36,191test locali | Lingua cinese corretta con attesa evento; runner da sincronizzare e overflow catalogo in correzione; ritest4lingue pendente |
 | Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
 Le durate scenari45.566/14.486/6.602/6.468ms includono readback/orchestrazione,
@@ -457,7 +473,8 @@ Cinque fixture della run conservate con marker e ID nel packet; nessun cleanup
 automatico. Le precedenti diagnosi NO_WRITE e il fallimento upload noto sono riconciliati;
 la versione immagine failed aveva cleanup backend pendente nell’ultimo readback.
 La vecchia preview è stata riconciliata prima dei tre casi immagini; la bozza
-non inviata della prova offline del28settembre richiede annullamento allo sblocco.
+non inviata della prova offline del28settembre è stata annullata prima della
+nuova prova unlocked, con conferma UI e outbox0 alle16:47:39UTC.
 Runner lock assente; controllare outbox e journal prima di riprendere o archiviare fixture.
 Pairing personale preservato. AppSecret/sessioni/codici/URLfirmati non sono evidenza.
 **CODE_COMPLETE** limitato ai delta approvati; **LIVE_VALIDATED parziale**;
