@@ -1,5 +1,27 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
+## Stato al 2026-09-28 17:15 UTC — offline e catalogo multilingua verificati
+
+Il recupero offline sulla stessa schermata è PASS in DevTools: feedback Saved,
+coda vuota, una sola scrittura causale e sessione valida al controllo finale.
+La correzione del layout catalogo è integrata con PR39, merge `ec62e47b`:
+review indipendenti 2/2 APPROVED, verify 191 PASS, CI head e main SUCCESS.
+La build TEST `83eec45d` è stata osservata nel simulatore con configurazione invariata.
+
+Il nuovo collaudo autenticato del catalogo termina con quattro casi
+OPERATOR_OBSERVED (zh-Hans, en, es, it): titolo nativo, contenuti e cinque tab
+localizzati, icone leggibili, codici lunghi a capo, placeholder stabile e prezzo
+entro la scheda. Zero intenti di scrittura e zero eccezioni runtime; report
+aggregato PARTIAL, distinto dal precedente tentativo FAIL conservato.
+Non è una prova completa di tutte le schermate nelle quattro lingue.
+
+WECHAT-010 resta in REVIEW, con blocchi esterni per convergenza nativa e telefono;
+restano inoltre le coperture runtime specifiche elencate nella matrice A–G e le
+misure prestazionali. CODE_COMPLETE limitato ai delta approvati,
+LIVE_VALIDATED parziale, PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO; nessun DONE.
+Evidenze e limiti sono nel report canonico `docs/testing/WECHAT-010-REPORT.md`.
+Gli aggiornamenti datati sottostanti conservano gli stati storici delle singole prove.
+
 ## Aggiornamento 2026-09-28 — recupero offline PASS, correzione layout catalogo
 
 Prova autentica16:52UTC completata con sessione valida fino al controllo finale:
@@ -49,7 +71,7 @@ PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO. REVIEW/BLOCKED_EXTERNAL; nessun DON
 
 Stato corrente: **pilot TEST parzialmente collaudato:17letture,13casi catalogo,
 3operazioni immagini e recupero offline con feedback finale PASS in DevTools.
-History8 nell'ultimo readback; lingue/layout in correzione. Convergenza nativa,
+History8 nell'ultimo readback; catalogo leggibile nelle quattro lingue in DevTools. Convergenza nativa,
 telefono e prestazioni restano aperti.** Nessun DONE auto-approvato.
 
 ## Aggiornamento 2026-09-27 — offline e lingue integrati, ritest bloccato dal Mac
@@ -451,6 +473,42 @@ sulle stesse fixture. Non ripetere images o images-buffer. Nessun telefono dispo
 o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
 
 
+## Ricevuta del collaudo catalogo — 2026-09-28 17:10–17:14 UTC
+
+Sorgente Mini `ec62e47beb9717dd1ea955d9f8e2d06f1e1e8b9e`; PR39 modifica
+soltanto WXML/WXSS del catalogo oltre alle ricevute documentali. Il client TEST
+mantiene la configurazione `37d94cf4`; manifest completo
+`83eec45df7dcd0c0f00ab1cfe1dd7f625634c4fb844eb4c8285fb979c99294d1`.
+Worker `beb94e1e`, confronto registry 145 con hash invariati e singleton autorizzato
+ricontrollati prima della prova. Nessun deploy Worker o nuova migrazione.
+DevTools 2.02.2609232, Base Library 3.17.0, simulatore 375×639; login WeChat
+reale rinnovato e prima Home caricata prima dell'avvio.
+
+Il runner privato revisionato 2/2 (41 test mirati PASS) attende l'effettivo
+cambio lingua e il catalogo pronto prima della ricevuta visiva. Non inietta
+stato applicativo o sessioni. Report `8002f843d969fa0697bc98cee5e368a7b883fd5e23be680061ddf9a267b4377c`:
+PARTIAL, quattro OPERATOR_OBSERVED, zero intenti/eccezioni, lingua iniziale
+ripristinata dal flusso. I quattro screenshot originali e le ricevute con hash
+sono nel packet privato; il target con codice lungo è visibile in ciascuno.
+Lo spazio immagine verificato è un placeholder, non una fotografia caricata.
+Le cinque icone sono leggibili; in spagnolo Attività recente occupa due righe.
+I controlli aggiuntivi di Home/Vendite/Attività/Account sono parziali e non
+estendono i quattro casi catalogo a un'accettazione di tutta l'app.
+
+Il precedente report lingue `fe78484e` resta FAIL: attesa evento insufficiente
+nel runner e overflow catalogo osservato sulla build precedente. Non è stato
+riscritto o trasformato retroattivamente in PASS. La prova offline accettata
+resta distinta sulla build `4519388b`, report
+`f90eed8705cc6ef4451e59eb1dca5ea3b7e177ee9d44139e7bd5897f2e08ae16`:
+una sola scrittura correlata all'operationId, History7→8, Saved e final scope valido.
+Nessun percentile dedotto dalle durate comprensive di coordinamento GUI/readback.
+
+Ricevute: [PR39](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/39),
+[CI head](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36455394919),
+[CI main](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/actions/runs/36455631640).
+Le due review indipendenti hanno verificato report, checkpoint e hash delle
+quattro immagini senza finding bloccanti, nel solo perimetro catalogo/DevTools.
+
 ## Matrice A–G e limiti delle prove — aggiornata 2026-09-28
 
 | Mandato | Evidenza disponibile | Residuo effettivo |
@@ -461,7 +519,7 @@ o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
 | D Immagini | Tre operazioni DevTools PASS: camera, sostituzione galleria, rimozione; orientamento/thumbnail osservati | Due cleanup pending; rete/lifecycle immagine e telefono non attestati |
 | E Offline/sync | Checkpoint/watermark verificati; salvataggio offline→online sulla stessa pagina applicato una volta, History5→6; feedback corretto PR35 | Nuova prova fresca PASS: Saved, coda vuota, una sola scrittura causale7→8 e final scope valido; altre schermate/lifecycle distinti |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
-| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow integrati PR36,191test locali | Lingua cinese corretta con attesa evento; runner da sincronizzare e overflow catalogo in correzione; ritest4lingue pendente |
+| G Usabilità/lingue | Icone tab5/5; PR36 e PR39 integrate,191test; quattro viste catalogo autenticate OPERATOR_OBSERVED, titoli/tab/testi/prezzo/placeholder corretti | Altre schermate, messaggi e conferme nelle quattro lingue non integralmente ricollaudati; nessuna prova telefono |
 | Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
 Le durate scenari45.566/14.486/6.602/6.468ms includono readback/orchestrazione,

@@ -192,3 +192,12 @@ User mandate continues WECHAT-010/TASK-159, root sole writer in isolated worktre
 | 2026-09-28T14:21:06Z | WECHAT-010 | Build TEST ricompilata e accessi autonomi; offline recupera Saved e History6→7, ma sessione scade al final scope: FAIL preservato e solo effetto riconciliato. Prova fresca fermata dal Mac prima del save,0intenti. | Due review runner APPROVED;35test mirati e verify191PASS; nessun delta applicativo,4lingue/telefono/convergenza ancora non accettati. |
 
 2026-09-28T16:57Z — WECHAT-010: offline autenticato PASS1caso, History7→8/una scrittura causale, Saved e finalscope valido; report precedenti preservati. LingueFAIL per attesa evento mancante nel runner; controllo separato mostra cinese corretto. Overflow catalogo autentico concodicelungo: delta WXML/WXSS circoscritto in EXECUTION, verify191PASS; review/ritest richiesti, nessun DONE.
+
+2026-09-28T17:15Z — WECHAT-010: PR39 integrata ec62e47b, review 2/2 APPROVED,
+verify 191 PASS, CI head36455394919/main36455631640 SUCCESS. Build TEST83eec45d
+visibile con config invariata; nuovo login autentico. Runner lingua revisionato
+2/2,41test PASS: quattro viste catalogo OPERATOR_OBSERVED,0intenti/eccezioni,
+report8002f843 (PARTIAL aggregate); screenshot/hash revisionati indipendentemente.
+Il precedente FAIL resta preservato. Offline PASS distinto sulla build4519388b.
+Solo evidenze documentali in questa chiusura; altre coperture runtime, convergenza
+nativa, telefono e misure restano aperti. REVIEW, nessun DONE.
