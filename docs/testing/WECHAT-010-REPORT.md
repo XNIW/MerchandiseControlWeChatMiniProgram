@@ -1,9 +1,40 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
+## Aggiornamento 2026-09-28 — feedback Saved osservato, accettazione ancora parziale
+
+Build TEST4519388b ricompilata in DevTools ufficiale2.02.2609232; accesso WeChat
+riuscito sul solo account/shop autorizzato. Worker beb94e1e e registry145 verificati
+senza drift; config37d94cf invariata. Nessuna modifica applicativa in questa ripresa.
+
+Prova offline post-fix: stesso modulo, controllo rete reale none→wifi, coda drenata,
+prodotto aggiornato e History6→7. Screenshot mostra Saved; lettura UI successiva:
+dirty=false, saving=false, errore vuoto e outbox0. Il controllo finale alle14:10:36UTC
+rileva sessione scaduta: report originale FAIL/UI_SCOPE_CHANGED,0casi PASS preservato.
+Riconciliato soltanto l'effetto osservato; operationId originale non attestato e
+nessuna promozione retroattiva del caso. Vietato reinviare la scrittura già applicata.
+
+Primo tentativo GUI interrotto prima del save (0intenti); timeout coordinamento
+portato a180s, cleanup rete consentito anche dopo perdita scope e verificato.
+Nuova prova distinta richiede almeno600s di sessione, suffisso diverso e conserva
+operationId/hash payload. Due review indipendenti APPROVED;35test mirati PASS.
+Accesso rinnovato alle14:16UTC; Mac nuovamente bloccato al controllo rete intorno alle14:18UTC.
+Anche questa prova termina prima di offline/save con0intenti, nessun nuovo esito
+business. Bozza non inviata da annullare alla ripresa; report/fixture conservati.
+Owner del blocco OS: utente; sblocco manuale, poi nuova prova circoscritta revisionata.
+
+Verify191PASS (110TS+81MJS), inclusi governance/privacy/segreti/typecheck/lint/build;
+diffcheck PASS. Dettaglio inglese osservato con codici e pulsanti contenuti; la
+verifica visiva completa nelle quattro lingue resta NOT_RUN_OS_LOCKED. Icone5/5 e
+immagini3operazioni DevTools restano le prove precedenti; nessuna nuova attestazione
+telefono, convergenza Android/iOS o p50/p95. LIVE_VALIDATED parziale;
+PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO. REVIEW/BLOCKED_EXTERNAL; nessun DONE.
+
 Stato corrente: **pilot TEST parzialmente collaudato: 17 scenari lettura e
 13 casi catalogo verificati in DevTools. Checkpoint e watermark sync verificati;
-tre operazioni immagini PASS; offline applicato una volta; feedback UI corretto e integrato, ritest bloccato dal Mac;
-convergenza nativa e telefono restano aperti.** Nessun DONE auto-approvato.
+tre operazioni immagini PASS. Offline storico History5→6; nel ritest post-fix
+Saved osservato e History6→7, ma report FAIL preservato per scadenza al controllo
+finale di sessione. Prova fresca ferma prima del save per Mac bloccato; quattro
+lingue, convergenza nativa e telefono restano aperti.** Nessun DONE auto-approvato.
 
 ## Aggiornamento 2026-09-27 — offline e lingue integrati, ritest bloccato dal Mac
 
@@ -404,17 +435,17 @@ sulle stesse fixture. Non ripetere images o images-buffer. Nessun telefono dispo
 o nuovo risultato nativo attestato; i blocchi nativi restano quelli sopra.
 
 
-## Matrice A–G e limiti delle prove — aggiornata 2026-09-27
+## Matrice A–G e limiti delle prove — aggiornata 2026-09-28
 
 | Mandato | Evidenza disponibile | Residuo effettivo |
 |---|---|---|
 | A Account/sessione/shop | Pairing, login distinto, profilo/shop, scadenza autentici | Foreground/logout/pending; negativi isolati separati; riaccesso autonomo autorizzato ed eseguito |
-| B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto5auditUI;6nel readback dopooffline | Ulteriori filtri/sort/pagine; edge case solo isolati |
+| B Letture/vendite |17scenari UI+SELECT, zero corretto,12documenti storici e History prodotto5auditUI;6nel readback storico post-offline;7nell’ultimo readback28settembre | Ulteriori filtri/sort/pagine; edge case solo isolati |
 | C Catalogo/prezzi |13casi reali,5fixture, rinomina e sostituzione/archiviazione categoria/fornitore, CLP interi e quantità1,25 | Conflitti live, storico multipagina e legacy invariati |
 | D Immagini | Tre operazioni DevTools PASS: camera, sostituzione galleria, rimozione; orientamento/thumbnail osservati | Due cleanup pending; rete/lifecycle immagine e telefono non attestati |
-| E Offline/sync | Checkpoint/watermark verificati; salvataggio offline→online sulla stessa pagina applicato una volta, History5→6; feedback corretto PR35 | Ritest feedback Saved post-fix bloccato dal Mac; aggiornamento altre schermate/lifecycle restano distinti |
+| E Offline/sync | Checkpoint/watermark verificati; salvataggio offline→online sulla stessa pagina applicato una volta, History5→6; feedback corretto PR35 | Saved osservato e History6→7; final scope fallisce per sessione scaduta, caso non accettato. Prova fresca0intenti bloccata dal Mac; altre schermate/lifecycle distinti |
 | F Convergenza | Emulatore Android/simulatore iOS autenticati sullo stesso IDcanonico/shop/progetto | Recovery Android bloccato da device identity; recovery iOS bloccato; nessun roundtrip attestato |
-| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow integrati PR36,191test locali | Collaudo visivo4lingue e conferme autenticate post-fix; Mac bloccato |
+| G Usabilità/lingue | Icone tab5/5 verificate; fix titoli/limiti native modal/overflow integrati PR36,191test locali | Dettaglio inglese osservato; collaudo completo4lingue e conferme post-fix bloccati dal Mac |
 | Telefono/prestazioni | DevTools e simulatori disponibili; nessuna prova telefono | PHONE_VALIDATED NO, p50/p95 NON_MISURATO |
 
 Le durate scenari45.566/14.486/6.602/6.468ms includono readback/orchestrazione,
@@ -424,8 +455,9 @@ convergenza richiedono misure comparabili. Zero campioni significa NON_MISURATO.
 
 Cinque fixture della run conservate con marker e ID nel packet; nessun cleanup
 automatico. Le precedenti diagnosi NO_WRITE e il fallimento upload noto sono riconciliati;
-la versione immagine failed ha cleanup backend pendente e la diagnosi successiva
-PREVIEW_ONLY_PENDING_CANCEL richiede annullamento/riconciliazione allo sblocco.
+la versione immagine failed aveva cleanup backend pendente nell’ultimo readback.
+La vecchia preview è stata riconciliata prima dei tre casi immagini; la bozza
+non inviata della prova offline del28settembre richiede annullamento allo sblocco.
 Runner lock assente; controllare outbox e journal prima di riprendere o archiviare fixture.
 Pairing personale preservato. AppSecret/sessioni/codici/URLfirmati non sono evidenza.
 **CODE_COMPLETE** limitato ai delta approvati; **LIVE_VALIDATED parziale**;

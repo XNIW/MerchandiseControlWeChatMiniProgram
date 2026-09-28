@@ -1,5 +1,34 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+## Aggiornamento 2026-09-28 — feedback Saved osservato, accettazione ancora parziale
+
+Build TEST4519388b ricompilata in DevTools ufficiale2.02.2609232; accesso WeChat
+riuscito sul solo account/shop autorizzato. Worker beb94e1e e registry145 verificati
+senza drift; config37d94cf invariata. Nessuna modifica applicativa in questa ripresa.
+
+Prova offline post-fix: stesso modulo, controllo rete reale none→wifi, coda drenata,
+prodotto aggiornato e History6→7. Screenshot mostra Saved; lettura UI successiva:
+dirty=false, saving=false, errore vuoto e outbox0. Il controllo finale alle14:10:36UTC
+rileva sessione scaduta: report originale FAIL/UI_SCOPE_CHANGED,0casi PASS preservato.
+Riconciliato soltanto l'effetto osservato; operationId originale non attestato e
+nessuna promozione retroattiva del caso. Vietato reinviare la scrittura già applicata.
+
+Primo tentativo GUI interrotto prima del save (0intenti); timeout coordinamento
+portato a180s, cleanup rete consentito anche dopo perdita scope e verificato.
+Nuova prova distinta richiede almeno600s di sessione, suffisso diverso e conserva
+operationId/hash payload. Due review indipendenti APPROVED;35test mirati PASS.
+Accesso rinnovato alle14:16UTC; Mac nuovamente bloccato al controllo rete intorno alle14:18UTC.
+Anche questa prova termina prima di offline/save con0intenti, nessun nuovo esito
+business. Bozza non inviata da annullare alla ripresa; report/fixture conservati.
+Owner del blocco OS: utente; sblocco manuale, poi nuova prova circoscritta revisionata.
+
+Verify191PASS (110TS+81MJS), inclusi governance/privacy/segreti/typecheck/lint/build;
+diffcheck PASS. Dettaglio inglese osservato con codici e pulsanti contenuti; la
+verifica visiva completa nelle quattro lingue resta NOT_RUN_OS_LOCKED. Icone5/5 e
+immagini3operazioni DevTools restano le prove precedenti; nessuna nuova attestazione
+telefono, convergenza Android/iOS o p50/p95. LIVE_VALIDATED parziale;
+PHONE_VALIDATED NO, PUBLIC_RELEASE_READY NO. REVIEW/BLOCKED_EXTERNAL; nessun DONE.
+
 ## Aggiornamento 2026-09-27 — offline e lingue integrati, ritest bloccato dal Mac
 
 Fix feedback offline integrato con PR35: head 36ad793, merge 71d5f117,
