@@ -1,5 +1,23 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
+## Aggiornamento 2026-09-28 — recupero offline PASS, correzione layout catalogo
+
+Prova autentica16:52UTC completata con sessione valida fino al controllo finale:
+stessa pagina, rete none→wifi, stessa operazione/chiave/corpo, una sola scrittura
+causale confermata e History7→8. Modulo Saved, dirty=false, errore vuoto, outbox0;
+checkpoint VERIFIED,1caso PASS. Report precedenti FAIL preservati; nessun replay.
+Build4519388b/config37d94cf; Worker beb94e1e e registry145 invariati.
+
+Prima verifica lingue interrotta senza PASS: il runner cambia scheda prima della
+conferma osservabile dell'evento lingua. Con eventi separati, cinese/tab/titolo
+catalogo risultano corretti. Difetto distinto riprodotto: codice lungo comprime
+la miniatura e spinge il prezzo fuori dalla scheda. Delta circoscritto in EXECUTION:
+miniatura stabile, testo a capo e prezzo sotto i dettagli nella colonna prodotto.
+Nessuna modifica a importi, traduzioni, capability o richieste server.
+Verify191PASS; review/integrazione e ritest visivo post-layout ancora pendenti.
+La prova completa4lingue, convergenza nativa, telefono e p50/p95 restano aperti.
+LIVE_VALIDATED parziale; nessun DONE o PUBLIC_RELEASE_READY.
+
 ## Aggiornamento 2026-09-28 — feedback Saved osservato, accettazione ancora parziale
 
 Build TEST4519388b ricompilata in DevTools ufficiale2.02.2609232; accesso WeChat
