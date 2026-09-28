@@ -1,5 +1,88 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
+## Stato corrente — 2026-09-28 19:20 UTC, completamento in esecuzione
+
+Mandato cross-client in **EXECUTION**; nessun DONE o readiness del pilot.
+La matrice [WECHAT-010-COMPLETION-MATRIX](WECHAT-010-COMPLETION-MATRIX.md)
+distingue prove autentiche, regressioni isolate e gate reali. Le correzioni native
+sono coordinate con la chat autorizzata «Correggi sync e parità Android/iOS»,
+unico writer dei due client; questo writer cura Mini/Admin e i simulatori dedicati.
+
+### Risultati nuovi e difetti corretti
+
+- Cleanup immagini della run: **PASS** 18:16Z. Due versioni storiche, quattro
+  oggetti oltre il grace period sono stati rimossi dal percorso canonico
+  prepare-cleanup → Storage removeOne → record-cleanup, con manifest esatto,
+  assenza di riferimenti e primaria nulla. Readback indipendente: tre versioni
+  della run complete, zero oggetti residui. Retry `ALREADY_COMPLETE_NO_WRITE`;
+  sei regressioni PASS. Nessuna cancellazione SQL diretta, migrazione o modifica
+  di scheduling: TASK-137 prevede un percorso manuale. Helper revisionato SHA
+  `a79d6d68ab69b5d5dc8229020d6c18d63618fd39069b4413645bccf391208f04`.
+- Sales: il polling sostituiva una finestra di 100 righe con le prime 50;
+  `Carica altro` ricompariva dopo EOF. Ora la finestra caricata viene riletta con
+  cursor canonici, query immutabile e deduplicazione. EOF noto è verificato con
+  lookahead massimo una riga; cache contraddittoria esclusa. Lock prima delle
+  letture preparatorie, invalidazione immediata di ricerca/hide e pulizia
+  sincrona di righe/aggregati/timezone al cambio scope impediscono i race
+  riprodotti. Le risposte negate non conservano dati sensibili.
+- Sales UI: filtri tipo/stato/pagamento ed etichette delle righe localizzati in
+  quattro lingue, codici wire invariati. I 30 riepiloghi giornalieri sono ora
+  scorribili; la colonna spagnola va a capo senza nascondere importi. DevTools:
+  quattro lingue, 30 giorni e fine intervallo osservati, stato vuoto coerente;
+  dataset del periodo senza vendite, paginazione multipagina testata in isolamento.
+- Audit UI ha inoltre riprodotto codici lunghi che spingono `Ripristina` fuori
+  viewport negli archiviati e stato Account `active` non localizzato. Delta
+  limitato a wrap/colonne e nomi di presentazione Account. Ritest12casi
+  Account/archiviati/modulo vuoto nelle4lingue: dati/assertions PASS, zero
+  eccezioni e lingua iniziale ripristinata. Verificati visivamente CTA restore e
+  Account; titolo ES abbreviato e metadati archiviati separati su righe.
+- Patch applicativa `69308ee09bd954c7746b4539df835fef9e444669188cf738c8573f3198df1b00`,
+  review indipendenti 2/2 APPROVED sullo snapshot finale, incluso
+  addendum titolo ES/separazione metadati. Verify **204 PASS (110 TS + 94 MJS)**,
+  inclusi governance/privacy/segreti/typecheck/lint/build. Regressioni Sales
+  mirate 14 PASS. Integrazione e CI remote ancora pendenti a questo checkpoint.
+
+### Native: evidenze attuali e limiti
+
+Android, solo `Medium_Phone_API_35`/emulator-5556: installazioni in-place con
+Google e scope TEST conservati. R-A04 risolve l'assenza di device identity nel
+recupero iniziale del DB vuoto. Il successivo `MissingFieldException` è stato
+riprodotto su log fresco e corretto da R-A05 nella decodifica status-first.
+APK `dc11b6ee4be66480f48e50d3cebb0c64e2776d5c8cb8ebdf93a08650d70920d3`,
+corrispondente al sorgente nativo `84899b8e`, osservato alle19:12:31Z:
+`checkpoint_resource_exceeded`, RPC `shop_sync_recovery_checkpoint_v1`,
+missingFields none. Un tentativo dal journal esistente, nessun nuovo Replace.
+Prodotti/relazioni/prezzi/History/outbox locali restano vuoti, binding invariata;
+journal resta1 ma runId/attempt6→7/reason/backoff cambiano come previsto.
+Questa è verifica dell'errore e della conservazione, **non recovery riuscito**.
+
+Backend TEST: preflight rifiuta 16 History shop-scoped con TOAST `pglz`,
+`compressed_legacy_history_requires_remediation`. La compressione è fisica di
+PostgreSQL, non gzip applicativo. Il trigger canonico verifica anche OLD e
+rifiuta riscritture ordinarie; nessun trigger disabilitato, gate allentato o
+History estraneo alle fixture riscritto. Procedura di remediation da verificare.
+
+Su iPhone15ProMax/iOS26.1, Release TEST iniziale `86fb6be6` installata senza
+reset. Login Google autentico riuscito, ma discovery non conclusa e accesso
+perso dopo rilancio normale. Il bundle aveva zero entitlements Keychain;
+la lane nativa ha confermato `errSecMissingEntitlement` con chiave dummy su
+simulatore separato e prepara firma canonica. Nessun Replace/Keep Local scelto:
+i dati locali preesistenti sono preservati. Nessun PASS iOS sync/convergenza.
+
+### Runtime, strumenti e prestazioni
+
+Packet privato: `_codex-private/wechat-010-admin-audit/native-completion-20260928`.
+Report e screenshot falliti conservati; errori del runner non promossi a PASS.
+Audit pagine 11×4: giro originale interrotto, follow-up completa i casi italiani
+mancanti; la verifica visiva ha trovato i difetti sopra. Dialoghi pending,
+privacy e ulteriori stati errore non sono coperti dal solo audit pagine.
+I tempi `navigationToDataReadyMs` del runner includono il delay fisso di3s
+nell'SDK ufficiale e **non sono latenze applicative né percentili**.
+Restano misure dedicate, recovery con riavvio/scadenza, immagini interrotte,
+convergenza nelle quattro direzioni e telefono fisico. Nessun PASS hardware.
+Worker staging `beb94e1e`, registry145 e configurazione TEST `37d94cf4`
+verificati invariati; nessun nuovo provisioning o lettura di AppSecret.
+
 ## Stato al 2026-09-28 17:15 UTC — offline e catalogo multilingua verificati
 
 Il recupero offline sulla stessa schermata è PASS in DevTools: feedback Saved,

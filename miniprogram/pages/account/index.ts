@@ -100,9 +100,15 @@ Page({
         currentShop,
         providersText:
           (account
-            ? [...account.providers, ...(account.mini_identity_linked ? ["wechat-mini"] : [])].join(
-                ", ",
-              )
+            ? [...account.providers, ...(account.mini_identity_linked ? ["wechat-mini"] : [])]
+                .map((provider) =>
+                  provider === "google"
+                    ? "Google"
+                    : provider === "wechat-mini"
+                      ? "WeChat Mini"
+                      : provider,
+                )
+                .join(", ")
             : "") || "—",
         shops,
       });

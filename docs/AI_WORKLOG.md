@@ -184,3 +184,7 @@ Android vuota impediscono il nuovo retry UI; ricontrollo non attesta convergenza
 Errore iOS persistito datato26settembre, non contato come nuovo FAIL. Richiesta
 indicazione esplicita ADB/XCTest per alternativa al controllo UI; test dipendenti
 pendenti, nessun DONE. Evidenze private native-runtime-*-20260928.
+
+| 2026-09-28T19:20:00Z | Codex | WECHAT-010 completamento cross-client | Mini writer + TEST DevTools; Admin readback/cleanup canonico; simulatori dedicati | Cleanup2versioni/4oggetti e retry senza scritture; Sales finestre/cursor/privacy/localizzazione; riprodotti R-A04/R-A05 e firma iOS coordinati col writer nativo | Verify204PASS, review2/2; Sales4lingue/30giorni runtime; Android errore tipizzato e dati preservati; sync nativo non superato | Report e matrice correnti; nessuna produzione, reset o disattivazione sicurezza; fixture preservate per casi residui |
+
+2026-09-28T19:32Z — Snapshot finale Mini v8 SHA69308ee0: due reviewer indipendenti APPROVED; verify204PASS, governance/segreti/diffcheck PASS. Integrazione del delta autorizzata; collaudo cross-client e residui restano EXECUTION.
