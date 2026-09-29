@@ -8,23 +8,29 @@ Stati: PASS verificato; FAIL riprodotto; NOT_RUN; BLOCKED esterno; N/A motivato;
 evidenza storica da riconvalidare. Problemi di runner/strumenti sono distinti dai
 difetti applicativi. Le correzioni native sono coordinate con la lane già attiva.
 
-Baseline remota verificata: Mini `5d737c8b`, Admin `fe4907ad`, Android `d7c4953c`,
+Baseline storica all'avvio del mandato: Mini `5d737c8b`, Admin `fe4907ad`, Android `d7c4953c`,
 iOS `30d226d0`. Checkout primari nativi rispettivamente `ca0a58d8` e `c55e3a93`,
 con modifiche locali preesistenti preservate. Build correnti da riconciliare prima
 dei nuovi PASS cross-client. Runtime TEST/configurazione e fixture sono nel packet
 privato già autorizzato; nessuna credenziale nel report.
 
+Checkpoint29/09 01:05UTC: Mini main`c6630e06`, Admin`46466364`, Android`1bf758dd`;
+CI post-merge verificata. Runtime Mini v8/config invariata; nuovo cursorfix
+revisionato208testPASS da integrare/collaudare con backend. Runtime AndroidR-A05;
+iOSR-I03finale firmata: UI/Connected/ordinaryrestart PASS, recovery non superato. Nessuna normalizzazione
+History TEST o distribuzione della patch catalogo attestata.
+
 | ID | Requisito | Repository | Stato | Evidenza disponibile | Azione mancante | Accettazione |
 |---|---|---|---|---|---|---|
 | A01 | Pairing e login personale distinto | Mini/Admin | PASS verificato | Report 26/09, codice auth invariato | Preservare mapping; nessun nuovo pairing | Identità canonica e login distinto |
-| A02 | Sessione attuale e rientro dopo scadenza | tutti | NOT_RUN (Mini login verificato) | Login Mini freschi4blocchi; iOS login→restart FAIL firma in correzione | Controllo autenticato fresco prima di ogni blocco | Scope esatto e margine sessione sufficiente |
+| A02 | Sessione attuale e rientro dopo scadenza | tutti | NOT_RUN (rientri autentici parziali verificati) | Mini login freschi; iOS R-I02 Google→restart Connected PASS; niente PASS recovery | Sessione fresca per ogni caso, expiry pending separato | Scope esatto e margine sessione sufficiente |
 | A03 | Logout/foreground con pending conserva/elimina | Mini | NOT_RUN | Test isolati esistenti, live non attestato | Prova controllata su fixture con checkpoint | Consenso rispettato, pending persistito o eliminato esplicitamente |
 | A04 | Cambio account/shop, cache e callback tardive | tutti | NOT_RUN | Guardie e suite isolate | Eseguire regressioni e contesti isolati; niente account sostituiti | Zero invii o applicazioni tardive fuori scope |
 | B01 | Home e vendite readonly, ricerca/dettaglio | Mini/Admin | PASS verificato | 17 scenari autentici precedenti | Conservare evidenze sui byte invariati | Valori e identità concordi con SELECT |
 | B02 | Filtri/sort/pagine/errori vendite residui | Mini | PASS verificato (isolato + runtime parziale) | Sales14regressioni PASS;4lingue/30giorni/empty DevTools, patch398cb406; paging100+1 isolato | Dataset periodo vuoto: nessuna creazione finanziaria; conservare limite multipagina isolato | Nessuna mutazione finanziaria; pagine e filtri coerenti |
 | C01 | Catalogo CRUD e ciclo archivia/ripristina | Mini/Admin | PASS verificato | 13 casi autentici, cinque fixture | Preservare evidenze | Identità confermate dal server, readback esatto |
 | C02 | Fornitori/categorie rinomina e riassegnazione | Mini/Admin | PASS verificato | Readback autentico delle cinque fixture | Preservare evidenze | Riferimenti attivi corretti e tombstone coerenti |
-| C03 | Ricerca/paging catalogo e relazioni | Mini | NOT_RUN | Prima pagina e lookup autentici; pagine grandi isolate | Completare casi ulteriori e misurare | Nessun duplicato/omissione; contesto stabile |
+| C03 | Ricerca/paging catalogo e relazioni | Mini | FAIL riprodotto; correzioni isolate PASS | Due pagingHTTP400; OpenNext query e SQL tie-order difettosi; Mini4regressioni/208verify e Admin18+49SQL/7JS PASS | Distribuire correzioni e ripetere paging/ricerca con oracle ID indipendente | Nessun duplicato/omissione; contesto stabile |
 | C04 | Duplicati, double tap, revision conflict | Mini/Admin | NOT_RUN | Duplicato autentico PASS, conflitti isolati | Conflitto controllato e regressioni idempotenza | Nessuna sovrascrittura o duplicazione involontaria |
 | C05 | Prezzi CLP/frazioni/legacy e History multipagina | Mini/Admin | NOT_RUN | Prezzi reali e History 8; paging isolato | Rilettura, cambio lingua e paging disponibile | Valore persistito invariato; ordinamento e audit esatti |
 | D01 | Upload/sostituzione/rimozione DevTools | Mini/Admin | PASS verificato | Tre operazioni, orientamento/thumbnail osservati | Preservare prove | Versioni e primaria corrispondono alla UI |
@@ -37,7 +43,7 @@ privato già autorizzato; nessuna credenziale nel report.
 | E03 | Scadenza sessione durante recovery | Mini | NOT_RUN | Tentativo storico interrotto conservato | Validare recupero con auth reale e test guardie | Nessuna mutazione fuori sessione; rete ripristinabile |
 | E04 | Readback negato/temporaneo, errore definitivo | Mini/Admin | NOT_RUN | Regressioni di errori differenziati | Suite fault injection isolata e runtime sicuro | Mai falso Saved o perdita draft/pending |
 | E05 | Nuove modifiche sul modulo durante recovery | Mini | NOT_RUN | Guardie session/page/revision | Regressione e caso runtime controllato | Risposte vecchie non sovrascrivono input nuovo |
-| F00 | Build native corrente, scope e recovery | Android/iOS | FAIL riprodotto | Android84899b8e/APKdc11b6ee tipizza checkpoint_resource_exceeded su16TOAST; iOS Release senza entitlement perde login al restart | Remediation Admin e artefatto iOS firmato, poi retry reale | Autenticazione valida, recovery concluso e dati scoped |
+| F00 | Build native corrente, scope e recovery | Android/iOS | FAIL riprodotto recovery; auth persistita PASS | AndroidR-A05 e iOSR-I03 mostrano checkpoint_resource_exceeded; iOS firma canonica/auth restart PASS; AdminPR115 integrata non applicata | Normalizzare16History con manifest/quiet window; retry fresco e readback | Autenticazione valida, recovery concluso e dati scoped |
 | F01 | Mini → Admin/Android/iOS automatico | tutti | NOT_RUN | Mini checkpoint delta PASS; nessun roundtrip | Mutazione fixture e readback quattro superfici | Stesso ID/revisione senza refresh manuale |
 | F02 | Admin → Mini/Android/iOS automatico | tutti | NOT_RUN | Nessuna prova autentica completa | Mutazione rappresentativa e readback | Stesso ID/campi, outbox coerente |
 | F03 | Android → Mini/Admin/iOS automatico | tutti | NOT_RUN | Recovery da riconvalidare | Mutazione UI nativa con scope verificato | Persistenza e propagazione automatiche |
@@ -46,12 +52,12 @@ privato già autorizzato; nessuna credenziale nel report.
 | F06 | Eventi duplicati/riordinati/concorrenza/tombstone | tutti | NOT_RUN | Suite contratti esistenti | Regressioni isolate e tombstone fixture runtime | Idempotenza, conflitti espliciti, nessuna ricomparsa |
 | G01 | Cinque icone e catalogo quattro lingue | Mini | PASS verificato | Icone5/5; quattro viste OPERATOR_OBSERVED | Conservare prove sul layout invariato | Titoli/tab/testi leggibili, prezzo contenuto |
 | G02 | Altre schermate/dialoghi/errori quattro lingue | Mini | NOT_RUN (copertura parziale verificata) |11pagine4lingue campionate; Sales/Account/archiviati corretti; form required/CTA osservati | Completare dialoghi pending/privacy e ultimi screenshot; nessun PASS globale | Cambio lingua completato; nessun testo troncato |
-| P01 | Catalogo apertura/navigazione/ricerca/paging | Mini | NOT_RUN | Nessun percentile applicativo | Misurare cold/warm, dataset, n, errori | Inizio/fine app espliciti; soglie canoniche o nessun PASS SLA |
+| P01 | Catalogo apertura/navigazione/ricerca/paging | Mini | PASS misure parziali; paging FAIL | 20warm p50=562/p95=1133ms;10search p50=1021;10empty p50=1020;40campioni completati,2pagingHTTP400 | Ripetere paging post-fix; cold/cache da caratterizzare, nessun PASS SLA | Inizio/fine app espliciti; soglie canoniche o nessun PASS SLA |
 | P02 | Save online e ripresa outbox | Mini | NOT_RUN | Durate orchestrazione escluse | Campioni con clock host coerente | p50/p95 solo con n adeguato, fallimenti inclusi |
 | P03 | Convergenza quattro client | tutti | NOT_RUN | Nessun campione autentico | Misurare dal submit osservato al readback finale | Clock unico e nessun refresh artificiale |
 | P04 | Upload/sostituzione/visualizzazione immagine | Mini/Admin | NOT_RUN | Picker incluso nelle vecchie durate | Misurare intervallo rete/UI separato dal picker | Payload/ambiente dichiarati e errori conteggiati |
 | H01 | Telefono fisico WeChat/hardware/lifecycle | Mini | NOT_RUN | Nessun telefono collegato attestato | Inventario e disponibilità umana separata | Camera/galleria/permessi/rete reali; nessun PASS simulato |
-| I01 | Integrazione e smoke combinazione finale | tutti modificati | NOT_RUN | Mini main5d737c8/Adminfe4907ad baseline | Review, PR, merge, CI e smoke finali | origin/main e runtime TEST riconducibili ai sorgenti |
+| I01 | Integrazione e smoke combinazione finale | tutti modificati | NOT_RUN combinazione finale; integrazioni parziali PASS | MiniPR42 c6630e06/AdminPR115 46466364/AndroidPR10 1bf758dd CI mainSUCCESS | Integrare cursorfix; deployTEST/SQL, nativefinal e smokecombinato | origin/main e runtime TEST riconducibili ai sorgenti |
 | I02 | Cleanup fixture run e report finale | Mini/Admin | NOT_RUN | Cinque fixture preservate | Dopo readback completati, soli percorsi applicativi | Nessun oggetto estraneo o diagnostico cancellato |
 
 ## Assegnazione della convergenza e misure

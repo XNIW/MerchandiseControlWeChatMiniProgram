@@ -1,6 +1,71 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Stato corrente — 2026-09-28 19:20 UTC, completamento in esecuzione
+## Stato corrente — 2026-09-29 01:05 UTC, catalogo e recovery in esecuzione
+
+Mini PR42: merge `c6630e0698edb0699d253fa91779880937292d30`, CI head
+36473221012 e main36473334165 SUCCESS. Runtime v8 invariato sullo staging;
+le precedenti prove Sales, layout, icone, immagini e offline rimangono limitate
+ai casi già osservati. Configurazione TEST invariata; nessun nuovo pairing.
+
+Il nuovo collaudo catalogo riproduce HTTP400 alla seconda pagina. La diagnosi
+isola tre difetti: OpenNext AWS4.1.0 ricostruisce una query già decodificata senza
+encoding (`+00:00` diventa spazio e `&` nella ricerca separa parametri); il
+predicato SQL non segue l'ordinamento misto timestampDESC/idASC (40 duplicati
+tra due pagine da50 nella diagnosi autorizzata); Mini invia timestamp anche nei
+sort testuali. Un limite route200 inoltre non ammette i nomi canonici240UTF16.
+La correzione Mini fissa il sort per la richiesta e manda soltanto cursorAt per
+updated_desc oppure cursorText per name/barcode, inclusa stringa vuota, con
+precisione server invariata. Quattro regressioni attraversano101righe/tre pagine;
+verify208PASS (110TS+98MJS), due review indipendenti APPROVED sull'artifact
+`1a85eb168fe63e5533923ae3dd0131920beef681f1b9680e02477010e13dd6bc`.
+Nessuna conversione Date/Z o doppio encoding usata come correzione client.
+
+Admin: delta SQL/trasporto/cursor240 revisionato separatamente da due reviewer,
+18nuovi pgTAP+49parity PASS e7test Node/workerd PASS. Build Cloudflare applica
+una patch circoscritta a req.url, con versioni/hash sorgente fissati, backup
+esclusivo e ripristino; metadata routing/auth restano invariati. Verify e build
+Node22PASS; foundation1030PASS/8skip/2ENOENT di file Win7POS esterni, non fullPASS.
+Distribuzione staging, applicazione SQL e ritest catalogo autenticato restano
+NOT_RUN a questo checkpoint. Le diagnosi precedenti FAIL sono preservate.
+
+Normalizzazione fisica History: Admin PR115 integrata `4646636433e1232f045b394b4c6f242c8011efba`,
+CI36505444494 e Cloudflare36505444484 SUCCESS. Procedura privata postgres-only,
+manifest esatto, limiti prima del detoast, lockNOWAIT e ledger monouso verificati:
+63nuovi pgTAP+365native PASS, restore/reapply e contesa reale55P03 senza effetti.
+Solo integrazione sorgente: **nessuna normalizzazione TEST eseguita**. Restano
+16History compresse nello shop; DDL deve rispettare la finestra senza scritture
+con gli altri lavori staging e il preflight fresco. Nessun trigger disabilitato.
+
+Android: PR10 merge `1bf758dd8d83a771dcfdb1844a223a036ba19eff`, CI head36471042788
+/main36472844511 SUCCESS; APK R-A05 già descritto rimane il runtime osservato.
+iOS: build firmata canonica risolve errSecMissingEntitlement; account Google
+conservato dopo installazione in-place e riavvio ordinario (R-I02). Su R-I03 un
+Retry effettivo29/09 00:46UTC mantiene Connected/outbox0 e mostra il rifiuto
+checkpoint_resource_exceeded con data/shop corretti. La card generale lo
+presentava impropriamente come problema permessi; fix nativo R-I03finale
+installato: UI e riavvio ordinario PASS in due prove XCTest senza nuovi Retry.
+Connected/outbox0 persistono, card Cloud check failed e diagnostica concordi.
+Receipt privata ios-ri03-final-runtime-receipt.json. Dati preservati; nessun Replace
+/KeepLocal. Autenticazione valida non equivale a recovery/convergenza riusciti.
+
+Prestazioni con clock unico host, gesto SDK→nuova sequenza/dati pronti, overhead
+polling50ms incluso:20aperture calde catalogo p50=562ms,p95=1133ms,min491,max2510;
+10ricerche fixture p50=1021ms,max2071 e10vuote p50=1020ms,max1424 (p95non
+pubblicato per n10). Dataset circa19.832prodotti.40campioni completati, report
+PARTIAL per successivo errore selettore del runner. Due tentativi di paging
+falliscono realmenteHTTP400; nessun campione riuscito di paging dichiarato.
+Login distinto7793ms,n1; nessun percentile/SLA. Cache non misurata. Durate dei
+runner storici contenenti atteseSDK3s restano escluse dalle latenze applicative.
+
+Helper pending/restart/expiry revisionato2/2 e26regressioniPASS, ma casi live
+non iniziati e zero nuovi Save. Il controllo GUI restituisce noWindowsAvailable
+per i clic coordinate; apertura rete tramite AX senza effetto. Non è prova di
+blocco OS. Richiesta finestra DevTools accessibile, lavoro indipendente prosegue.
+Nessun PASS su conservazione/eliminazione pending, scadenza, convergenza quattro
+client o telefono. La matrice operativa conserva tutti i requisiti aperti.
+
+
+## Stato storico — 2026-09-28 19:20 UTC, completamento in esecuzione
 
 Mandato cross-client in **EXECUTION**; nessun DONE o readiness del pilot.
 La matrice [WECHAT-010-COMPLETION-MATRIX](WECHAT-010-COMPLETION-MATRIX.md)

@@ -188,3 +188,11 @@ pendenti, nessun DONE. Evidenze private native-runtime-*-20260928.
 | 2026-09-28T19:20:00Z | Codex | WECHAT-010 completamento cross-client | Mini writer + TEST DevTools; Admin readback/cleanup canonico; simulatori dedicati | Cleanup2versioni/4oggetti e retry senza scritture; Sales finestre/cursor/privacy/localizzazione; riprodotti R-A04/R-A05 e firma iOS coordinati col writer nativo | Verify204PASS, review2/2; Sales4lingue/30giorni runtime; Android errore tipizzato e dati preservati; sync nativo non superato | Report e matrice correnti; nessuna produzione, reset o disattivazione sicurezza; fixture preservate per casi residui |
 
 2026-09-28T19:32Z — Snapshot finale Mini v8 SHA69308ee0: due reviewer indipendenti APPROVED; verify204PASS, governance/segreti/diffcheck PASS. Integrazione del delta autorizzata; collaudo cross-client e residui restano EXECUTION.
+
+2026-09-29T01:05Z — WECHAT-010: Mini cursor sort/empty/microsecond fix,4regressioni,
+verify208PASS e2reviewAPPROVED artifact1a85eb16. PR42 giàintegrata c6630e06/CIverde.
+Paging autentico FAIL localizzato in trasportoOpenNext+predicatoSQL; fixAdmin
+revisionato non distribuito. AdminPR115 merge46466364/CIverde, manutenzioneTEST
+non eseguita. iOS firma/authpersistita verificata, rifiuto recovery attuale distinto
+da auth; runtimefinale in verifica.40campioni catalogo/ricerche e limiti riportati,
+pendinghelper26test/2reviewPASS ma0Save live. EXECUTION continua, nessun DONE.
