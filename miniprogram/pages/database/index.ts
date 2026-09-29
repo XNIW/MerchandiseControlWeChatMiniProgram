@@ -167,6 +167,10 @@ Page({
     const supplierFilterId = pendingFilter
       ? (pendingFilter.supplierId ?? "")
       : this.data.supplierFilterId;
+    const sort = this.data.sorts[this.data.sortIndex] as
+      | "barcode_asc"
+      | "name_asc"
+      | "updated_desc";
     const windowSize = preserveWindow ? Math.max(50, this.data.products.length) : 50;
     let last: CatalogProduct | undefined = reset
       ? undefined
@@ -182,11 +186,13 @@ Page({
         const batch = await app.salesClient.catalogPage(shop.shop_id, {
           ...(categoryFilterId ? { categoryId: categoryFilterId } : {}),
           ...(last ? { cursorId: last.product_id } : {}),
-          ...(last?.updated_at ? { cursorAt: last.updated_at } : {}),
-          ...(last?.cursor_text ? { cursorText: last.cursor_text } : {}),
+          ...(sort === "updated_desc" && last?.updated_at ? { cursorAt: last.updated_at } : {}),
+          ...(sort !== "updated_desc" && typeof last?.cursor_text === "string"
+            ? { cursorText: last.cursor_text }
+            : {}),
           limit: 50,
           ...(this.data.search ? { search: this.data.search } : {}),
-          sort: this.data.sorts[this.data.sortIndex] as "barcode_asc" | "name_asc" | "updated_desc",
+          sort,
           ...(supplierFilterId ? { supplierId: supplierFilterId } : {}),
         });
         if (

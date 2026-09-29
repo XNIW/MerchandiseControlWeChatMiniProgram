@@ -1,6 +1,22 @@
 # Active task
 
-## Checkpoint corrente — 2026-09-28 19:20 UTC
+## Checkpoint corrente — 2026-09-29 01:05 UTC
+
+WECHAT-010 **EXECUTION**. Mini PR42 integrata `c6630e06`, CI head/main SUCCESS;
+Sales/layout e prove DevTools precedenti conservati. Paging catalogo FAIL autentico:
+trasporto OpenNext corrompe il plus del cursor; SQL ordina timestamp DESC/id ASC
+ma filtrava entrambi DESC. Delta Mini usa una sola famiglia di cursori per sort,
+preserva microsecondi e cursore testuale vuoto; quattro regressioni, verify208PASS,
+due review indipendenti APPROVED. Correzioni Admin SQL/trasporto revisionate;
+ritest autenticato dopo distribuzione ancora richiesto.
+Admin PR115 normalizzazione History integrata `46466364`, CI post-merge SUCCESS;
+nessuna applicazione TEST o normalizzazione dati attestata a questo checkpoint.
+Android PR10 integrata `1bf758dd`; iOS firma canonica ripristina persistenza login.
+Entrambi i client diagnosticano il rifiuto `checkpoint_resource_exceeded` attuale;
+convergenza non ancora superata. Matrice/report distinguono runtime, test isolati,
+misure e residui. Nessun DONE o readiness del pilot.
+
+## Checkpoint storico — 2026-09-28 19:20 UTC
 
 WECHAT-010 **EXECUTION**: cleanup immagini run PASS tramite percorso canonico;
 Sales concorrenza/privacy/paginazione e testi/layout corretti, verify204PASS e
