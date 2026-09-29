@@ -104,6 +104,27 @@ test("catalog delta reloads all visible keyset pages, independent of event ID co
         "canonical order preserved",
       );
     }
+    const archiveTarget = source[10];
+    assert(archiveTarget, "archive target exists");
+    const archived = archiveTarget.product_id;
+    source.splice(10, 1);
+    await invoke(page, "applySync", notification(1));
+    assertEqual(
+      (page.data.products as CatalogProduct[]).length,
+      99,
+      "canonical archive removes row",
+    );
+    const afterArchive = JSON.stringify(page.data.products);
+    await invoke(page, "applySync", {
+      kind: "delta",
+      shopId,
+      events: [{ domain: "catalog", id: "1", entityIds: { product_ids: [archived] } }],
+    });
+    assertEqual(
+      JSON.stringify(page.data.products),
+      afterArchive,
+      "late notification cannot resurrect tombstone",
+    );
     const beforeRows = JSON.stringify(page.data.products);
     failing = true;
     await expectReject(

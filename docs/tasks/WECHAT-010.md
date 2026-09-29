@@ -1,6 +1,31 @@
 # WECHAT-010 — Test-account domains and first-live prerequisites
 
-## Checkpoint corrente — 2026-09-29 01:05 UTC
+## Checkpoint corrente — 2026-09-29 01:45 UTC
+
+WECHAT-010 resta in **EXECUTION**. Mini PR43 integrata su `c95dacfe`, CI head e
+main SUCCESS. Il nuovo delta corregge i titoli nativi Privacy/Eliminazione troppo
+lunghi e completa regressioni su conflitti, audit multipagina e ordine eventi:
+verify 211 PASS, due review indipendenti APPROVED. Runtime v9: login autentico e
+otto viste informative nelle quattro lingue verificati; quattro titoli nativi
+ritestati visivamente. Nessuna cancellazione account.
+
+Admin PR116 integrata su `53e58013`, CI main SUCCESS. Worker TEST selettivo
+`bdd42368` distribuito e verificato: binding, flag, runtime e scope invariati.
+Migrazioni History/keyset applicate, registry 147 con le 145 entry precedenti
+invariate. Normalizzazione fisica delle 16 History PASS: hash e revisioni
+identici, compressione rimossa, zero eventi aggiunti e zero marker residui.
+Catalogo autentico: sette pagine, 350 ID/revisioni esatti contro SQL; sei caricamenti
+successivi PASS. Nessun PASS globale di prestazioni o convergenza.
+
+Retry iOS fresco dopo normalizzazione: Connected/outbox0, ma recovery FAIL per
+HTTP500/SQLSTATE57014 nel preflight prezzi (8645 ms lato origin). Backend in
+diagnosi; nessun nuovo Retry. Il riavvio Android R-A05 ha inoltre riprodotto
+SignedOut dopo timeout bootstrap di 10 s, senza prova di credenziali perse;
+correzione e collaudo coordinati con il writer nativo. Pending/offline e telefono
+restano da completare. Nessun DONE o readiness del pilot.
+
+
+## Checkpoint storico — 2026-09-29 01:05 UTC
 
 WECHAT-010 **EXECUTION**. Mini PR42 integrata `c6630e06`, CI head/main SUCCESS;
 Sales/layout e prove DevTools precedenti conservati. Paging catalogo FAIL autentico:

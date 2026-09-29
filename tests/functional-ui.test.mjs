@@ -1087,3 +1087,117 @@ test("changing Account language updates native title and visible pending message
     assert.equal(p.data.pending[0].stateLabel, p.data.text.offline);
   }
 });
+
+test("C04 actual conflict dialog reloads, reapplies or cancels without dispatch", async () => {
+  const original = {
+    product_id: id(2),
+    barcode: "P2",
+    product_name: "Old server",
+    second_product_name: null,
+    item_number: null,
+    category_id: null,
+    supplier_id: null,
+    purchase_price: 10,
+    retail_price: 20,
+    stock_quantity: 1,
+    updated_at: "2026-09-25T12:00:00.111111+00:00",
+  };
+  for (const choice of [0, 1, 2, "dismiss", "preview-cancel"]) {
+    let server = original;
+    let discarded = 0,
+      dispatched = 0,
+      sheets = 0;
+    const a = app({
+      categories: async () => [],
+      suppliers: async () => [],
+      productDetail: async () => server,
+    });
+    a.catalogClient = {
+      mutate() {
+        dispatched++;
+        throw Error("Unexpected write");
+      },
+    };
+    a.outbox = {
+      discardIntent: () => discarded++,
+      enqueueSequence() {
+        dispatched++;
+        throw Error("Unexpected enqueue");
+      },
+    };
+    const p = page("product-form", a);
+    await p.onLoad({ mode: "edit", id: id(2) });
+    p.changeProductName({ detail: { value: "Local draft" } });
+    p.saveAction = { intentId: id(100), fingerprint: "conflicted draft" };
+    server = {
+      ...original,
+      product_name: "Fresh server",
+      updated_at: "2026-09-25T12:00:00.222222+00:00",
+    };
+    globalThis.wx.showModal = async () => ({ confirm: choice !== "preview-cancel" });
+    globalThis.wx.showActionSheet = async () => {
+      sheets++;
+      if (choice === "dismiss") throw Error("cancel");
+      return { tapIndex: choice };
+    };
+    await p.resolveRevisionConflict();
+    assert.equal(dispatched, 0, String(choice));
+    assert.equal(sheets, choice === "preview-cancel" ? 0 : 1);
+    if (choice === 0 || choice === 1) {
+      assert.equal(discarded, 1);
+      assert.equal(p.saveAction, undefined);
+      assert.equal(p.data.updatedAt, server.updated_at);
+      assert.equal(p.data.productName, choice === 0 ? "Fresh server" : "Local draft");
+      assert.equal(p.data.dirty, choice === 1);
+    } else {
+      assert.equal(discarded, 0);
+      assert.equal(p.saveAction.intentId, id(100));
+      assert.equal(p.data.productName, "Local draft");
+      assert.equal(p.data.updatedAt, original.updated_at);
+      assert.equal(p.data.dirty, true);
+    }
+  }
+});
+
+test("C05 catalog audit History retains exact tie cursors and finds new rows across refresh", async () => {
+  let count = 125;
+  const timestamp = "2026-09-25T12:00:00.123456+00:00";
+  const calls = [];
+  const a = app({
+    catalogHistory: async (shopId, options) => {
+      assert.equal(shopId, shop.shop_id);
+      assert.equal(options.limit, 50);
+      calls.push(options);
+      if (options.beforeAuditLogId) assert.equal(options.beforeCreatedAt, timestamp);
+      else assert.equal(options.beforeCreatedAt, undefined);
+      return Array.from({ length: count }, (_, i) => ({
+        history_id: id(count - i),
+        occurred_at: timestamp,
+        entity_type: "product",
+        operation: "updated",
+        result: "success",
+        surface: "mini_program",
+      }))
+        .filter((row) => !options.beforeAuditLogId || row.history_id < options.beforeAuditLogId)
+        .slice(0, 50);
+    },
+  });
+  const p = page("history", a);
+  p.data.canReadCatalogHistory = true;
+  await p.load(true);
+  await p.load(false);
+  assert.equal(p.data.catalogItems.length, 100);
+  count = 185;
+  await p.load(true, true);
+  for (let i = 0; i < 5 && p.data.hasMoreCatalog; i++) await p.load(false);
+  assert.equal(p.data.hasMoreCatalog, false);
+  assert.deepEqual(
+    p.data.catalogItems.map((row) => row.history_id),
+    Array.from({ length: 185 }, (_, i) => id(185 - i)),
+  );
+  assert.equal(new Set(p.data.catalogItems.map((row) => row.history_id)).size, 185);
+  assert.deepEqual(
+    calls.filter((x) => x.beforeAuditLogId).map((x) => x.beforeAuditLogId),
+    [id(76), id(136), id(86), id(36)],
+  );
+});

@@ -196,3 +196,18 @@ revisionato non distribuito. AdminPR115 merge46466364/CIverde, manutenzioneTEST
 non eseguita. iOS firma/authpersistita verificata, rifiuto recovery attuale distinto
 da auth; runtimefinale in verifica.40campioni catalogo/ricerche e limiti riportati,
 pendinghelper26test/2reviewPASS ma0Save live. EXECUTION continua, nessun DONE.
+
+
+## 2026-09-29 01:45 UTC — WECHAT-010, catalogo TEST e normalizzazione verificati
+
+- Mini PR43 c95dacfe, CI head/main SUCCESS; nuovo delta privacy/recovery
+  b0affd6f revisionato2/2, verify211PASS e45miratiPASS. v9 login/8contenuti
+  multilingua e4titoli nativi osservati; integrazione delta ancora da concludere.
+- Admin PR116 53e58013, Worker selettivo bdd42368 e registry147 verificati.
+  Normalizzazione exact16 una volta: fullhash/revisioni identici, eventi2074
+  invariati, marker0. Catalogo7pagine/350ID/revisioni concordi con SQL;6loadmorePASS.
+- iOS Retry fresco dopo manutenzione: HTTP500/SQL57014 preflight prezzi,
+  recoveryFAIL preservato. Android restart: bootstrapTimeout10s→SignedOut;
+  writer nativo informato, stato preservato. Nessun reset o bypass dei limiti.
+- Pending runner aggiornato26PASS isolati; UI rete DevTools ancora inutilizzabile.
+  Matrice/report consolidati, EXECUTION e nessun DONE o accettazione globale.
