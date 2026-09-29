@@ -356,3 +356,33 @@ test("starting sync twice for the selected shop does not duplicate checkpoint or
   assertEqual(platform.requests.length, 1, "coalesced foreground/shop activation");
   coordinator.stop();
 });
+
+test("duplicate, descending and replayed event IDs cannot notify or advance the watermark", async () => {
+  for (const ids of [["11", "11"], ["12", "11"], ["10"], ["13"]]) {
+    const { coordinator, platform, cleared } = setup();
+    platform.queuedResponses.push(checkpoint("10", true));
+    await coordinator.syncNow(SHOP_ID);
+    const stored = JSON.stringify([...platform.storage.entries()]);
+    const cacheBefore = JSON.stringify(cleared);
+    let notifications = 0;
+    coordinator.subscribe(() => {
+      notifications++;
+    });
+    const response = deltaPage("12", "12", false);
+    const event = response.data.delta.rows[0];
+    assert(event, "fixture event exists");
+    response.data.delta.rows = ids.map((id) => ({ ...event, id }));
+    platform.queuedResponses.push(checkpoint("12", false), response);
+    await expectReject(
+      () => coordinator.syncNow(SHOP_ID),
+      (error) => error instanceof AuthContractError && error.code === "backend_temporary",
+    );
+    assertEqual(notifications, 0, "invalid batch cannot partially notify");
+    assertEqual(
+      JSON.stringify([...platform.storage.entries()]),
+      stored,
+      "cursor remains retryable",
+    );
+    assertEqual(JSON.stringify(cleared), cacheBefore, "rejected batch cannot invalidate caches");
+  }
+});

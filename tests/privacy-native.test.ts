@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { policyBundle } from "../miniprogram/content/policies";
-import type { LocaleKey } from "../miniprogram/locales/index";
+import { type LocaleKey, translationsFor } from "../miniprogram/locales/index";
 import { assert, assertEqual } from "./fakes";
 
 test("native privacy and deletion remain complete for all four locales", () => {
@@ -96,17 +96,14 @@ test("public native page supports OFF/expired sessions, language, document switc
       assertEqual(page.data.kind, "privacy", "session cannot gate public content");
       for (const [index, locale] of (["zh-Hans", "en", "es", "it"] as const).entries()) {
         page.chooseLocale({ detail: { value: String(index) } });
-        assertEqual(
-          title,
-          policyBundle.locales[locale].privacy.title,
-          "title follows selected language",
-        );
+        assertEqual(title, translationsFor(locale).privacy, "title follows selected language");
         page.showOtherDocument();
         assertEqual(
           page.data.document.title,
           policyBundle.locales[locale].deletion.title,
           "full deletion document available",
         );
+        assertEqual(title, translationsFor(locale).deletion, "compact deletion navigation label");
         assertEqual(scrollTop, 0, "new document opens at top");
         page.showOtherDocument();
       }

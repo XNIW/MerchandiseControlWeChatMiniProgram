@@ -1,6 +1,90 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Stato corrente — 2026-09-29 01:05 UTC, catalogo e recovery in esecuzione
+## Stato corrente — 2026-09-29 01:45 UTC
+
+### Mini: correzione Privacy e copertura recovery
+
+PR43 integrata: merge `c95dacfea4bd98d21b9396430b5fda162db2eebd`, CI head
+36506575180 e main36506636057 SUCCESS. Il delta successivo separa i titoli brevi
+della barra nativa dalle intestazioni complete dei documenti Privacy/Eliminazione:
+i titoli italiani e spagnoli risultavano troncati in v8. Testo canonico, hash,
+accesso pubblico e assenza di autenticazione restano invariati.
+
+Artifact applicativo/test `b0affd6f9a5cff9c2c63cebd1353934f7c80923a9a81f101f59ddcf397b6c721`
+approvato da due reviewer indipendenti. Verify 211 PASS (111 TS + 100 MJS),
+45 test mirati PASS. Nuove regressioni eseguono le scelte reali del dialogo di
+conflitto senza invio automatico; audit catalogo da 125 a 185 righe con timestamp
+uguali e refresh; eventi duplicati/decrescenti/replay/oltre checkpoint respinti
+prima di cache, notifiche o watermark; archivio canonico non resuscitato da
+notifica tardiva. Queste sono prove isolate, non convergenza runtime.
+
+Build TEST v9: ricevuta `db7b3eb7`, base c95dacfe più il delta revisionato;
+102 file verificati, configurazione byte-identica `37d94cf4`. Login autentico
+sullo stesso profilo/shop PASS. Packet privacy-v9-audit-1790644928068: otto casi
+(due documenti, quattro lingue) concordano integralmente con il contenuto canonico,
+zero eccezioni; quattro screenshot iniziali verificano i titoli di eliminazione
+ora leggibili. Non si attesta l'ispezione visiva di ogni riga intermedia né tutta G02.
+
+### Backend distribuito e catalogo autentico
+
+Admin PR115/116 integrate rispettivamente `46466364`/`53e58013`; CI post-merge
+36505444494/36505444484 e 36506734780/36506734714 SUCCESS. Release Worker selettiva
+01:31:13Z, versione `bdd42368-1398-4b74-8139-43d4b290dddf`, dai soli tre file del
+trasporto/query e route catalogo. Due review, 11 test locali e preflight fresco
+PASS; binding, flag, runtime/settings e singleton scope preservati. Enrollment e
+altre superfici WeChat OFF; Mini auth/catalogo rimangono nel solo TEST autorizzato.
+Smoke pubblico: cursor offset e testo240 raggiungono 401 senza credenziali;
+testo241 resta 400. Il primo smoke senza shop_id era correttamente 400.
+
+SQL esatta applicata via workflow canonico: sorgente20260928193505 →
+service20260929013345 (History), sorgente20260929004159 → service20260929013437
+(keyset). Registry147; tutte le precedenti145 entry/hash invariati. I sei corpi
+funzione distribuiti coincidono con quelli revisionati; owner/ACL preesistenti e
+quattro trigger preservati. Helper privati invoker/postgres-only, nessun EXECUTE
+client. Backup protetto di definizioni/ACL/registry e metadata acquisito prima.
+
+Piano esatto16 righe revisionato, SHA256
+`ace817b560b3b6bf7dc6c4dc3be1be5fef791880bd84bc14bf51ac88fa1398b5`.
+Applicazione fisica una sola volta con timeout/NOWAIT. Postcheck indipendente
+01:39:14Z: tutti i full-row hash e revisioni identici, compressione NULL, marker0,
+eventi2074 invariati. Nessun contenuto business modificato, nessun trigger
+sospeso; questo PASS manutenzione non equivale a recovery nativo.
+
+Packet catalog-measure-1790645825389: sette pagine/350 ID e revisioni microsecondo
+concordano con SELECT canonica inventory_products; zero duplicati/omissioni entro
+la finestra osservata. Sei load-more PASS, min323/p50 328/max2321 ms, p95 non
+pubblicato per n6. Stesso clock host/gesto→nuova generazione dati pronti, polling
+50ms incluso. Report originale MEASURED_ORACLE_PENDING conservato e receipt
+oracle separata PASS. Errori iniziali dell'oracle (tabella errata e parser ISO
+locale) corretti senza alterare i dati. I due paging HTTP400 precedenti restano
+FAIL storici. Sort testuali/filtri completi e intero dataset non dedotti da350righe.
+
+### Nativi e residui attuali
+
+iOS R-I03finale: installazione in-place/firma canonica, due XCTest di UI e
+riavvio PASS; Connected/outbox0 e classificazione Cloud check failed coerenti.
+Dopo normalizzazione un solo Retry fresco 01:41:42–01:41:52Z supera il precedente
+checkpoint_resource_exceeded, ma termina con HTTP500. Log server nella stessa
+finestra: SQLSTATE57014 in sync_checkpoint_json_timestamp →
+sync_price_recovery_row_v1 → sync_recovery_preflight_counts_v1, origin8645ms.
+Recovery resta FAIL; il PASS XCTest è limitato al gesto e alla transizione.
+Nessun Replace, KeepLocal, nuovo Retry o azzeramento dati. Diagnosi backend aperta.
+
+Android R-A05 sul5556: prima Connected; dopo ordinary force-stop/start la UI
+stabile mostra Not signed in. Log SupabaseAuth22:19:20–30 locale: attesa bootstrap
+10000ms → Timeout → SignedOut. Nessuna perdita credenziali dedotta; stato
+conservato senza login/reset per il writer nativo, che prepara R-A06.
+
+Helper pending v10 aggiorna solo il Worker verificato; 26 test isolati PASS,
+casi live non inizializzati, zero nuovi Save. DevTools continua a rifiutare i
+clic coordinate con noWindowsAvailable; il debugger AX può risultare offscreen.
+Non è prova di blocco OS. Richiesta umana precisa già pendente; rete rimasta online.
+A03/E02/E03/E05 runtime, conflitti/immagini residui, convergenza quattro client,
+misure restanti, smoke finale e telefono conservano gli stati della matrice.
+**EXECUTION; nessun DONE, PHONE_VALIDATED o PUBLIC_RELEASE_READY.**
+
+
+## Stato storico — 2026-09-29 01:05 UTC, catalogo e recovery in esecuzione
 
 Mini PR42: merge `c6630e0698edb0699d253fa91779880937292d30`, CI head
 36473221012 e main36473334165 SUCCESS. Runtime v8 invariato sullo staging;
