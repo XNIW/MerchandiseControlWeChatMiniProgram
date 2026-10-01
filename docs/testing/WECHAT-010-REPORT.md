@@ -1,6 +1,30 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Checkpoint corrente — 2026-10-01 22:28 UTC
+## Checkpoint corrente — 2026-10-01 23:22 UTC
+
+Mini PR45 integrata su `305e175f`, CI head e post-merge36935600832 SUCCESS;
+runtime v9 ancora invariato. Cinese, inglese e spagnolo: sette casi read-only
+ciascuno concordano con SELECT indipendente (ricerca, filtri, prezzi e History).
+Italiano non concluso: due tentativi login terminati in errore generico senza
+sessione, uno intermedio riuscito; causa del transiente non attribuita.
+
+Riprodotto difetto distinto Home: dopo login fallito senza sessione il pulsante
+Retry chiama refresh senza shop e non fa nulla. Fix circoscritto mantiene Sign in
+sulla stessa schermata, azzera valori precedenti e conserva il messaggio;
+stati autenticati e gate specifici invariati. Tre nuove regressioni; verify217PASS,
+due review APPROVED artifact `172917cb`; integrazione/ritest del fix pendenti.
+
+Admin History PR120 integrata `b162f23d`, CI head/main SUCCESS. Apply TEST
+respinto atomicamente dal guard ACL: il checkpoint TEST possiede già EXECUTE
+service_role oltre a postgres/authenticated, mentre il clone locale ha due voci.
+Snapshot22:53:55 conferma registry148, helper assente, funzioni/dati/eventi
+invariati. Nessuna History applicata; adeguamento del solo guard in revisione.
+Performance TEST20261001220355 resta applicata e verificata. Artefatti nativi
+finali verificati per hash/firma, non ancora installati su questa lane.
+Pending/telefono dipendono ancora dal controllo grafico; convergenza, misure e
+smoke finale restano aperti. EXECUTION, nessun DONE o readiness del pilot.
+
+## Checkpoint storico — 2026-10-01 22:28 UTC
 
 WECHAT-010 resta in **EXECUTION**. Mini main `dea3203f` (PR44, CI post-merge
 SUCCESS), runtime v9/configurazione TEST e Worker `bdd42368` invariati. Admin

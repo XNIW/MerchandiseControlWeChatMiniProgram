@@ -258,7 +258,12 @@ Page({
       return;
     }
     if (code === "offline") {
-      this.setData({ errorMessage: this.data.text.offline, viewState: "offline" as ViewState });
+      const signedOut = app.sessionStore.load() === null;
+      if (signedOut) this.clearSignedOutView();
+      this.setData({
+        errorMessage: this.data.text.offline,
+        viewState: (signedOut ? "signed_out" : "offline") as ViewState,
+      });
       return;
     }
     if (code === "session_expired") {
@@ -285,6 +290,11 @@ Page({
       });
       return;
     }
-    this.setData({ errorMessage: this.data.text.error, viewState: "error" as ViewState });
+    const signedOut = app.sessionStore.load() === null;
+    if (signedOut) this.clearSignedOutView();
+    this.setData({
+      errorMessage: this.data.text.error,
+      viewState: (signedOut ? "signed_out" : "error") as ViewState,
+    });
   },
 });
