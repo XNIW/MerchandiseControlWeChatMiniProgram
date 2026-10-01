@@ -1,6 +1,6 @@
 # MerchandiseControl WeChat Mini Program
 
-> Stato operativo corrente2026-09-25: [report canonico](docs/testing/WECHAT-010-REPORT.md), matrice locale/DevTools/telefono separata. Il resto delle note datate precedenti è storico. Mandato TEST14settembre valido; rotazione NOT_PERFORMED/ACCEPTED_FOR_TEST_ONLY. Integrazione funzionale OFF in corso; nessun DONE/live implicito.
+> Stato operativo corrente: [report canonico](docs/testing/WECHAT-010-REPORT.md) e [matrice di completamento](docs/testing/WECHAT-010-COMPLETION-MATRIX.md). WECHAT-010 è in EXECUTION. Login e catalogo Mini sono attivi esclusivamente per l'account/shop TEST autorizzato; enrollment e altre superfici WeChat restano OFF. Le prove locali, DevTools, native e su telefono sono distinte. Nessun DONE o rilascio pubblico attestato.
 
 Status: **FOUNDATION / DEVELOPMENT / NOT PRODUCTION READY**
 
@@ -17,7 +17,7 @@ It does not mutate staff/POS data, import/export data, scan barcodes with the ca
 - Admin Web owns the WeChat backend boundary, identity and mutation ADRs, Supabase migrations, permissions, audit/outbox/sync, private image Storage and every business-data API/RPC.
 - Android and iOS remain independent personal-account clients of the same canonical Supabase identity.
 
-The corrective status is `CHANGES_REQUIRED`: the OIDC bridge and iOS provider adapter are missing, live four-surface authentication has not run, private sales invalidation is not implemented, and WeChat DevTools visual/device evidence is unavailable. See [the capability matrix](docs/PARITY_MATRIX.md).
+Current completion evidence is tracked by WECHAT-010. Authentic Mini pairing, sign-in and catalog operations have been verified in TEST; native recovery and four-client convergence remain under validation. Historical foundation gaps are not a statement of the current implementation. See [the completion matrix](docs/testing/WECHAT-010-COMPLETION-MATRIX.md) for the remaining runtime cases.
 - Supabase `auth.users` remains canonical; WeChat is an identity provider, not a role.
 - Win7POS and the POS staff login are outside this project.
 - The Mini Program is a thin consumer. `shop_id` membership and server-side permissions govern every read and mutation; the client never writes Supabase tables directly or decides authorization.
