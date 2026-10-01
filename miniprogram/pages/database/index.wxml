@@ -5,7 +5,7 @@
     <button wx:if="{{canCreate}}" class="primary compact" bindtap="createProduct">{{text.newProduct}}</button>
     <text wx:else class="read-only">{{text.readOnlyCatalog}}</text>
   </view>
-  <input class="search" placeholder="{{text.search}} · {{text.name}} / {{text.barcode}}" value="{{search}}" bindinput="search"/>
+  <input class="search" placeholder="{{text.search}} · {{text.name}} / {{text.barcode}}" maxlength="80" value="{{search}}" bindinput="search"/>
   <view class="quick-links">
     <button size="mini" bindtap="openCategories">{{text.categories}}</button>
     <button size="mini" bindtap="openSuppliers">{{text.suppliers}}</button>

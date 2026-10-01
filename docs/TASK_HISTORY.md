@@ -236,3 +236,6 @@ pendinghelper26test/2reviewPASS ma0Save live. EXECUTION continua, nessun DONE.
   writer nativo informato, stato preservato. Nessun reset o bypass dei limiti.
 - Pending runner aggiornato26PASS isolati; UI rete DevTools ancora inutilizzabile.
   Matrice/report consolidati, EXECUTION e nessun DONE o accettazione globale.
+
+
+2026-10-01T22:28Z — WECHAT-010 ripresa: PR44/main dea3203 e sort3×150 SQL concordi; Android R-A06 restore Connected PASS, business recovery rifiutato. Diagnosi tre History ISO valide/storageintegro; delta Admin PR120 review2/2 e184+365pgTAP PASS, non applicato. Performance PR119/main4532831b CIverde e applyTEST20261001220355/registry148: metadati e fingerprint scoped invariati,2074eventi. Due pending tentativi zeroSave/intenti, originali preservati; Mac lock22:22. Search90 HTTP400 riprodotto, fix80UTF16non-split nelle tre liste,3regressioni e verify214PASS/review2APPROVED artifactcb298e27; integrazione e ritest pendenti. Nessun DONE o PASS globale.

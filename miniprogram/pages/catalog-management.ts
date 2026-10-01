@@ -7,6 +7,17 @@ import type {
 } from "../lib/contracts";
 import type { TranslationKey } from "../locales/index";
 
+// The Admin search contract counts UTF-16 units. Keep a pasted prefix within
+// that limit without splitting a supplementary Unicode character.
+export function boundCatalogSearch(value: string): string {
+  let result = "";
+  for (const character of value) {
+    if (result.length + character.length > 80) break;
+    result += character;
+  }
+  return result;
+}
+
 export type CatalogCapability =
   | "can_read_catalog"
   | "can_write_products"

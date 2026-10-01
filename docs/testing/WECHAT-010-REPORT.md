@@ -1,6 +1,37 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Stato corrente — 2026-09-29 01:45 UTC
+## Checkpoint corrente — 2026-10-01 22:28 UTC
+
+WECHAT-010 resta in **EXECUTION**. Mini main `dea3203f` (PR44, CI post-merge
+SUCCESS), runtime v9/configurazione TEST e Worker `bdd42368` invariati. Admin
+PR119 integrata su `4532831b`, CI head/main SUCCESS. Migrazione performance
+applicata una volta alle22:03:55UTC come `20261001220355`: registry148,
+metadati/ACL/OID, trigger, altre funzioni e fingerprint dati/eventi invariati.
+Il miglioramento prestazionale è misurato localmente; nuovi campioni runtime
+e recupero nativo non sono ancora accettati.
+
+Diagnosi scoped: tre History ISO UTC/millisecondi valide per i client erano
+rifiutate dai predicati recovery; nessuna riscrittura business. Delta Admin
+PR120 in integrazione dopo due review APPROVED,184+365pgTAP e verify PASS;
+History SQL non ancora applicata a questo checkpoint. Android/iOS coordinano
+la stessa grammatica45vettori; iOS validatore45 PASS. Android R-A06 ripristino
+ordinario storage/sessione/UI Connected PASS; recovery resta da ritestare con
+gli artefatti finali, senza reset.
+
+Ricerca Mini: input90 unità UTF-16 provoca HTTP400 e messaggio temporaneo
+fuorviante; il runner aveva generato una ricerca oltre il limite80. FAIL
+originale preservato. Fix prodotti/categorie/fornitori limita input e valore
+visibile a80 senza dividere caratteri supplementari; tre regressioni,
+verify214PASS e due review APPROVED. Integrazione e ritest del fix pendenti.
+Nuovo runner read-only corregge la query; quattro lingue ancora da riconciliare.
+
+Due tentativi pending si sono fermati prima di Save, con zero intenti e rete
+ripristinata: nessun PASS di conserva/elimina/scadenza. Il Mac è nuovamente
+bloccato al controllo22:22; sblocco manuale già richiesto. Convergenza,
+campioni prestazionali, combinazione finale e telefono restano aperti nella
+matrice. Nessun DONE, pubblicazione o readiness del pilot.
+
+## Stato storico — 2026-09-29 01:45 UTC
 
 ### Mini: correzione Privacy e copertura recovery
 

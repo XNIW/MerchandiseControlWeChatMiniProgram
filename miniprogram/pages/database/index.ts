@@ -5,7 +5,11 @@ import { ProductImageCache } from "../../lib/product-image-cache";
 import type { ProductImageReadResult } from "../../lib/product-image-mutation-client";
 import type { MiniSyncNotification } from "../../lib/sync-coordinator";
 import { translationsFor } from "../../locales/index";
-import { hasCatalogCapability, readErrorTranslationKey } from "../catalog-management";
+import {
+  boundCatalogSearch,
+  hasCatalogCapability,
+  readErrorTranslationKey,
+} from "../catalog-management";
 
 type ProductRow = CatalogProduct & {
   readonly price_text: string;
@@ -111,7 +115,7 @@ Page({
     }
   },
   search(event: WechatMiniprogram.Input) {
-    this.setData({ search: event.detail.value });
+    this.setData({ search: boundCatalogSearch(event.detail.value) });
     const holder = this as unknown as { timer?: number };
     if (holder.timer !== undefined) clearTimeout(holder.timer);
     holder.timer = setTimeout(() => void this.refresh(true), 350);

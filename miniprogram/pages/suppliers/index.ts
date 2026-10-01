@@ -2,7 +2,11 @@ import type { MerchandiseControlApp } from "../../app";
 import type { Supplier } from "../../lib/contracts";
 import { type MiniSyncNotification, miniSyncEntityIds } from "../../lib/sync-coordinator";
 import { translationsFor } from "../../locales/index";
-import { hasCatalogCapability, readErrorTranslationKey } from "../catalog-management";
+import {
+  boundCatalogSearch,
+  hasCatalogCapability,
+  readErrorTranslationKey,
+} from "../catalog-management";
 
 const app = getApp<MerchandiseControlApp>();
 
@@ -61,7 +65,7 @@ Page({
     }
   },
   search(event: WechatMiniprogram.Input) {
-    this.setData({ search: event.detail.value });
+    this.setData({ search: boundCatalogSearch(event.detail.value) });
     const holder = this as unknown as { timer?: number };
     if (holder.timer !== undefined) clearTimeout(holder.timer);
     holder.timer = setTimeout(() => void this.load(), 350);
