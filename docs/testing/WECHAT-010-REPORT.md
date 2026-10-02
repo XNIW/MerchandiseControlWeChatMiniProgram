@@ -1,6 +1,40 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Checkpoint corrente — 2026-10-01 23:22 UTC
+## Checkpoint corrente — 2026-10-02 00:27 UTC
+
+Mini PR46 è integrata su `07ff35c0`, con CI head e post-merge SUCCESS.
+Runtime TEST v10: 102 file verificati, configurazione invariata. Dopo un errore
+reale senza sessione, il login dalla stessa Home riesce al nuovo tap senza
+riavvio: correzione del pulsante verificata. Un ulteriore login autentico riesce
+in 7.964 ms (singolo campione, non percentile o SLA).
+
+Catalogo italiano: sette letture concordi con SQL; insieme alle tre lingue già
+verificate copre ricerca, filtri, prezzi CLP e History nelle quattro lingue.
+Nove casi di limite ricerca su prodotti/categorie/fornitori sono PASS DevTools:
+ASCII, cinese ed emoji rispettano 80 unità UTF-16 senza spezzare caratteri;
+widget, modello e nove oracle SQL concordano. Il primo runner fallito resta
+conservato. Nessuna prova di tastiera fisica o localizzazione globale dedotta.
+
+Admin PR121/122 sono integrate su `516b8181`, CI head/main SUCCESS. History v2
+è applicata una volta in TEST come `20261001235153`, registry149. Metadati/ACL
+esistenti, dati scoped e 2.074 eventi invariati; helper privato e hash verificati.
+Preflight reale positivo: 61.595 righe complessive, zero violazioni e nessun
+superamento risorse. L'apply v1 respinto resta distinto e non viene riscritto.
+
+Artefatti Android R-A07/R-A08 e iOS R-I06 installati e verificati. iOS conserva
+l'accesso; Android recupera automaticamente la sessione dopo la riparazione del
+DNS dell'emulatore mediante normale riavvio con gli stessi dati. Nessun nuovo
+login Google, reset, cambio DNS o ripristino di snapshot precedenti.
+I due recuperi dati falliscono invece realmente: HTTP500/SQL57014 nel calcolo
+del digest prezzi del checkpoint (iOS origin8.227ms, Android8.181ms). Nessuna
+nuova generazione accettata. Ottimizzazione Admin in esecuzione; limite8s invariato.
+
+Mac ancora bloccato al controllo UI: pending/logout/scadenza e picker restano
+NOT_RUN, con sblocco manuale già richiesto. Convergenza, misure residue, smoke
+combinato e telefono restano aperti. WECHAT-010 è EXECUTION; nessun DONE o
+readiness del pilot. Worker `bdd42368`, fixture e configurazione TEST invariati.
+
+## Checkpoint storico — 2026-10-01 23:22 UTC
 
 Mini PR45 integrata su `305e175f`, CI head e post-merge36935600832 SUCCESS;
 runtime v9 ancora invariato. Cinese, inglese e spagnolo: sette casi read-only

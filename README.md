@@ -17,6 +17,8 @@ It does not mutate staff/POS data, import/export data, scan barcodes with the ca
 - Admin Web owns the WeChat backend boundary, identity and mutation ADRs, Supabase migrations, permissions, audit/outbox/sync, private image Storage and every business-data API/RPC.
 - Android and iOS remain independent personal-account clients of the same canonical Supabase identity.
 
+At the 2026-10-02 checkpoint, Mini v10 login retry and nine Unicode search-boundary cases are verified in DevTools. Both native clients are authenticated; their current recovery fails on the backend checkpoint SQL budget. Remaining cases and exact evidence are tracked in the completion matrix.
+
 Current completion evidence is tracked by WECHAT-010. Authentic Mini pairing, sign-in and catalog operations have been verified in TEST; native recovery and four-client convergence remain under validation. Historical foundation gaps are not a statement of the current implementation. See [the completion matrix](docs/testing/WECHAT-010-COMPLETION-MATRIX.md) for the remaining runtime cases.
 - Supabase `auth.users` remains canonical; WeChat is an identity provider, not a role.
 - Win7POS and the POS staff login are outside this project.

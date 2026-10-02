@@ -216,3 +216,16 @@ pendinghelper26test/2reviewPASS ma0Save live. EXECUTION continua, nessun DONE.
 2026-10-01T22:28Z — WECHAT-010 ripresa: PR44/main dea3203 e sort3×150 SQL concordi; Android R-A06 restore Connected PASS, business recovery rifiutato. Diagnosi tre History ISO valide/storageintegro; delta Admin PR120 review2/2 e184+365pgTAP PASS, non applicato. Performance PR119/main4532831b CIverde e applyTEST20261001220355/registry148: metadati e fingerprint scoped invariati,2074eventi. Due pending tentativi zeroSave/intenti, originali preservati; Mac lock22:22. Search90 HTTP400 riprodotto, fix80UTF16non-split nelle tre liste,3regressioni e verify214PASS/review2APPROVED artifactcb298e27; integrazione e ritest pendenti. Nessun DONE o PASS globale.
 
 2026-10-01T23:22Z — WECHAT-010: PR45/main305e175f CIhead/postmergeSUCCESS; tre lingue×7letture concordi con SQL, italiano non concluso. Due errori di login senza sessione preservati; HomeRetry inerte riprodotto e corretto riusando signed_out/reset+messaggio,3regressioni e verify217PASS/review2APPROVED artifact172917cb, nooriginebackend/Tencentdedotta. HistoryPR120/mainb162f23d CIverde, applyrespintoatomicamente ACLguard; registry148/helperassente/funzioni/dati/eventi invariati. Solo guardACL in correzioneAdmin; nessun Retrynative o nuova scrittura business. Task EXECUTION.
+
+
+2026-10-02T00:27Z — WECHAT-010: Mini PR46/main07ff35c0 e runtime v10 verificati;
+login fallito seguito da successo sulla stessa Home, italiano7 letture SQL concordi,
+ricerca9 limiti Unicode PASS con oracle indipendenti (report SHA0a3844ba).
+Admin PR121/122/main516b8181 CI head/main SUCCESS; History v2 applicata una volta
+20261001235153/registry149, postcheck metadata/dati/eventi invariati e preflight
+zero violazioni. Native finali installati: iOS auth conservata, Android auth
+ripristinata dopo normale riavvio AVD per DNS guasto, nessun nuovo login/reset.
+Recovery iOS00:11:49 e Android automatico00:24:27 FAIL HTTP500/SQL57014 nel
+checkpoint prezzi, receipt iOSd6ba11df e log scoped conservati. Ottimizzazione
+Admin in corso; nessun PASS business globale. Mac UI bloccato, pending/picker
+non eseguiti. Task EXECUTION; fixture, Worker e scope invariati.
