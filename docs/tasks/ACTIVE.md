@@ -1,6 +1,68 @@
 # Active task
 
-## Checkpoint corrente — 2026-10-02 00:27 UTC
+## Checkpoint corrente — 2026-10-02 16:39 UTC
+
+WECHAT-010 resta EXECUTION. Mini runtime v10/configurazione e sei fixture invariati.
+Prova autentica senza scritture: Account offline con sessione valida nasconde Sign out;
+rete ripristinata Online. Fix locale con guardia sessione e dialogo logout tardivo:
+verify219PASS, review/integrazione/ritest runtime pendenti.
+C04 Save Admin respinto dal browser per stock1.25/step1: nessun effetto backend;
+conflitto NOT_RUN. PR129 stepany ha CI verde, build selettiva TEST in preparazione.
+Android154: tre retry automatici falliti (due count mismatch, uno HTTP500/SQL57014
+checkpoint line910); quarto interrotto normalmente16:35, pending/binding conservati.
+iOS154 resta FAIL locale; nuova build R-I07 verificata ma CI13 fallita, non installata.
+Nessuna convergenza completa, misura prestazionale nuova, DONE o pilot attestati.
+Dettagli nel [report canonico](../testing/WECHAT-010-REPORT.md).
+
+## Checkpoint storico — 2026-10-02 15:51 UTC
+
+TEST registry154/postcheck invarianti PASS; PR128 finale7232637b CI verde, aperta.
+Recovery iOS154 FAIL locale nonMonotonicOrDuplicateID dopo due checkpoint HTTP200
+(5138/4694ms origin),61598ledger ordinate/uniche e baseline persistita valid.
+Writer iOS riferisce RED reale/GREEN60 dopo sort lexical; nuova build/review/CI e
+recovery autentico pending. Mac sbloccato; Mini login fresco PASS, C04 NOT_RUN.
+Serie Mini cold setupFAIL senza misure; v11 runtime NOT_RUN. Nessun DONE.
+Dettagli e limiti nel [report canonico](../testing/WECHAT-010-REPORT.md).
+
+## Checkpoint storico — 2026-10-02 04:58 UTC
+
+WECHAT-010 resta **EXECUTION**. Mini main/runtime v10 `07ff35c0` e le sei
+fixture sono invariati. Doppio tap DevTools PASS; conflitto, pending, immagini,
+recupero nativo e convergenza completa restano aperti.
+
+Admin PR127 è integrata su `e0089365` dopo due revisioni della correzione e
+due del successivo allineamento della versione. CI finale del PR: database/pgTAP,
+Verify e Cloudflare SUCCESS; CI post-merge36966129161/36966129129 SUCCESS.
+Il SQL revisionato è applicato una sola volta su TEST come `20261002044017`,
+registry153. Postcheck04:40:41 PASS: precedenti152 entry invariate, solo i due
+corpi previsti aggiornati e un nuovo helper privato invoker; OID/ACL esistenti,
+altre funzioni, trigger, dati scoped, eventi, immagini e History fisiche invariati.
+Il contratto runtime risulta true; il sorgente applicato coincide con la migrazione
+SHA256 `e6e3a2631c82e506461c400e16a910f87c8e007ff8ad29a643ce10b3f19af826`.
+
+La correzione evita serializzazioni ripetute nel preflight e nel calcolo byte
+dei prezzi, conservando DTO, valori float8, scope, digest, fallback e limite8s.
+561 pgTAP e casi di drift/byte/scoping/generic-plan passano localmente. La prova
+read-only precedente v6 in6736.758ms resta un diagnostico su nove fasi, non una
+RPC autenticata, un percentile o una misura della versione finale con guardie.
+
+L'ultimo esito autentico è **FAIL iOS153**. Unico Retry04:53:59UTC, dopo CI main
+verde: checkpoint iniziale HTTP200 origin7664/upstream7446ms, secondo checkpoint
+HTTP500 origin8965/upstream8849ms, SQL57014 nell'aggregato prodotti alla riga346.
+Termine04:54:16.496144UTC, verifiedConvergence=false/didWork=false. Binding invariato,
+journal prepared e mirror pending presenti, wipeCommitted=false; nessun manifest
+attivo o ricevuta finale. App terminata normalmente, pending preservato. Android153
+NOT_RUN per lo stesso blocco backend; FAIL150–152 conservati. Primo HTTP200 non
+equivale a recovery accettata. Diagnosi dei costi consecutivi in corso.
+Worker TEST `3521a945-2dbb-4b97-aa8d-ccefae96543e` mantiene il fix di refresh
+Admin distribuito03:37, binding/flag/tracing invariati. Il reload dopo deploy
+è soltanto smoke del rilascio, non convergenza automatica.
+
+Mac bloccato all'ultimo controllo UI04:56; sblocco già richiesto, da ricontrollare
+prima dei dialoghi Mini. Telefono non disponibile nell'ultimo inventario.
+Nessun DONE, collaudo fisico o readiness del pilot attestati.
+
+## Checkpoint storico — 2026-10-02 00:27 UTC
 
 Mini PR46 è integrata su `07ff35c0`, con CI head e post-merge SUCCESS.
 Runtime TEST v10: 102 file verificati, configurazione invariata. Dopo un errore

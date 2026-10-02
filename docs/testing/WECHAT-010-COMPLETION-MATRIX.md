@@ -14,7 +14,69 @@ con modifiche locali preesistenti preservate. Build correnti da riconciliare pri
 dei nuovi PASS cross-client. Runtime TEST/configurazione e fixture sono nel packet
 privato già autorizzato; nessuna credenziale nel report.
 
-## Checkpoint corrente — 2026-10-02 00:27 UTC
+## Checkpoint corrente — 2026-10-02 16:39 UTC
+
+WECHAT-010 resta EXECUTION. Mini runtime v10/configurazione e sei fixture invariati.
+Prova autentica senza scritture: Account offline con sessione valida nasconde Sign out;
+rete ripristinata Online. Fix locale con guardia sessione e dialogo logout tardivo:
+verify219PASS, review/integrazione/ritest runtime pendenti.
+C04 Save Admin respinto dal browser per stock1.25/step1: nessun effetto backend;
+conflitto NOT_RUN. PR129 stepany ha CI verde, build selettiva TEST in preparazione.
+Android154: tre retry automatici falliti (due count mismatch, uno HTTP500/SQL57014
+checkpoint line910); quarto interrotto normalmente16:35, pending/binding conservati.
+iOS154 resta FAIL locale; nuova build R-I07 verificata ma CI13 fallita, non installata.
+Nessuna convergenza completa, misura prestazionale nuova, DONE o pilot attestati.
+Dettagli nel [report canonico](WECHAT-010-REPORT.md).
+
+## Checkpoint storico — 2026-10-02 15:51 UTC
+
+TEST registry154/postcheck invarianti PASS; PR128 finale7232637b CI verde, aperta.
+Recovery iOS154 FAIL locale nonMonotonicOrDuplicateID dopo due checkpoint HTTP200
+(5138/4694ms origin),61598ledger ordinate/uniche e baseline persistita valid.
+Writer iOS riferisce RED reale/GREEN60 dopo sort lexical; nuova build/review/CI e
+recovery autentico pending. Mac sbloccato; Mini login fresco PASS, C04 NOT_RUN.
+Serie Mini cold setupFAIL senza misure; v11 runtime NOT_RUN. Nessun DONE.
+Dettagli e limiti nel [report canonico](WECHAT-010-REPORT.md).
+
+## Checkpoint storico — 2026-10-02 04:58 UTC
+
+WECHAT-010 resta **EXECUTION**. Mini main/runtime v10 `07ff35c0` e le sei
+fixture sono invariati. Doppio tap DevTools PASS; conflitto, pending, immagini,
+recupero nativo e convergenza completa restano aperti.
+
+Admin PR127 è integrata su `e0089365` dopo due revisioni della correzione e
+due del successivo allineamento della versione. CI finale del PR: database/pgTAP,
+Verify e Cloudflare SUCCESS; CI post-merge36966129161/36966129129 SUCCESS.
+Il SQL revisionato è applicato una sola volta su TEST come `20261002044017`,
+registry153. Postcheck04:40:41 PASS: precedenti152 entry invariate, solo i due
+corpi previsti aggiornati e un nuovo helper privato invoker; OID/ACL esistenti,
+altre funzioni, trigger, dati scoped, eventi, immagini e History fisiche invariati.
+Il contratto runtime risulta true; il sorgente applicato coincide con la migrazione
+SHA256 `e6e3a2631c82e506461c400e16a910f87c8e007ff8ad29a643ce10b3f19af826`.
+
+La correzione evita serializzazioni ripetute nel preflight e nel calcolo byte
+dei prezzi, conservando DTO, valori float8, scope, digest, fallback e limite8s.
+561 pgTAP e casi di drift/byte/scoping/generic-plan passano localmente. La prova
+read-only precedente v6 in6736.758ms resta un diagnostico su nove fasi, non una
+RPC autenticata, un percentile o una misura della versione finale con guardie.
+
+L'ultimo esito autentico è **FAIL iOS153**. Unico Retry04:53:59UTC, dopo CI main
+verde: checkpoint iniziale HTTP200 origin7664/upstream7446ms, secondo checkpoint
+HTTP500 origin8965/upstream8849ms, SQL57014 nell'aggregato prodotti alla riga346.
+Termine04:54:16.496144UTC, verifiedConvergence=false/didWork=false. Binding invariato,
+journal prepared e mirror pending presenti, wipeCommitted=false; nessun manifest
+attivo o ricevuta finale. App terminata normalmente, pending preservato. Android153
+NOT_RUN per lo stesso blocco backend; FAIL150–152 conservati. Primo HTTP200 non
+equivale a recovery accettata. Diagnosi dei costi consecutivi in corso.
+Worker TEST `3521a945-2dbb-4b97-aa8d-ccefae96543e` mantiene il fix di refresh
+Admin distribuito03:37, binding/flag/tracing invariati. Il reload dopo deploy
+è soltanto smoke del rilascio, non convergenza automatica.
+
+Mac bloccato all'ultimo controllo UI04:56; sblocco già richiesto, da ricontrollare
+prima dei dialoghi Mini. Telefono non disponibile nell'ultimo inventario.
+Nessun DONE, collaudo fisico o readiness del pilot attestati.
+
+## Checkpoint storico — 2026-10-02 00:27 UTC
 
 Mini PR46 è integrata su `07ff35c0`, con CI head e post-merge SUCCESS.
 Runtime TEST v10: 102 file verificati, configurazione invariata. Dopo un errore
@@ -67,14 +129,14 @@ PASS globale auth persistita per Android, recovery o convergenza.
 |---|---|---|---|---|---|---|
 | A01 | Pairing e login personale distinto | Mini/Admin | PASS verificato | Report 26/09, codice auth invariato | Preservare mapping; nessun nuovo pairing | Identità canonica e login distinto |
 | A02 | Sessione attuale e rientro dopo scadenza | tutti | PASS auth corrente; expiry pending NOT_RUN | Mini v10 login e retry sulla stessa Home PASS; iOS R-I06 Connected; Android R-A07 restore SDK tardivo validato e UI Connected dopo ripristino DNS | Expiry durante pending e prove residue | Scope esatto e margine sessione sufficiente |
-| A03 | Logout/foreground con pending conserva/elimina | Mini | NOT_RUN | Test isolati esistenti, live non attestato | Prova controllata su fixture con checkpoint | Consenso rispettato, pending persistito o eliminato esplicitamente |
+| A03 | Logout/foreground con pending conserva/elimina | Mini | NOT_RUN; accesso UI offline difettoso riprodotto | Sessione valida/pending0 ma logout assente; fix locale219testPASS, runtime v10 invariato | Prova controllata su fixture con checkpoint | Consenso rispettato, pending persistito o eliminato esplicitamente |
 | A04 | Cambio account/shop, cache e callback tardive | tutti | PASS isolato Mini; runtime cross-client NOT_RUN | cache-safety/page-session-fencing/catalog context e nuove guardie eventi PASS | Conservare limite isolato; niente account sostituiti | Zero invii o applicazioni tardive fuori scope |
 | B01 | Home e vendite readonly, ricerca/dettaglio | Mini/Admin | PASS verificato | 17 scenari autentici precedenti | Conservare evidenze sui byte invariati | Valori e identità concordi con SELECT |
 | B02 | Filtri/sort/pagine/errori vendite residui | Mini | PASS verificato (isolato + runtime parziale) | Sales14regressioni PASS;4lingue/30giorni/empty DevTools, patch398cb406; paging100+1 isolato | Dataset periodo vuoto: nessuna creazione finanziaria; conservare limite multipagina isolato | Nessuna mutazione finanziaria; pagine e filtri coerenti |
 | C01 | Catalogo CRUD e ciclo archivia/ripristina | Mini/Admin | PASS verificato | 13 casi autentici, cinque fixture | Preservare evidenze | Identità confermate dal server, readback esatto |
 | C02 | Fornitori/categorie rinomina e riassegnazione | Mini/Admin | PASS verificato | Readback autentico delle cinque fixture | Preservare evidenze | Riferimenti attivi corretti e tombstone coerenti |
 | C03 | Ricerca/paging catalogo e relazioni | Mini | PASS DevTools e paging parziale | v10 nove limiti ASCII/CJK/emoji, widget/modello e nove oracle concordi; sette letture per lingua; paging7×50 e tre sort×150 SQL concordi già validi | Conservare il limite di campionamento, senza dedurre intero dataset o telefono | Nessun duplicato/omissione; contesto stabile |
-| C04 | Duplicati, double tap, revision conflict | Mini/Admin | PASS isolato; runtime conflict/doubletap NOT_RUN | Duplicato autentico precedente PASS;5scelte dialogo conflitto e idempotenza/ACL server isolate | Conflitto controllato e doubletap autentico | Nessuna sovrascrittura o duplicazione involontaria |
+| C04 | Duplicati, double tap, revision conflict | Mini/Admin | PASS doppio tap DevTools e duplicato; runtime conflict NOT_RUN | 02/10 due tap, una creazione/due prezzi/un audit/una ricevuta, UI e SQL concordi; outbox0; dialoghi conflitto isolati PASS | Conflitto controllato con revisione concorrente e scelta nativa | Nessuna sovrascrittura o duplicazione involontaria |
 | C05 | Prezzi CLP/frazioni/legacy e History multipagina | Mini/Admin | PASS isolato e readback multilingua; runtime multipagina NOT_RUN | Prezzi CLP/legacy e paging125→185 isolati; prezzi e History nelle quattro lingue concordi con SQL | Conservare il limite multipagina isolato | Valore persistito invariato; ordinamento e audit esatti |
 | D01 | Upload/sostituzione/rimozione DevTools | Mini/Admin | PASS verificato | Tre operazioni, orientamento/thumbnail osservati | Preservare prove | Versioni e primaria corrispondono alla UI |
 | D02 | Picker/anteprima annullati e file temporanei | Mini | NOT_RUN | Regressioni locali; diagnosi preview riconciliate | Casi runtime senza mutazione e suite lifecycle | Zero intent involontari e nessun file necessario perso |
@@ -86,8 +148,8 @@ PASS globale auth persistita per Android, recovery o convergenza.
 | E03 | Scadenza sessione durante recovery | Mini | NOT_RUN | Tentativo storico interrotto conservato | Validare recupero con auth reale e test guardie | Nessuna mutazione fuori sessione; rete ripristinabile |
 | E04 | Readback negato/temporaneo, errore definitivo | Mini/Admin | PASS isolato; runtime fault NOT_RUN | Readback negato/offline/timeout differenziati, draft preservato e nessun falso Saved | Fault runtime solo se riproducibile senza bypass | Mai falso Saved o perdita draft/pending |
 | E05 | Nuove modifiche sul modulo durante recovery | Mini | PASS modello isolato; widget/runtime NOT_RUN | 26helpertest inclusi form compilato: input rifiutato durante pending/readback, nuovo draft dopo completamento | Probe widget e recupero autentico con rete UI accessibile | Risposte vecchie non sovrascrivono input nuovo |
-| F00 | Build native corrente, scope e recovery | Android/iOS | PASS auth; FAIL recovery riprodotto | R-A07/R-A08 e R-I06 installati; sessioni valide, DNS Android risolto senza reset; History v2 registry149/preflight PASS; entrambi checkpoint500/57014 nella fase prezzi | Ottimizzazione equivalente Admin e nuovo recupero con readback terminale | Autenticazione valida, recovery concluso e dati scoped |
-| F01 | Mini → Admin/Android/iOS automatico | tutti | NOT_RUN | Mini checkpoint delta PASS; nessun roundtrip | Mutazione fixture e readback quattro superfici | Stesso ID/revisione senza refresh manuale |
+| F00 | Build native corrente, scope e recovery | Android/iOS | FAIL154 Android e iOS; fix in verifica | Android3autoFAIL(count mismatch/SQL57014line910), quarta interrotta e binding/pending conservati; iOS154localeFAIL, R-I07firmata verificata ma CI13FAIL | Correggere cause, verificare CI e nuovo recovery autentico terminale | Autenticazione valida, recovery concluso e dati scoped |
+| F01 | Mini → Admin/Android/iOS automatico | tutti | NOT_RUN completo; Admin readback manuale distinto | Creazione C04 Mini/SQL PASS; Admin vede record dopo Reload, nessuna propagazione automatica accettata | Recovery nativa e readback quattro superfici senza refresh | Stesso ID/revisione senza refresh manuale |
 | F02 | Admin → Mini/Android/iOS automatico | tutti | NOT_RUN | Nessuna prova autentica completa | Mutazione rappresentativa e readback | Stesso ID/campi, outbox coerente |
 | F03 | Android → Mini/Admin/iOS automatico | tutti | NOT_RUN | Recovery da riconvalidare | Mutazione UI nativa con scope verificato | Persistenza e propagazione automatiche |
 | F04 | iOS → Mini/Admin/Android automatico | tutti | NOT_RUN | Recovery da riconvalidare | Mutazione UI nativa con scope verificato | Persistenza e propagazione automatiche |
@@ -96,12 +158,12 @@ PASS globale auth persistita per Android, recovery o convergenza.
 | G01 | Cinque icone e catalogo quattro lingue | Mini | PASS verificato | Icone5/5; quattro viste OPERATOR_OBSERVED | Conservare prove sul layout invariato | Titoli/tab/testi leggibili, prezzo contenuto |
 | G02 | Altre schermate/dialoghi/errori quattro lingue | Mini | NOT_RUN globale (copertura parziale verificata) | 11pagine4lingue precedenti;8contenuti privacy/deletion canonici;4titoli nativi v9 visivamentePASS | Dialoghi pending/errori e screenshot residui; nessun PASS globale | Cambio lingua completato; nessun testo troncato |
 | P01 | Catalogo apertura/navigazione/ricerca/paging | Mini | PASS misure parziali incluse6pagine post-fix | 20warm p50=562/p95=1133ms;10search p50=1021;6paging p50=328,min323,max2321;2HTTP400 storici preservati | Cold/cache e altri sort da caratterizzare; nessun PASS SLA | Inizio/fine app espliciti; soglie canoniche o nessun PASS SLA |
-| P02 | Save online e ripresa outbox | Mini | NOT_RUN | Durate orchestrazione escluse | Campioni con clock host coerente | p50/p95 solo con n adeguato, fallimenti inclusi |
+| P02 | Save online e ripresa outbox | Mini | PASS singolo campione Save; serie/outbox NOT_RUN | C04 doppio tap→catalogo1093ms, n1, clock host monotonic, SDK/poll75ms inclusi; SQL successivo escluso | Serie e recupero outbox misurati distintamente | p50/p95 solo con n adeguato, fallimenti inclusi |
 | P03 | Convergenza quattro client | tutti | NOT_RUN | Nessun campione autentico | Misurare dal submit osservato al readback finale | Clock unico e nessun refresh artificiale |
 | P04 | Upload/sostituzione/visualizzazione immagine | Mini/Admin | NOT_RUN | Picker incluso nelle vecchie durate | Misurare intervallo rete/UI separato dal picker | Payload/ambiente dichiarati e errori conteggiati |
-| H01 | Telefono fisico WeChat/hardware/lifecycle | Mini | NOT_RUN | Nessun telefono collegato attestato | Inventario e disponibilità umana separata | Camera/galleria/permessi/rete reali; nessun PASS simulato |
-| I01 | Integrazione e smoke combinazione finale | tutti modificati | NOT_RUN combinazione finale; integrazioni parziali PASS | MiniPR46 07ff35c0 e AdminPR122 516b8181 CI main SUCCESS; runtimev10/Workerbdd42368/registry149 verificati; artefatti nativi finali installati | Correggere budget checkpoint, completare runtime e smoke combinato | origin/main e runtime TEST riconducibili ai sorgenti |
-| I02 | Cleanup fixture run e report finale | Mini/Admin | NOT_RUN | Cinque fixture preservate | Dopo readback completati, soli percorsi applicativi | Nessun oggetto estraneo o diagnostico cancellato |
+| H01 | Telefono fisico WeChat/hardware/lifecycle | Mini | BLOCKED esterno | Inventario01:13: Android solo emulatore, iPhone fisico Offline; nessuna prova hardware | Owner utente: rendere disponibile telefono autorizzato; prove simulatori continuano | Camera/galleria/permessi/rete reali; nessun PASS simulato |
+| I01 | Integrazione e smoke combinazione finale | tutti modificati | NOT_RUN combinazione finale; integrazioni parziali PASS | MiniPR46 07ff35c0, AdminPR127 e0089365, AndroidPR11 0613339 e iOSPR11 2322c5e CI main SUCCESS; runtimev10/Worker3521a945/registry154; PR128/129 aperte CIgreen, iOS13CIFAIL; postcheck154 invarianti PASS | Risolvere budget checkpoint, completare runtime e smoke combinato | origin/main e runtime TEST riconducibili ai sorgenti |
+| I02 | Cleanup fixture run e report finale | Mini/Admin | NOT_RUN | Cinque fixture originali e nuova fixture C04 preservate | Dopo readback completati, soli percorsi applicativi sui sei oggetti propri | Nessun oggetto estraneo o diagnostico cancellato |
 
 ## Assegnazione della convergenza e misure
 
@@ -123,4 +185,4 @@ non è p50/p95 né prova di rispetto SLA. Ulteriori campioni separano cold/warm.
 | ID | Requisito | Repository | Stato | Evidenza disponibile | Azione mancante | Accettazione |
 |---|---|---|---|---|---|---|
 | D06 | Scadenza URL immagine/rinnovo limitato | Mini/Admin | NOT_RUN | Test isolati e parity residua | Dettaglio/thumbnail scaduti, scope/version fencing | Rinnovo bounded, versione corrente, nessuna applicazione tardiva |
-| P05 | Login e prima Home | Mini/Admin | NOT_RUN | Singolo login fresco riuscito13.419ms | Serie cold/warm con richieste/cache/errori | Metodo e campioni espliciti; nessun percentile da n=1 |
+| P05 | Login e prima Home | Mini/Admin | FAIL setup cold; serie app NOT_RUN | Campioni singoli storici13.419ms e v10 7.964ms, nessuna serie | Serie cold/warm con richieste/cache/errori | Metodo e campioni espliciti; nessun percentile da n=1 |

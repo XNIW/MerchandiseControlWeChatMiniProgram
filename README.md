@@ -17,7 +17,7 @@ It does not mutate staff/POS data, import/export data, scan barcodes with the ca
 - Admin Web owns the WeChat backend boundary, identity and mutation ADRs, Supabase migrations, permissions, audit/outbox/sync, private image Storage and every business-data API/RPC.
 - Android and iOS remain independent personal-account clients of the same canonical Supabase identity.
 
-At the 2026-10-02 checkpoint, Mini v10 login retry and nine Unicode search-boundary cases are verified in DevTools. Both native clients are authenticated; their current recovery fails on the backend checkpoint SQL budget. Remaining cases and exact evidence are tracked in the completion matrix.
+At the 2026-10-02 16:39 UTC checkpoint, Mini v10 login retry, nine Unicode search-boundary cases and double-tap duplicate prevention are verified in DevTools. TEST registry154 is applied; Admin PR128 remains open with green CI. Authentic native recovery still fails: iOS reports a local UUID proof-order error, while Android reports staging apply-count mismatches and one checkpoint timeout. The new iOS build has not been installed because its CI failed. The Mini offline Account/logout fix passes 219 local checks and awaits review and runtime validation. Admin fractional-stock PR129 has green CI and a selective TEST build is prepared. Automatic convergence still needs validation; remaining cases and exact evidence are tracked in the completion matrix.
 
 Current completion evidence is tracked by WECHAT-010. Authentic Mini pairing, sign-in and catalog operations have been verified in TEST; native recovery and four-client convergence remain under validation. Historical foundation gaps are not a statement of the current implementation. See [the completion matrix](docs/testing/WECHAT-010-COMPLETION-MATRIX.md) for the remaining runtime cases.
 - Supabase `auth.users` remains canonical; WeChat is an identity provider, not a role.
@@ -41,7 +41,7 @@ Environment variable names and feature flags are documented in [the environment 
 
 ## External activation state
 
-No WeChat AppID/AppSecret, registered request domain, approved Mini Program, or live cross-platform identity evidence is present. The checked-in feature is OFF and the UI fails closed. Fixtures and contract tests do not constitute live validation.
+The checked-in configuration keeps WeChat features OFF. The separately verified staging configuration enables Mini sign-in and catalog access only for the authorized TEST account and shop; authentic pairing, sign-in and scoped catalog results are recorded in the completion matrix. Protected credentials and private DevTools configuration are excluded from this repository. Enrollment and other WeChat surfaces remain OFF. Native recovery, four-client convergence and physical-phone validation are still open; no public release or production readiness is asserted.
 
 ## Repository layout
 

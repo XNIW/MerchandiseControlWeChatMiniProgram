@@ -126,6 +126,15 @@ App<MerchandiseControlApp>({
   async requestSignOut() {
     const session = this.sessionStore.load();
     const shopId = this.activeShop?.shop_id;
+    const generation = this.sessionStore.generation;
+    const isCurrent = () => {
+      const currentSession = this.sessionStore.load();
+      return (
+        generation === this.sessionStore.generation &&
+        (currentSession?.accountFingerprint ?? null) === (session?.accountFingerprint ?? null) &&
+        this.activeShop?.shop_id === shopId
+      );
+    };
     if (session && shopId) {
       let scopes: readonly string[] = [shopId];
       let hasPending = true;
@@ -152,8 +161,10 @@ App<MerchandiseControlApp>({
             title: text.pendingSignOutTitle,
           });
         });
+        if (!isCurrent()) return;
         if (!retain) {
           for (const scope of scopes) {
+            if (!isCurrent()) return;
             try {
               this.outbox.discard(session.accountFingerprint, scope);
               await this.imageClient?.discardDurableAttempts(session.accountFingerprint, scope);
@@ -164,6 +175,7 @@ App<MerchandiseControlApp>({
         }
       }
     }
+    if (!isCurrent()) return;
     this.clearSessionContext();
   },
   onLaunch() {

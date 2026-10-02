@@ -17,6 +17,7 @@ interface AccountRequestContext {
 
 let accountRequestGeneration = 0;
 let unsubscribeOutbox: (() => void) | undefined;
+let unsubscribeSession: (() => void) | undefined;
 
 function isAccountRequestCurrent(context: AccountRequestContext): boolean {
   const activeSession = app.sessionStore.load();
@@ -41,10 +42,15 @@ Page({
     locales,
     loading: true,
     providersText: "—",
+    signedIn: false,
     shops: [] as readonly AuthorizedShop[],
     text: translationsFor(app.locale),
   },
   onShow() {
+    unsubscribeSession?.();
+    unsubscribeSession = undefined;
+    unsubscribeOutbox?.();
+    unsubscribeOutbox = undefined;
     accountRequestGeneration += 1;
     this.setData({
       pending: [],
@@ -53,24 +59,38 @@ Page({
       currentShop: null,
       loading: false,
       providersText: "—",
+      signedIn: app.featureReady && app.sessionStore.load() !== null,
       shops: [],
       text: translationsFor(app.locale),
     });
     wx.setNavigationBarTitle({ title: this.data.text.account });
     if (!app.featureReady) return;
-    unsubscribeOutbox?.();
+    unsubscribeSession = app.sessionStore.subscribe(() => {
+      accountRequestGeneration += 1;
+      this.setData({
+        account: null,
+        currentShop: null,
+        loading: false,
+        providersText: "—",
+        shops: [],
+        signedIn: app.sessionStore.load() !== null,
+      });
+      this.refreshPending();
+    });
     unsubscribeOutbox = app.outbox?.subscribe(() => this.refreshPending());
     this.refreshPending();
     if (!app.featureReady) return;
     void this.load();
   },
   onHide() {
+    accountRequestGeneration += 1;
+    unsubscribeSession?.();
+    unsubscribeSession = undefined;
     unsubscribeOutbox?.();
     unsubscribeOutbox = undefined;
   },
   onUnload() {
     this.onHide();
-    accountRequestGeneration += 1;
   },
   async load() {
     if (!app.featureReady) return;
@@ -250,13 +270,19 @@ Page({
     wx.navigateTo({ url: "/pages/privacy/index" });
   },
   async signOut() {
+    if (app.sessionStore.load() === null) {
+      this.setData({ signedIn: false });
+      return;
+    }
     accountRequestGeneration += 1;
     await app.requestSignOut();
+    if (app.sessionStore.load() !== null) return;
     this.setData({
       account: null,
       currentShop: null,
       loading: false,
       providersText: "—",
+      signedIn: false,
       shops: [],
     });
     wx.switchTab({ url: "/pages/index/index" });
