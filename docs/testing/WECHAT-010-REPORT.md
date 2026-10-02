@@ -1,6 +1,201 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Checkpoint corrente — 2026-10-01 23:22 UTC
+## Checkpoint corrente — 2026-10-02 16:39 UTC
+
+WECHAT-010 resta **EXECUTION**. Mini runtime v10/main07ff35c0, configurazione e
+sei fixture sono invariati. Nuova correzione locale ancora da integrare: Account
+espone Sign out dalla sessione in memoria anche quando il profilo HTTP non arriva;
+revoca/cambio sessione e hide invalidano richieste precedenti. Il dialogo pending
+ricontrolla generation/fingerprint/shop dopo l'attesa e prima del clear: una risposta
+vecchia non può eliminare pending o sessione di un nuovo contesto. Due regressioni
+RED riprodotte prima dei fix; verify219PASS (111TS+108JS), lint/typecheck/build,
+governance/privacy/secret scan PASS. Primo verify respinto solo dalla formattazione;
+secondo intercetta il gate OFF, corretto senza indebolire il test. Review e ritest
+DevTools del nuovo sorgente restano pendenti: i test isolati non attestano A03 live.
+
+Prova autentica Account offline, senza Save/logout: sessione valida generation5,
+shop canonico, remaining344s, pending0; account:null/loading:false/errore assente,
+button.logout non presente. La ricevuta originale OBSERVED_OTHER resta conservata
+perché il runner attendeva anche un errore che Account non espone. La proiezione e
+il WXML confermano il difetto di visibilità indipendentemente da quel messaggio.
+Rete ripristinata attraverso il controllo nativo: Throttling Disabled:Online.
+
+C04 nuovo tentativo: unico Save Admin rifiutato dalla validazione nativa del browser
+per stock1.25 e step1; nessuna richiesta business conclusa. SELECT indipendente15:57
+conferma target/prices/audit/receipt e cinque fixture originali identici al before.
+Mini Save non armato/eseguito; conflitto NOT_RUN. Reset normale Admin ripristina la
+bozza. Nel Mini, Cancel del dialogo cinese conserva bozza/revisione; Confirm la
+scarta e ritorna al dettaglio invariato, outbox0. Il primo probe di discard usa
+erroneamente product.id e fallisce: ricevuta conservata; lettura corretta di
+product.product_id PASS senza ripetere il gesto. Copertura limitata a quel dialogo
+zh-Hans, non pending logout o localizzazione globale.
+PR129 head1ee0e3b5 stepany ha due review e CI Database/Verify/Cloudflare SUCCESS;
+nessun merge/deploy. Tree selettivo TEST1f0679b2 conserva quattro file già distribuiti
+più la sola riga quantità; helper reviewed con intent esclusivo, build in preparazione.
+
+Android154, APK96b3d613: normale boot16:06/userdata preservato, unico launch16:11;
+nessun Retry manuale o mutazione. Accesso ripristinato, UI Cloud account connected.
+Retry automatici16:14:59 e16:28:53 falliscono recovery_stage_apply_count_mismatch;
+16:20:08 fallisce shop_sync_rpc_http_500. Backend osservato: checkpoint16:11:37
+HTTP200 origin7062/upstream6868ms;16:20:00 HTTP5008283/8195ms, SQL57014 nel checkpoint
+line910;16:33:54 HTTP2006436/6376ms. I campioni non sono percentili né accettazione.
+App fermata con comando standard am force-stop16:35:18 dopo i tre fallimenti, quarto download interrotto
+esplicitamente; la finestra automatica non è dichiarata conclusa. Copie SQLite
+coerenti da processo fermo quick_checkok: main0business/outbox0, journal1 staging,
+attempt19, binding SHA57efa9b6 invariato; staging parziale105supplier/74category/
+5564product/5819manifest, prezzi0. Consenso mismatch_replace_confirmed precedente
+conservato, distinto da same-scope; nessun reset o riscrittura del binding. Diagnosi
+nativa e backend separate in corso. Non c'è manifest attivo o recovery accettata.
+
+iOS154 precedente resta FAIL nonMonotonicOrDuplicateID. R-I07 lexical, binary050db10a,
+23file/signature/configurazione verificati da root; non installato su459. PR13
+exactheadfabae1e5 CI37031063547 FAILURE: il writer riferisce crash del nuovo controllo
+sincrono, mentre il test servizio257 passa; diagnosi/fix e nuova CI restano aperti.
+Nessun bootstrap459 o merge dedotto dai60test mirati.
+
+TEST registry154 e Worker3521 restano correnti; nessun nuovo apply SQL, deploy,
+produzione o public Mini. Performance Mini rinviata durante la lane di build.
+Quattro-client roundtrip, pending/expiry, immagini residue, telefono e smoke finale
+restano aperti. Nessun DONE o readiness pilot attestati.
+
+## Checkpoint storico — 2026-10-02 15:51 UTC
+
+WECHAT-010 resta **EXECUTION**. Mini main/runtime v10 `07ff35c0` e le sei
+fixture restano invariati. Admin PR128 finale `7232637b` ha due review indipendenti,
+561pgTAP/oracle completo PASS e CI Database, Verify e Cloudflare SUCCESS.
+Il SQL è applicato una sola volta su TEST come `20261002150909`, registry154;
+postcheck15:09:43 invarianti PASS. SQL SHA256
+`9a09b8106aa8dbb3f86365ef964cc0e6a204fc8e38440b660716ebb179f04e27`.
+Nessun nuovo apply, deploy Worker o modifica produzione.
+
+Il recovery autentico iOS154 è **FAIL locale**, dopo entrambi i checkpoint HTTP200:
+A15:11:07.795 origin5138/upstream5106ms; B15:20:14.802 origin4694/upstream4627ms.
+Tutti i61598 record delle sei ledger sono scaricati; ordine UUID lessicografico e
+unicità raw verificati. La baseline SQLite è valid con appliedAt, quindi il percorso
+ha superato ricevuta, checkpoint B e tail prima del readback dello store persistito.
+Termine15:20:24.8923988: `nonMonotonicOrDuplicateID`, verifiedConvergence=false,
+didWork=false. Binding invariato, pending/journal conservati, manifest/finalizzazione
+assenti. App terminata normalmente15:23; dispositivo459 shutdown15:30, dati preservati.
+FAIL153 e tutti i tentativi precedenti restano conservati.
+
+Diagnosi concreta: il sort SwiftData di recordKey usa localizedStandard, mentre
+il proof accumulator richiede UUID lessicografici. Il writer iOS coordinato riferisce
+RED del servizio reale con257record e GREEN60/0/0 dopo una sola riga `.lexical`;
+artefatto firmato, review/CI e nuovo recovery autentico restano da verificare.
+I due HTTP200 sotto8s non attestano recovery o convergenza quattro client.
+
+Mac sbloccato e debugger Network accessibile. Mini login personale15:50 PASS,
+Home empty, account/shop canonici, sessione fresca, nessuna mutazione business.
+C04 conflitto resta NOT_RUN: helper privati aggiornati ai pin registry154/Worker3521
+in review prima della prova. Serie Mini cold v10: setupFAIL prima di SignIn,
+zero misure/mutazioni,4NOT_RUN; v11 diagnostico36test puri PASS, runtime NOT_RUN.
+Misure prestazionali rinviate fino al rilascio del carico build iOS. Worker TEST
+`3521a945` e binding/flag/tracing invariati. Nessun p95, SLA, telefono, DONE o pilot.
+
+## Checkpoint storico — 2026-10-02 04:58 UTC
+
+WECHAT-010 resta **EXECUTION**. Mini main/runtime v10 `07ff35c0` e le sei
+fixture sono invariati. Doppio tap DevTools PASS; conflitto, pending, immagini,
+recupero nativo e convergenza completa restano aperti.
+
+Admin PR127 è integrata su `e0089365` dopo due revisioni della correzione e
+due del successivo allineamento della versione. CI finale del PR: database/pgTAP,
+Verify e Cloudflare SUCCESS; CI post-merge36966129161/36966129129 SUCCESS.
+Il SQL revisionato è applicato una sola volta su TEST come `20261002044017`,
+registry153. Postcheck04:40:41 PASS: precedenti152 entry invariate, solo i due
+corpi previsti aggiornati e un nuovo helper privato invoker; OID/ACL esistenti,
+altre funzioni, trigger, dati scoped, eventi, immagini e History fisiche invariati.
+Il contratto runtime risulta true; il sorgente applicato coincide con la migrazione
+SHA256 `e6e3a2631c82e506461c400e16a910f87c8e007ff8ad29a643ce10b3f19af826`.
+
+La correzione evita serializzazioni ripetute nel preflight e nel calcolo byte
+dei prezzi, conservando DTO, valori float8, scope, digest, fallback e limite8s.
+561 pgTAP e casi di drift/byte/scoping/generic-plan passano localmente. La prova
+read-only precedente v6 in6736.758ms resta un diagnostico su nove fasi, non una
+RPC autenticata, un percentile o una misura della versione finale con guardie.
+
+L'ultimo esito autentico è **FAIL iOS153**. Unico Retry04:53:59UTC, dopo CI main
+verde: checkpoint iniziale HTTP200 origin7664/upstream7446ms, secondo checkpoint
+HTTP500 origin8965/upstream8849ms, SQL57014 nell'aggregato prodotti alla riga346.
+Termine04:54:16.496144UTC, verifiedConvergence=false/didWork=false. Binding invariato,
+journal prepared e mirror pending presenti, wipeCommitted=false; nessun manifest
+attivo o ricevuta finale. App terminata normalmente, pending preservato. Android153
+NOT_RUN per lo stesso blocco backend; FAIL150–152 conservati. Primo HTTP200 non
+equivale a recovery accettata. Diagnosi dei costi consecutivi in corso.
+Worker TEST `3521a945-2dbb-4b97-aa8d-ccefae96543e` mantiene il fix di refresh
+Admin distribuito03:37, binding/flag/tracing invariati. Il reload dopo deploy
+è soltanto smoke del rilascio, non convergenza automatica.
+
+Mac bloccato all'ultimo controllo UI04:56; sblocco già richiesto, da ricontrollare
+prima dei dialoghi Mini. Telefono non disponibile nell'ultimo inventario.
+Nessun DONE, collaudo fisico o readiness del pilot attestati.
+
+### Evidenze nuove e limiti
+
+- C04 DevTools PASS per il doppio tap: due chiamate ufficiali Element.tap entrambe
+  confermate, una sola creazione canonica; prezzi10000/47100 e stock1.25 concordi.
+  Originali cinque oggetti e relative evidenze invariate. Misura host monotonic
+  dall'invio dei tap al ritorno del catalogo:1093ms, n=1, inclusi SDK e osservazione
+  con polling75ms. Ricerca e SQL successivi esclusi; nessun p50/p95 o SLA dedotto.
+  Packet privato `doubletap-v10-cc2ad01c-96ca-491b-8ef6-98015c8706b1`:
+  risultato originale `UI_OBSERVED_ORACLE_PENDING` preservato e riconciliazione
+  distinta `C04_DEVTOOLS_PASS`; l'intento esclusivo resta non ripetibile.
+- PR123 e PR124 hanno due revisioni indipendenti ciascuna, gate locali e CI head
+  e post-merge verdi. Applichiamo soltanto le migrazioni revisionate in TEST;
+  nessun deploy completo di Admin main né modifica produzione. Postcheck151
+  SHA256`375b19d67e583ed4f2e106cd75e8e9327764ca6aa9748cc9012b6172ae5df971`:
+  precedenti150entry intatte, solo corpo checkpoint previsto modificato,
+  helper importi/OID/ACL/header, altre funzioni, trigger, dati e History fisiche invariati.
+- iOS registry151: unico Retry UI01:39:43UTC, terminale fallito01:39:52.012612UTC;
+  origin8256ms/upstream8127ms, SQL57014 nel SELECT finale di integrità.
+  Accesso/shop verificati, pending0, binding invariato, nessun manifest o ricevuta
+  finale nuova, verifiedConvergence=false. Android151 non ritentato inutilmente;
+  precedente fallimento150 conservato. Ricevuta safe150–151 SHA256
+  `a291f9c655ee3bfb5c7f2622c77f6d699f9ee3692c3cd219711e3c69bfa9dcf3`.
+- La query finale isolata migliora, ma questo non risolve l'intera RPC: profilatura
+  SELECT read-only senza impersonazione individua costi cumulativi anche in
+  preflight, prodotti, prezzi ed eventi. I piani isolati includono strumentazione
+  e non sono latenze end-to-end, percentili o risultati di recovery.
+- Admin rimasto aperto non ha mostrato la nuova fixture prima del ricaricamento;
+  successivo errore di caricamento dello strumento e Reload riportano il catalogo
+  con il record esatto. Non attribuiamo ancora una causa applicativa e non
+  promuoviamo il caso a convergenza automatica. Originale polling osservato preservato.
+
+## Checkpoint storico — 2026-10-02 00:27 UTC
+
+Mini PR46 è integrata su `07ff35c0`, con CI head e post-merge SUCCESS.
+Runtime TEST v10: 102 file verificati, configurazione invariata. Dopo un errore
+reale senza sessione, il login dalla stessa Home riesce al nuovo tap senza
+riavvio: correzione del pulsante verificata. Un ulteriore login autentico riesce
+in 7.964 ms (singolo campione, non percentile o SLA).
+
+Catalogo italiano: sette letture concordi con SQL; insieme alle tre lingue già
+verificate copre ricerca, filtri, prezzi CLP e History nelle quattro lingue.
+Nove casi di limite ricerca su prodotti/categorie/fornitori sono PASS DevTools:
+ASCII, cinese ed emoji rispettano 80 unità UTF-16 senza spezzare caratteri;
+widget, modello e nove oracle SQL concordano. Il primo runner fallito resta
+conservato. Nessuna prova di tastiera fisica o localizzazione globale dedotta.
+
+Admin PR121/122 sono integrate su `516b8181`, CI head/main SUCCESS. History v2
+è applicata una volta in TEST come `20261001235153`, registry149. Metadati/ACL
+esistenti, dati scoped e 2.074 eventi invariati; helper privato e hash verificati.
+Preflight reale positivo: 61.595 righe complessive, zero violazioni e nessun
+superamento risorse. L'apply v1 respinto resta distinto e non viene riscritto.
+
+Artefatti Android R-A07/R-A08 e iOS R-I06 installati e verificati. iOS conserva
+l'accesso; Android recupera automaticamente la sessione dopo la riparazione del
+DNS dell'emulatore mediante normale riavvio con gli stessi dati. Nessun nuovo
+login Google, reset, cambio DNS o ripristino di snapshot precedenti.
+I due recuperi dati falliscono invece realmente: HTTP500/SQL57014 nel calcolo
+del digest prezzi del checkpoint (iOS origin8.227ms, Android8.181ms). Nessuna
+nuova generazione accettata. Ottimizzazione Admin in esecuzione; limite8s invariato.
+
+Mac ancora bloccato al controllo UI: pending/logout/scadenza e picker restano
+NOT_RUN, con sblocco manuale già richiesto. Convergenza, misure residue, smoke
+combinato e telefono restano aperti. WECHAT-010 è EXECUTION; nessun DONE o
+readiness del pilot. Worker `bdd42368`, fixture e configurazione TEST invariati.
+
+## Checkpoint storico — 2026-10-01 23:22 UTC
 
 Mini PR45 integrata su `305e175f`, CI head e post-merge36935600832 SUCCESS;
 runtime v9 ancora invariato. Cinese, inglese e spagnolo: sette casi read-only

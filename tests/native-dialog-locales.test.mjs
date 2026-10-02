@@ -78,3 +78,107 @@ test("Spanish logout displays distinct valid retain/discard choices before chang
     Object.assign(globalThis, previous);
   }
 });
+
+test("a late logout decision cannot discard entries or clear a changed session or shop", async () => {
+  const previous = { wx: globalThis.wx, App: globalThis.App };
+  let definition;
+  globalThis.wx = { getStorageSync() {} };
+  globalThis.App = (value) => {
+    definition = value;
+  };
+  const file = require.resolve("../dist-test/miniprogram/app.js");
+  delete require.cache[file];
+  try {
+    require(file);
+    for (const transition of ["replacement", "expiry", "shop"]) {
+      for (const retain of [true, false]) {
+        let cleared = 0,
+          discarded = 0,
+          choose;
+        let session = { accountFingerprint: "account-a" };
+        const sessionStore = { generation: 1, load: () => session };
+        const a = {
+          ...definition,
+          locale: "en",
+          activeShop: { shop_id: "shop-a" },
+          imageClient: null,
+          sessionStore,
+          outbox: {
+            scopesForCurrentAccount: () => ["shop-a"],
+            pendingForCurrentShop: () => [{}],
+            discard: () => discarded++,
+          },
+          clearSessionContext: () => cleared++,
+        };
+        globalThis.wx.showModal = (options) => {
+          choose = () => options.success({ confirm: retain, cancel: !retain });
+        };
+        const pending = a.requestSignOut();
+        if (transition === "shop") a.activeShop = { shop_id: "shop-b" };
+        else {
+          session = transition === "replacement" ? { accountFingerprint: "account-b" } : null;
+          sessionStore.generation += 1;
+        }
+        choose();
+        await pending;
+        assert.equal(discarded, 0, `${transition}: the old decision cannot discard`);
+        assert.equal(
+          cleared,
+          0,
+          `${transition}: the old decision cannot clear the current session`,
+        );
+      }
+    }
+  } finally {
+    Object.assign(globalThis, previous);
+  }
+});
+
+test("session replacement during image discard cannot clear the replacement session", async () => {
+  const previous = { wx: globalThis.wx, App: globalThis.App };
+  let definition;
+  globalThis.wx = { getStorageSync() {} };
+  globalThis.App = (value) => {
+    definition = value;
+  };
+  const file = require.resolve("../dist-test/miniprogram/app.js");
+  delete require.cache[file];
+  try {
+    require(file);
+    let session = { accountFingerprint: "account-a" },
+      finishDiscard,
+      cleared = 0,
+      discarded = 0;
+    const sessionStore = { generation: 1, load: () => session };
+    const a = {
+      ...definition,
+      locale: "en",
+      activeShop: { shop_id: "shop" },
+      sessionStore,
+      imageClient: {
+        discardDurableAttempts: () =>
+          new Promise((resolve) => {
+            finishDiscard = resolve;
+          }),
+      },
+      outbox: {
+        scopesForCurrentAccount: () => ["shop"],
+        pendingForCurrentShop: () => [{}],
+        discard: () => discarded++,
+      },
+      clearSessionContext: () => cleared++,
+    };
+    globalThis.wx.showModal = (options) => options.success({ confirm: false, cancel: true });
+    const pending = a.requestSignOut();
+    await Promise.resolve();
+    assert.equal(discarded, 1, "the original scope discard started while authorized");
+    assert.equal(cleared, 0);
+    session = { accountFingerprint: "account-b" };
+    sessionStore.generation += 1;
+    finishDiscard();
+    await pending;
+    assert.equal(cleared, 0, "awaiting image cleanup cannot clear the newer session");
+  } finally {
+    Object.assign(globalThis, previous);
+  }
+});

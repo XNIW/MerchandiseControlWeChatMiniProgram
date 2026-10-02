@@ -216,3 +216,234 @@ pendinghelper26test/2reviewPASS ma0Save live. EXECUTION continua, nessun DONE.
 2026-10-01T22:28Z — WECHAT-010 ripresa: PR44/main dea3203 e sort3×150 SQL concordi; Android R-A06 restore Connected PASS, business recovery rifiutato. Diagnosi tre History ISO valide/storageintegro; delta Admin PR120 review2/2 e184+365pgTAP PASS, non applicato. Performance PR119/main4532831b CIverde e applyTEST20261001220355/registry148: metadati e fingerprint scoped invariati,2074eventi. Due pending tentativi zeroSave/intenti, originali preservati; Mac lock22:22. Search90 HTTP400 riprodotto, fix80UTF16non-split nelle tre liste,3regressioni e verify214PASS/review2APPROVED artifactcb298e27; integrazione e ritest pendenti. Nessun DONE o PASS globale.
 
 2026-10-01T23:22Z — WECHAT-010: PR45/main305e175f CIhead/postmergeSUCCESS; tre lingue×7letture concordi con SQL, italiano non concluso. Due errori di login senza sessione preservati; HomeRetry inerte riprodotto e corretto riusando signed_out/reset+messaggio,3regressioni e verify217PASS/review2APPROVED artifact172917cb, nooriginebackend/Tencentdedotta. HistoryPR120/mainb162f23d CIverde, applyrespintoatomicamente ACLguard; registry148/helperassente/funzioni/dati/eventi invariati. Solo guardACL in correzioneAdmin; nessun Retrynative o nuova scrittura business. Task EXECUTION.
+
+
+2026-10-02T00:27Z — WECHAT-010: Mini PR46/main07ff35c0 e runtime v10 verificati;
+login fallito seguito da successo sulla stessa Home, italiano7 letture SQL concordi,
+ricerca9 limiti Unicode PASS con oracle indipendenti (report SHA0a3844ba).
+Admin PR121/122/main516b8181 CI head/main SUCCESS; History v2 applicata una volta
+20261001235153/registry149, postcheck metadata/dati/eventi invariati e preflight
+zero violazioni. Native finali installati: iOS auth conservata, Android auth
+ripristinata dopo normale riavvio AVD per DNS guasto, nessun nuovo login/reset.
+Recovery iOS00:11:49 e Android automatico00:24:27 FAIL HTTP500/SQL57014 nel
+checkpoint prezzi, receipt iOSd6ba11df e log scoped conservati. Ottimizzazione
+Admin in corso; nessun PASS business globale. Mac UI bloccato, pending/picker
+non eseguiti. Task EXECUTION; fixture, Worker e scope invariati.
+
+## 2026-10-02 01:48 UTC — C04 autentico e checkpoint151
+
+Doppio tap Mini v10: una creazione/due prezzi/un audit/una ricevuta, UI/SQL
+concordi, outbox0;1093ms n1, nessun percentile/SLA. Cinque fixture originali
+immutate e sesta fixture propria conservata. Admin readback dopo Reload distinto
+dalla convergenza automatica ancora non accettata.
+Admin PR123/124 main2e236586 e CI head/main PASS; applicazioni TEST una volta
+20261002005414/20261002013745,registry151; metadati/ACL/dati invariati.
+Nuovo iOS Retry01:39:43→failed01:39:52.012612 HTTP500/SQL57014 nel SELECT
+integrità; nessun manifest/finalizzazione, bindingimmutato. Android150 FAIL
+conservato,151nonritentato. Profilatura richiesta completa in corso.
+Ricevuta safe150–151 SHAa291f9c655ee3bfb5c7f2622c77f6d699f9ee3692c3cd219711e3c69bfa9dcf3.
+Solo documentazione in questo checkpoint; nessun nuovo delta applicativo Mini.
+Conflitto/pending/immagini/convergenza/smoke/telefono restano aperti; EXECUTION.
+
+## 2026-10-02 03:05 UTC — pipeline152, recupero fallito e diagnosi cumulativa
+
+Admin PR125/main7bd490ba integrata dopo due review, gate locali e CI head/main
+verdi. SQL38e504d8 applicata una volta come20261002025317 (registry152).
+Postcheck30f8e5bc conferma tre prosrc/due prolang attesi e tutte le altre
+invarianti di metadati, dati ed eventi. Worker/runtime Mini e sei fixture invariati.
+Unico Retry iOS02:55:18→02:55:27.036767: HTTP500/SQL57014 nel SELECT prezzi418,
+origin8279/upstream8049; binding conservato, nessuna generazione o convergenza.
+Android152 NOT_RUN per evitare duplicato dello stesso errore condiviso.
+Ricevuta sanitizzata152 SHA256
+`f884bd7e9e4a9e23f5dce6ff7413aa08aa4144d9727877b2bf369a4eeeb4d06a`.
+Una query EXPLAIN read-only delle nove fasi:9230.271ms (preflight4209.257,
+prezzi2804.778). Non RPC autenticata né latenza app/SLA; guardie e runtime8s
+invariati. Risultato SHA256
+`a1629ab607e96ef599f7eb0031b59c000906829bb0319b31d0c83e6e37bf5029`.
+Difetto Admin distinto riprodotto isolatamente: marker perso con refresh rinviato;
+fix in verifica, nessun deploy o PASS live ancora. Mac02:42 bloccato; dialoghi e
+telefono restano esterni. Esecuzione continua; nessun DONE e nessuna produzione.
+
+## 2026-10-02 03:41 UTC — refresh Admin distribuito, ottimizzazione recovery in verifica
+
+Admin PR126/main74f1d3cc: CI head/main SUCCESS, due review, undici callback
+staging e undici guardie release PASS. Worker selettivo3521a945 distribuito una
+volta03:37:56; receipt `worker-admin-marker-deployment.json` SHA256
+`f2a0570444c4cc8f4ae45d4dea5bc45d394667a97a41dc6e9fa2f3984846401f`.
+Binding/runtime/settings e flag invariati. Reload Admin mantiene sessione/shop;
+non è un PASS di convergenza automatica. Mini v10 e sei fixture preservati.
+
+Registry152 e FAIL autentico iOS restano invariati. Due candidate diagnostiche
+read-only rendono lo stesso JSON preflight ma misurano8538.125/7935.051ms nelle
+nove fasi prima di auth/fence/assembly: NON applicate, nessun nuovo Retry.
+Receipts private `checkpoint-preflight-candidate-nine-phase-result.json`
+(SHA256 e23a165de7c9f2219bd1e801a1361e7083461f84a610533aeb13144a412d38b8)
+e `checkpoint-preflight-candidate-v2-nine-phase-result.json`
+(SHA256 a3345f4b0942dba5560401fddd59b71ac8f8808b9b0be5a7f6787e764db1d12c).
+Count split con indici esistenti e memo per SELECT in verifica, nessun nuovo DDL.
+Mac bloccato03:37; sblocco già richiesto. Stato EXECUTION; nessuna accettazione
+runtime o hardware aggiunta. Required verify dei nuovi soli documenti pendente.
+
+## 2026-10-02 04:02 UTC — candidato recovery v6, equivalenza TEST read-only
+
+V4 mantiene preflight e prezzi identici ma misura8469.353ms. V5 con memo dei
+testi regredisce localmente e viene scartata senza prova remota. V6 usa scalar
+JSON tipizzati e memo solo di numeri/timestamp: completo locale2579/2572→1869/1824ms,
+JSON identico; 360 vettori prezzi×4,288 bound×4 e14fallback PASS. Due review statiche.
+Unica prova TEST04:00:00–04:00:14: nove fasi6736.758ms, preflight2777.322,
+prezzi1629.313; entrambi i confronti originali fuori timing sono true.
+Receipt privato `checkpoint-preflight-candidate-v6-price-equality-result.json`
+SHA256 `4989217f54314a3676d20ef222d9cf4b1c24d9fac7530c685279158c1f7a3c9c`.
+Solo READ ONLY/ROLLBACK, nessuna funzione sostituita; registry152/Worker3521a945,
+sei fixture, Mini v10 e FAIL nativo precedenti invariati. Preparazione guardie
+runtime/fallback contro modifiche future ai contratti, non rollout o RPC PASS.
+Controllo Mac03:59 ancora bloccato. Verify Mini concluso04:02:34 PASS: 111TS+106MJS=217, governance/privacy/secret/typecheck/lint/build e diff-check PASS. Log privato `mini-doc-verify-20261002T0402.log`, SHA256 `c30cf86679e687cde2f03b237297ae41c5da2857e5289d3b794a34d2a9065499`. Build eseguita solo nel worktree; runtime primario v10 preservato.
+
+## 2026-10-02 04:48 UTC — recovery optimization applied TEST153, PR127 integrated
+
+Guarded SQL reviewed twice,561pgTAP/verify/Cloudflare and first-head CI PASS.
+Fresh before snapshot04:39:49 matches04:33:49 and guard passes. Exclusive intent
+precedes the single apply04:40:17; registry152→153, version20261002044017.
+Postcheck04:40:41 PASS, receipt SHA256
+`ca4d45469d3c9a04b3fd4d807fcfdc1ed52c38ccdcc124e3843b83f68d28f4ff`.
+Expected body MD5 and runtime contract verified; stored raw SQL MD5 matches.
+All existing metadata/ACL except expected bodies and protected data/events unchanged.
+Same PR127 aligns the service-generated filename with SQL bytes identical;
+two metadata reviews, final-head ac8a11b9 CI/Cloudflare PASS, main e0089365.
+Main CI36966129161/36966129129 pending. Worker3521 and Mini v10 unchanged.
+Native153 NOT_RUN; last authentic FAIL152 preserved. No client acceptance.
+Private stale runner pins updated to registry153/Worker3521, static reviewed;
+25 pure checks and authentic UI case still pending host release. Primary build
+untouched. Final Mini document checks will follow the next substantive checkpoint.
+
+## 2026-10-02 04:58 UTC — registry153 authentic iOS failure preserved
+
+PR127 main e0089365 postmerge CI36966129161/Cloudflare36966129129 SUCCESS.
+R-I06 binary4a708a47 unchanged, scope/auth UI confirmed, pending0; ordinary
+activation did not start recovery. One Retry04:53:59 yields first checkpoint200
+(origin7664/upstream7446ms), second500 (origin8965/upstream8849ms), SQL57014
+checkpoint line346 product aggregate. Terminal04:54:16.496144: verifiedfalse,
+didWorkfalse, binding unchanged, journal prepared/mirror pending present,
+wipeCommittedfalse; no active manifest/finalization. Ordinary terminate preserves
+pending. Android153 NOT_RUN because the backend failure is shared.
+Safe receipt native-checkpoint-registry153-safe-projection.json SHA256
+b5546e428b35e69f7300cf273dc558d048b6117d9172d8a7c6c851ae6ac4311d.
+All previous FAILs remain separate. No new Retry or reset; profiling resumes.
+Stale helper25purechecks PASS04:52, no business UI case executed.
+Maclocked04:56; no bypass. Mini v10, six fixtures and Worker3521 unchanged.
+
+## 2026-10-02 05:03 UTC — two-round read-only diagnostic, no new rollout
+
+Required Mini verify PASS at05:01:217tests (111TS+106MJS), governance/privacy/
+secret/typecheck/lint/build and diff-check; primary runtime remains v10.
+Log mini-doc-verify-20261002T0501.log SHA256
+ffaec464c304773d49400089a8bae8f167e2178fdd857d3a7de643c32af4684d.
+Registry153 two-round diagnostic reviewed twice and executed once05:03:04–20
+in READ ONLY repeatable snapshot, ROLLBACK. Actual preflight/max helpers and
+eight exact phase SELECTs; instrumentation local. Values/digests identical.
+First/second instrumented elapsed7860.676/4551.592ms; preflight3343.273/928.491ms,
+ownself2855.674/531.281ms. Products1236.499/1209.711 and prices1627.836/1633.345ms.
+This narrows investigation to initial preflight cost but does not prove planner
+or I/O cause or reproduce pooled authenticated RPCs. No new retry/DDL.
+Private diagnostic checkpoint153-two-round-result.json SHA256
+cb94bea0515d0c971cfadb6b6ccc10b269f286e61587c06d6c4e25bc38d080ab.
+
+## 2026-10-02 05:32 UTC — preflight initial execution cost narrowed
+
+Read-only planning diagnostic v1 matched8/11 known statements. A metadata-only
+representative query failed parsing before SELECT (42601); original retained.
+The one-parenthesis correction and revised boolean/NULL constant normalization
+matched all three missing source shapes. Cumulative counters alone were not
+used to infer per-round timings.
+
+The independently reviewed v2 wrapper (SHA256
+1fef194df92ab144828f4ff31de028048ecc22e52e8dd0bac39de37b7ac7dfc4) then ran once,
+two preflight calls in one repeatable READ ONLY transaction with ROLLBACK.
+Both returned61598rows/29701203bytes and no violations. All11 fixed statements
+matched, each with one call/plan per round; statsSince/reset/deallocation stable.
+First/second preflight2896.690/790.663ms; measured plan164.386/2.999ms and
+execution2455.831/711.037ms. Product bounds execution564.960/8.734ms, price
+bounds667.906/20.272ms; counts products142.801/2.885 and prices359.794/8.089ms.
+Product bytes425.607/416.894 and price bytes256.742/253.865ms were stable.
+Matched statements had zero shared-block reads; price-byte temp I/O was about
+10.5ms in both rounds. Executor startup remains to be attributed; these results
+do not prove the full authenticated RPC cause, nor a performance acceptance.
+No new migration, native Retry, timeout/auth change or business write.
+Result checkpoint153-planning-v2-result.json SHA256
+c9b957454ae1a848eebfa62d15a3672982f81be93251bf4fb23ca9b2b8b9a22f.
+
+## 2026-10-02 06:31 UTC — candidate and measurement preparation
+
+Registry153 remains the last applied TEST baseline and authentic iOS recovery
+FAIL. Serial-planner read-only preflight still took2718.873/809.134ms; the four
+independently EXPLAINed queries used no Gather, had zero shared reads and scan
+startup under2ms. Dynamic plans are not the static SPI plans. No persistent
+GUC, timeout, auth or business change follows from these diagnostics.
+
+Admin sole writer prepared bounded count/metadata scans and exact product-byte
+memoization, source SHA2569a09b8106aa8dbb3f86365ef964cc0e6a204fc8e38440b660716ebb179f04e27.
+Static reviews found no SQL contract defect. The first local harness exceeded
+its120s process deadline and DROP masked the cause; original log is retained.
+The harness now preserves primary and cleanup errors separately. Second run
+passed561pgTAP but the original153 checkpoint exceeded runtime8s before the
+candidate was invoked. This is no candidate PASS or FAIL. Process times on
+fresh psql connections are not warm-backend measurements.
+
+Host inspection found root Android5556 still running with substantial CPU and
+root iOS459 booted. Normal shutdown completed06:29:28UTC: Android serial/PID
+absent and iOS459Shutdown; userdata preserved. Another TASK144 iPhone17 was
+left untouched. Native lane5554/FC4 had already released its own devices.
+Targeted local run began06:30:11, preserving561PASS and the8s candidate budget;
+baseline120s is an explicitly diagnostic equivalence oracle. No new TEST apply,
+Worker deploy, native Retry or catalog mutation has occurred.
+
+Private Mini performance helper66439cfca54060ba393520de0317d931aeabc5ba5fec11f8457276b2f3633068
+and tests35ae7646b816b29f11f99544832627d77c57dac90f7332d3633332fd5df41e3f
+passed24pure tests and two static reviews. Fixed unbounded SDK waits,
+premature sample acceptance, drafts without dirty flags and corrupt scoped
+indices. Exact before/after catalog oracle preserves timestamp microseconds.
+Cold means fresh DevTools AppService;5cold/10warm planned, p95null below20.
+Runtime collection remains NOT_RUN pending host release. This preparation is
+not a performance, convergence, physical-device or pilot acceptance.
+
+
+## 2026-10-02T15:18Z — bounded candidate TEST154 e recovery in corso
+
+Admin PR128 head2e7237f4 CI completa verde e due review immutabili PASS. Singolo
+apply20261002150909/postcheck15:09:43 PASS: solo due prosrc, helper/precedenti153
+registry/metadataACL/dati invariati. Locali561pgTAP e oracle120s PASS, FAIL8s
+preservati. R-I06 installata4a708a47, boot normale459; pending153 intatto prima
+attivazione, bootstrap automatico15:11 con nuova staging in crescita. XCTest
+Options exit65 perché privacy gate, nessun nuovo Retry o acceptance anticipata.
+Serie Mini cold07:00 setupFAIL,0login/0misure/0mutazioni,4NOT_RUN; probe separato
+read-only pulito generation0. Helperv11 stage/classificazione36test puri PASS,
+review/runtime pendenti. Nessuna nuova fixture, Worker o produzione modificati.
+
+2026-10-02 15:51 UTC — WECHAT-010 EXECUTION: recovery iOS154 terminale locale
+nonMonotonicOrDuplicateID15:20:24.8923988 dopo checkpoint A/B HTTP2005138/4694ms
+origin. Sei rawledger61598righe ordinate/uniche; baseline SQLite valid/appliedAt.
+Binding/pending preservati, manifest/final assenti, app15:23/device45915:30 shutdown
+normali. Writer iOS riferisce RED reale257 e GREEN60/0/0 con sola comparator lexical;
+nuovo artefatto e recovery pending. PR128 final7232637b CI3workflow SUCCESS/aperta.
+Mac sbloccato, Network accessibile; login Mini fresco15:50 PASS, zero businesswrite.
+Helper C04/Worker refresh in review; performance NOT_RUN durante build nativa.
+Nessun apply/deploy/retry aggiuntivo, nuova fixture, reset, produzione o DONE.
+
+## 2026-10-02 16:39 UTC — Account offline, C04 e recovery154
+
+WECHAT-010 resta EXECUTION. Mini runtime v10/configurazione e sei fixture invariati.
+Prova autentica senza scritture: Account offline con sessione valida nasconde Sign out;
+rete ripristinata Online. Fix locale con guardia sessione e dialogo logout tardivo:
+verify219PASS, review/integrazione/ritest runtime pendenti.
+C04 Save Admin respinto dal browser per stock1.25/step1: nessun effetto backend;
+conflitto NOT_RUN. PR129 stepany ha CI verde, build selettiva TEST in preparazione.
+Android154: tre retry automatici falliti (due count mismatch, uno HTTP500/SQL57014
+checkpoint line910); quarto interrotto normalmente16:35, pending/binding conservati.
+iOS154 resta FAIL locale; nuova build R-I07 verificata ma CI13 fallita, non installata.
+Nessuna convergenza completa, misura prestazionale nuova, DONE o pilot attestati.
+
+Evidenze private: offline-account-probe-f891c630, stale-revision-v10-8a2447cc,
+android154-root(after-stopped-safe-db-projection/backend-safe-log-projection);
+verifiche e limiti riportati nel report canonico. Nessuna credenziale o raw auth
+conservata. Correzione Mini in rootworktree, Admin sole writer separato, native
+coordinate nella chat autorizzata. Nessun DONE autoapprovato.

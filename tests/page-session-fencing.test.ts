@@ -8,6 +8,7 @@ import { assert, assertEqual } from "./fakes";
 
 interface Deferred<Value> {
   readonly promise: Promise<Value>;
+  reject(error: Error): void;
   resolve(value: Value): void;
 }
 
@@ -18,11 +19,17 @@ interface RegisteredPage {
 
 function deferred<Value>(): Deferred<Value> {
   let resolver: ((value: Value) => void) | null = null;
-  const promise = new Promise<Value>((resolve) => {
+  let rejecter: ((error: Error) => void) | null = null;
+  const promise = new Promise<Value>((resolve, reject) => {
     resolver = resolve;
+    rejecter = reject;
   });
   return {
     promise,
+    reject(error) {
+      assert(rejecter !== null, "deferred rejecter exists");
+      rejecter(error);
+    },
     resolve(value) {
       assert(resolver !== null, "deferred resolver exists");
       resolver(value);
@@ -212,6 +219,7 @@ test("history and account pages clear old scope and reject late session/shop/cac
     assertEqual(historyShopIds[3], shopB.shop_id, "new request is bound to shop B");
 
     const accountSession = { active: true, generation: 1 };
+    const accountSessionListeners = new Set<() => void>();
     const accountCaches = { generation: 1 };
     const accountRequests: Deferred<AccountProfile | null>[] = [];
     const shopsRequests: Deferred<readonly AuthorizedShop[]>[] = [];
@@ -253,6 +261,10 @@ test("history and account pages clear old scope and reject late session/shop/cac
               }
             : null;
         },
+        subscribe(listener: () => void) {
+          accountSessionListeners.add(listener);
+          return () => accountSessionListeners.delete(listener);
+        },
       },
       setLocale() {},
     };
@@ -292,6 +304,67 @@ test("history and account pages clear old scope and reject late session/shop/cac
     );
     assertEqual(selectedShops.length, 1, "stale account request cannot select its old shop");
     assertEqual(selectedShops[0], shopB.shop_id, "only the replacement shop is selected");
+
+    invoke(accountPage, "onShow");
+    assertEqual(accountPage.data.signedIn, true, "logout remains available during profile loading");
+    accountRequests[2]?.reject(new Error("offline"));
+    shopsRequests[2]?.resolve([shopB]);
+    await settleAsyncPageUpdate();
+    assertEqual(
+      accountPage.data.account,
+      null,
+      "failed profile request exposes no cached identity",
+    );
+    assertEqual(accountPage.data.loading, false, "offline profile loading ends");
+    assertEqual(accountPage.data.signedIn, true, "offline profile failure preserves local logout");
+
+    invoke(accountPage, "onShow");
+    accountSession.generation += 1;
+    for (const listener of accountSessionListeners) listener();
+    assertEqual(
+      accountPage.data.signedIn,
+      true,
+      "replacement session keeps local logout available",
+    );
+    accountRequests[3]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
+    shopsRequests[3]?.resolve([shopB]);
+    await settleAsyncPageUpdate();
+    assertEqual(accountPage.data.account, null, "replacement rejects the old profile response");
+
+    invoke(accountPage, "onShow");
+    invoke(accountPage, "onHide");
+    accountRequests[4]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
+    shopsRequests[4]?.resolve([shopB]);
+    await settleAsyncPageUpdate();
+    assertEqual(
+      accountPage.data.account,
+      null,
+      "hidden page rejects the outstanding profile response",
+    );
+
+    invoke(accountPage, "onShow");
+    assertEqual(accountSessionListeners.size, 1, "onShow replaces the session subscription");
+    accountSession.active = false;
+    accountSession.generation += 1;
+    for (const listener of accountSessionListeners) listener();
+    assertEqual(accountPage.data.signedIn, false, "revocation hides logout immediately");
+    assertEqual(accountPage.data.account, null, "revocation clears the displayed profile");
+    assertEqual(
+      pageArray<AuthorizedShop>(accountPage, "shops").length,
+      0,
+      "revocation clears shops",
+    );
+    accountRequests[5]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
+    shopsRequests[5]?.resolve([shopB]);
+    await settleAsyncPageUpdate();
+    assertEqual(accountPage.data.account, null, "late response cannot restore revoked profile");
+    assertEqual(accountPage.data.signedIn, false, "late response cannot restore revoked logout");
+    invoke(accountPage, "onHide");
+    assertEqual(accountSessionListeners.size, 0, "hidden page releases the session subscription");
+    invoke(accountPage, "onShow");
+    assertEqual(accountPage.data.signedIn, false, "signed-out onShow does not expose logout");
+    invoke(accountPage, "onUnload");
+    assertEqual(accountSessionListeners.size, 0, "unloaded page releases the session subscription");
   } finally {
     if (previousGetApp === undefined) delete globals.getApp;
     else globals.getApp = previousGetApp;
