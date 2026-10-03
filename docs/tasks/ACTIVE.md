@@ -1,6 +1,31 @@
 # Active task
 
-## Checkpoint corrente — 2026-10-02 16:39 UTC
+## Checkpoint corrente — 2026-10-03 03:20 UTC
+
+WECHAT-010 resta **EXECUTION**, con gate locali consegnati e accettazione autenticata
+ancora aperta. Mini PR47/sorgente applicativa `f68afed9`, runtime TEST v11/102 file, verify219 e
+CI post-merge37038908172 SUCCESS; configurazione protetta invariata. Admin PR129
+è integrata (`553c4568`); TEST registry155 e Worker `22107a6f` sono separati dalla
+versione di main. PR128/130 restano aperte con CI verde, in attesa dell'accettazione.
+Android corrente: 1110 test (1103 PASS, 7 SKIP noti), build/lint PASS e cinque test
+Compose effettivamente PASS; TEST APK `3ccf651e` verificato. Android PR14 è
+integrata normalmente su main `04f6fe26`, tree identico all’head `b440c4f2`;
+CI head37090849273 e main37091905186 SUCCESS, con i risultati effettivi
+di tutti i 1110 casi e le sette esclusioni invariati tra le due CI.
+iOS PR14/main `8dfbf9a0`, CI37084694560 SUCCESS: 1464 test (1428 PASS, 36 SKIP noti).
+Le build native correnti non hanno ancora un nuovo recovery autenticato accettato.
+
+Conflitto C04, logout offline v11/pending, convergenza quattro-client, misure
+residue e telefono restano distinti. CSV iOS03 è una prova interrotta dal
+supervisore, senza PASS applicativo o campioni prestazionali accettati. PSS
+Android264 è preparato/revisionato, **NOT_RUN e senza GO**: il processo Studio
+è presente ma il controllo JVM non lo enumera. Sblocco/rete DevTools Online,
+accesso Dashboard TEST e riapertura normale Studio sono richiesti all'utente;
+non viene aggirata alcuna autenticazione o restrizione OS. Nessun DONE o pilot.
+
+Dettagli e matrice39 nel [report canonico](../testing/WECHAT-010-REPORT.md).
+
+## Checkpoint storico — 2026-10-02 16:39 UTC
 
 WECHAT-010 resta EXECUTION. Mini runtime v10/configurazione e sei fixture invariati.
 Prova autentica senza scritture: Account offline con sessione valida nasconde Sign out;

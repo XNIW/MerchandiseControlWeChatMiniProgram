@@ -447,3 +447,56 @@ android154-root(after-stopped-safe-db-projection/backend-safe-log-projection);
 verifiche e limiti riportati nel report canonico. Nessuna credenziale o raw auth
 conservata. Correzione Mini in rootworktree, Admin sole writer separato, native
 coordinate nella chat autorizzata. Nessun DONE autoapprovato.
+
+
+## 2026-10-03 03:20 UTC — consolidamento cross-repo e residui espliciti
+
+WECHAT-010 resta **EXECUTION**, con gate locali consegnati e accettazione autenticata
+ancora aperta. Mini PR47/sorgente applicativa `f68afed9`, runtime TEST v11/102 file, verify219 e
+CI post-merge37038908172 SUCCESS; configurazione protetta invariata. Admin PR129
+è integrata (`553c4568`); TEST registry155 e Worker `22107a6f` sono separati dalla
+versione di main. PR128/130 restano aperte con CI verde, in attesa dell'accettazione.
+Android corrente:1110 test (1103 PASS,7 SKIP noti), build/lint PASS e cinque test
+Compose effettivamente PASS; TEST APK `3ccf651e` verificato. Android PR14 è
+integrata normalmente su main `04f6fe26`, tree identico all’head `b440c4f2`;
+CI head37090849273 e main37091905186 SUCCESS, con i risultati effettivi
+di tutti i 1110 casi e le sette esclusioni invariati tra le due CI.
+iOS PR14/main `8dfbf9a0`, CI37084694560 SUCCESS:1464 test (1428 PASS,36 SKIP noti).
+Le build native correnti non hanno ancora un nuovo recovery autenticato accettato.
+
+Conflitto C04, logout offline v11/pending, convergenza quattro-client, misure
+residue e telefono restano distinti. CSV iOS03 è una prova interrotta dal
+supervisore, senza PASS applicativo o campioni prestazionali accettati. PSS
+Android264 è preparato/revisionato, **NOT_RUN e senza GO**: il processo Studio
+è presente ma il controllo JVM non lo enumera. Sblocco/rete DevTools Online,
+accesso Dashboard TEST e riapertura normale Studio sono richiesti all'utente;
+non viene aggirata alcuna autenticazione o restrizione OS. Nessun DONE o pilot.
+
+Unico aggiornamento consolidato di report/matrice39/ACTIVE/task/Master Plan/README;
+storico e FAIL conservati. Nessuna modifica applicativa/configurazione TEST,
+nuova mutazione, reset, cleanup fixture, deploy o DONE in questo batch.
+Le ricevute e la PR di questa revisione documentale sono distinte dalle
+accettazioni runtime; il riferimento applicativo/runtime Mini resta f68/v11.
+Nessuna build viene rinominata dopo un commit di soli Markdown.
+
+Verifica del consolidamento: `npm run verify` exit0,111 TS +108 JS =219 PASS,
+0 FAIL/SKIP; governance/privacy/secret scan/typecheck/lint/build PASS,
+`git diff --check` PASS. Node locale osservato 26.10.0; la CI obbligatoria
+mantiene il pin repository26.7.0. Non è dichiarata una nuova esecuzione locale
+su26.7.0. Log privato SHA2560181754f80903531c043e6906afbc2accbbe4fbd35a2a64724d24d9eed9d2dd9.
+Review documentale75f4c23f APPROVED_STATIC sul primo diff ee8c3d60;
+il suo limite non comprende gli esiti Git/CI Android successivi.
+
+Inventario hardware03:02:59/03:04:20 SDK read-only: Android: 0 dispositivi fisici online;
+Apple: 1 tunnel connesso uguale al SIM459,24 disconnessi/2 stati non classificati.
+Nessun telefono WeChat/shop TEST accettato. Propri 3 gruppi metadata terminati,
+JSON temporanei eliminati; nomi/UDID/rawstream non conservati.
+Ricevute private0907586b/f8aeae02, nessuna app, sessione o business data toccati.
+
+CI Android main effettiva37091905186: tutti12 step PASS,73 XML/1110 ID e stati
+uguali alla head approvata,1103 PASS/7 SKIP/0 FAIL o ERROR; lint54 warning/0 errori
+byte-identico alla head,25 avvisi di disponibilità conservati e0 nuovi warning.
+Review salvata7c4dba6579e8457383ba523846ebc99dccf201d4dcba87b0cc439087d210dc4c;
+readback11c8d4761705b96934093b2b7e7eeca79a5aebdc8435ba3edcd8ef4147923ea5:
+main04f6fe26/treeedd56701 uguale all’headb440c4f2,13 file pubblici approvati,
+Git pulito. Nessun nuovo install/READY/recovery/performance o GO.

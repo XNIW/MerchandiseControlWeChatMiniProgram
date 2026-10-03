@@ -14,7 +14,76 @@ con modifiche locali preesistenti preservate. Build correnti da riconciliare pri
 dei nuovi PASS cross-client. Runtime TEST/configurazione e fixture sono nel packet
 privato già autorizzato; nessuna credenziale nel report.
 
-## Checkpoint corrente — 2026-10-02 16:39 UTC
+## Checkpoint corrente — 2026-10-03 03:20 UTC
+
+WECHAT-010 resta **EXECUTION**, con gate locali consegnati e accettazione autenticata
+ancora aperta. Mini PR47/sorgente applicativa `f68afed9`, runtime TEST v11/102 file, verify219 e
+CI post-merge37038908172 SUCCESS; configurazione protetta invariata. Admin PR129
+è integrata (`553c4568`); TEST registry155 e Worker `22107a6f` sono separati dalla
+versione di main. PR128/130 restano aperte con CI verde, in attesa dell'accettazione.
+Android corrente: 1110 test (1103 PASS, 7 SKIP noti), build/lint PASS e cinque test
+Compose effettivamente PASS; TEST APK `3ccf651e` verificato. Android PR14 è
+integrata normalmente su main `04f6fe26`, tree identico all’head `b440c4f2`;
+CI head37090849273 e main37091905186 SUCCESS, con i risultati effettivi
+di tutti i 1110 casi e le sette esclusioni invariati tra le due CI.
+iOS PR14/main `8dfbf9a0`, CI37084694560 SUCCESS: 1464 test (1428 PASS, 36 SKIP noti).
+Le build native correnti non hanno ancora un nuovo recovery autenticato accettato.
+
+Conflitto C04, logout offline v11/pending, convergenza quattro-client, misure
+residue e telefono restano distinti. CSV iOS03 è una prova interrotta dal
+supervisore, senza PASS applicativo o campioni prestazionali accettati. PSS
+Android264 è preparato/revisionato, **NOT_RUN e senza GO**: il processo Studio
+è presente ma il controllo JVM non lo enumera. Sblocco/rete DevTools Online,
+accesso Dashboard TEST e riapertura normale Studio sono richiesti all'utente;
+non viene aggirata alcuna autenticazione o restrizione OS. Nessun DONE o pilot.
+
+Questa è la matrice autorevole corrente di39 casi. Le tabelle e i checkpoint
+successivi sono storici e non attestano lo stato corrente. Dettagli, integrazione,
+metodi prestazionali e dipendenze nel [report canonico](WECHAT-010-REPORT.md).
+
+| ID | Requisito | Repository | Stato attuale | Evidenza/build | Azione mancante | Accettazione |
+|---|---|---|---|---|---|---|
+| A01 | Pairing e login personale distinto | Mini/Admin | PASS storico preservato | Pairing/login personale autentici; mapping invariato | Nessun nuovo pairing | Identità canonica e login distinto |
+| A02 | Sessione attuale e rientro dopo scadenza | tutti | PASS login autentici storici; expiry pending NOT_RUN | Mini v11 login/scope verificati nei rispettivi momenti; prepare A03 scaduto21:16:58 senza logout | Sessione nuova e scadenza reale durante pending | Scope esatto e margine sessione sufficiente |
+| A03 | Logout/foreground con pending conserva/elimina | Mini | FAILv10 storico; fix integrato; runtimev11 NOT_RUN | PR47/f68/219 e v11 installata; prepare0observe/0logout, UI manuale non disponibile | Online/sessione nuova, Offline reale, conserva/elimina e rientro ordinario | Consenso rispettato, pending persistito o eliminato esplicitamente |
+| A04 | Cambio account/shop, cache e callback tardive | tutti | PASS isolato; runtime cross-client NOT_RUN | Mini fences e native scope/cancellation/restore guard PASS | Cambio contesto effettivamente autorizzato, callback/cache/outbox osservate | Zero invii o applicazioni tardive fuori scope |
+| B01 | Home e vendite readonly, ricerca/dettaglio | Mini/Admin | PASS autentico preservato | 17scenari storici attribuibili ai byte invariati | Preservare le prove | Valori e identità concordi con SELECT |
+| B02 | Filtri/sort/pagine/errori vendite residui | Mini | PASS isolato/parziale; multipagina reale NOT_RUN | Quattro lingue/30giorni/empty;100+1 isolato | Paging reale solo se dataset esistente idoneo; niente scritture finanziarie | Nessuna mutazione finanziaria; pagine e filtri coerenti |
+| C01 | Catalogo CRUD e ciclo archivia/ripristina | Mini/Admin | PASS autentico preservato | 13 CRUD/lifecycle originari e cinque fixture | Preservare ID/revisioni/readback | Identità confermate dal server, readback esatto |
+| C02 | Fornitori/categorie rinomina e riassegnazione | Mini/Admin | PASS autentico preservato | Rinomina/riassegnazione e riferimenti verificati | Preservare prove | Riferimenti attivi corretti e tombstone coerenti |
+| C03 | Ricerca/paging catalogo e relazioni | Mini | PASS DevTools campionato | Nove limiti Unicode, sette letture/lingua, paging7×50 e sort3×150 concordi SQL | Nessun claim intero dataset/telefono | Nessun duplicato/omissione; contesto stabile |
+| C04 | Duplicati, double tap, revision conflict | Mini/Admin | Doubletap PASS; restoration limitata PASS; nuovo stale NOT_RUN | Un solo ripristino Admin21:14:02.023448; helperv14/48pure/review statici, nessun case live | Un Admin Save e un Mini stale Save, draft preservato e Reload latest nativo | Nessuna sovrascrittura o duplicazione involontaria |
+| C05 | Prezzi CLP/frazioni/legacy e History multipagina | Mini/Admin | PASS isolato/readback; multipagina runtime NOT_RUN | CLP/frazioni/legacy,185eventi isolati, quattro lingue/SQL | History multipagina solo con dati disponibili | Valore persistito invariato; ordinamento e audit esatti |
+| D01 | Upload/sostituzione/rimozione DevTools | Mini/Admin | PASS DevTools autentico preservato | Upload camera/sostituzione galleria/rimozione osservati | Preservare limiti DevTools | Versioni e primaria corrispondono alla UI |
+| D02 | Picker/anteprima annullati e file temporanei | Mini | NOT_RUN residuo runtime | Regressioni/preview diagnostiche riconciliate | Picker/preview cancel e gestione file temporanei nel runtime | Zero intent involontari e nessun file necessario perso |
+| D03 | Upload interrotto/ripreso e identità operazione | Mini/Admin | NOT_RUN runtime | Replay/finalize isolati PASS | Interruzione/ripresa autorizzata e riconciliazione senza duplicare intent | Stessa key/payload; un solo effetto finale |
+| D04 | Cache immagini e miniatura cross-client | tutti | NOT_RUN quattro-client | Nessuna convergenza immagini autentica completa | Un ciclo condiviso con destinatari pronti, accorpato alle misure | Nessuna vecchia immagine dopo invalidazione prevista |
+| D05 | Cleanup versioni storiche/Storage | Admin | PASS autentico/readback155 preservato | 19:15:37:3versioni complete,0primarie, metadata scoped0oggetti/6path e0extra | Nessuna nuova cancellazione; non dedurre download o cross-client | Manifest esatto, primaria nulla, versioni/audit conservati |
+| D06 | Scadenza URL immagine/rinnovo limitato | Mini/Admin | NOT_RUN runtime | Rinnovo/scope/version fence isolati | Scadenza reale di URL corrente e rinnovo bounded | Rinnovo bounded, versione corrente, nessuna applicazione tardiva |
+| E01 | Offline→online stesso modulo | Mini | PASS autentico preservato | Stesso form Saved/outbox0/History7→8 | Preservare prova | Una mutazione causale e feedback coerente |
+| E02 | Riavvio con pending e rete intermittente | Mini | NOT_RUN runtime | Pending helperv14/41pure distinto da C04; nessun nuovo Save | Dopo C04 accettato: retain/logout/restart/rientro sullo stesso intent | Pending durevole, invio automatico e zero duplicati |
+| E03 | Scadenza sessione durante recovery | Mini | NOT_RUN pending runtime | Prepare A03 scaduto non prova expiry con pending | Scadenza reale900s senza TTL esteso; rientro ordinario | Nessuna mutazione fuori sessione; rete ripristinabile |
+| E04 | Readback negato/temporaneo, errore definitivo | Mini/Admin | PASS isolato; fault runtime NOT_RUN | Readback negato/temporaneo/definitivo differenziati | Fault autentico riproducibile senza bypass e senza falso Saved | Mai falso Saved o perdita draft/pending |
+| E05 | Nuove modifiche sul modulo durante recovery | Mini | PASS modello; widget/runtime NOT_RUN | Pending41/C04v14/48 sono suite diverse, non widget acceptance | Nuovo input durante pending e dopo completion osservati | Risposte vecchie non sovrascrivono input nuovo |
+| F00 | Build native corrente, scope e recovery | Android/iOS | Nuovi gate nativi PASS; vecchi FAIL autentici preservati; ritest NOT_RUN | Android1110/Compose5/TEST3cc/main04f6CI SUCCESS; iOS1464/signed2783/main8dfCI SUCCESS | Build correnti/sessione/scope e recovery terminale durevole su target preservati | Autenticazione valida, recovery concluso e dati scoped |
+| F01 | Mini → Admin/Android/iOS automatico | tutti | NOT_RUN quattro-client completo | Mini/SQL creazione storica; ReloadAdmin manuale distinto | Dopo F00: origine Mini e tre destinatari automatici | Stesso ID/revisione senza refresh manuale |
+| F02 | Admin → Mini/Android/iOS automatico | tutti | NOT_RUN quattro-client completo | Nessuna prova completa corrente | Origine Admin e destinatari automatici | Stesso ID/campi, outbox coerente |
+| F03 | Android → Mini/Admin/iOS automatico | tutti | NOT_RUN quattro-client completo | Nuovi gate Android isolati PASS | Origine Android dopo READY, propagazione automatica | Persistenza e propagazione automatiche |
+| F04 | iOS → Mini/Admin/Android automatico | tutti | NOT_RUN quattro-client completo | Nuovi gate iOS isolati/mainCI PASS | Origine iOS dopo READY, lifecycle/tombstone dove autorizzati | Persistenza e propagazione automatiche |
+| F05 | Foreground/reconnect/eventi mancanti e pagine | tutti | PASS isolati aggiornati; runtime cross-client NOT_RUN | Continuation/reopen/disk-backed native e canonical verdi | Foreground/reconnect/catch-up autentici dopo F00 | Nessuna perdita eventi; stesso clock osservatore |
+| F06 | Eventi duplicati/riordinati/concorrenza/tombstone | tutti | PASS isolati; runtime cross-client NOT_RUN | Duplicati/riordino/tombstone Mini e guardie native verdi; RED conservati | Idempotenza/concorrenza/tombstone autentici durante F01–F04 | Idempotenza, conflitti espliciti, nessuna ricomparsa |
+| G01 | Cinque icone e catalogo quattro lingue | Mini | PASS DevTools storico; assetv11 attribuibili | Cinque tab/10PNG nel manifest102 file; layout/catalogo quattro lingue storici | Nessun full-app/telefono dedotto | Titoli/tab/testi leggibili, prezzo contenuto |
+| G02 | Altre schermate/dialoghi/errori quattro lingue | Mini | PASS storico parziale; dialoghi residui NOT_RUN | Sales quattro lingue e contenuti/titoli storici; Accountv11 offline non accettato | Account/pending/conflitto/errori con cambio lingua concluso e ritorno zh-Hans | Cambio lingua completato; nessun testo troncato |
+| P01 | Catalogo apertura/navigazione/ricerca/paging | Mini | Misure storiche parziali; residui NOT_RUN | 20warm/10search/6paging e due HTTP400 preservati | Cold/cache/sort e serie attribuibili alla versione; nessun SLA inventato | Inizio/fine app espliciti; soglie canoniche o nessun PASS SLA |
+| P02 | Save online e ripresa outbox | Mini | Save singolo osservato; serie/outbox NOT_RUN | 1093ms n1 inclusi SDK/poll75ms, SQL escluso | Misure accorpate ai Save/pending autorizzati, niente write di warmup | p50/p95 solo con n adeguato, fallimenti inclusi |
+| P03 | Convergenza quattro client | tutti | NOT_RUN | Nessun campione quattro-client autentico | Misurare submit→ultimo readback con clock osservatore coerente | Clock unico e nessun refresh artificiale |
+| P04 | Upload/sostituzione/visualizzazione immagine | Mini/Admin | NOT_RUN | Vecchie durate includevano picker | Misure rete/UI durante D03/D04 separate dal coordinamento picker | Payload/ambiente dichiarati e errori conteggiati |
+| P05 | Login e prima Home | Mini/Admin | FAIL setup cold storico; nuova serie NOT_RUN | Login singoli13.419s/7.964s e setupFAIL preservati | Cold/warm distinti, errori inclusi; niente p95 da n1 | Metodo e campioni espliciti; nessun percentile da n=1 |
+| H01 | Telefono fisico WeChat/hardware/lifecycle | Mini | BLOCKED_EXTERNAL hardware | SDK03:02/04: Android: 0 dispositivi fisici online; unico tunnel Apple connesso coincide con SIM459;2 stati non classificati, nessun WeChat/TEST fisico validato | Owner utente: collegamento telefono, nuova verifica WeChat/shop TEST | Camera/galleria/permessi/rete reali; nessun PASS simulato |
+| I01 | Integrazione e smoke combinazione finale | tutti modificati | Main/CI Mini e nativi verificati; Admin128/130 e smoke finale aperti | Mini47/f68; Android14/main04f6 e CI37091905186; iOS14/main8df e CI37084694560 SUCCESS; Admin129/553c/Worker221/registry155 | Dopo prerequisiti e accettazione backend: integrazione Admin residua, smoke autentico finale | origin/main e runtime TEST riconducibili ai sorgenti |
+| I02 | Cleanup fixture run e report finale | Mini/Admin | NOT_RUN finale | Diagnosi e sei fixture preservate; D05 PASS | Dopo accettazione/readback: soli cleanup previsti e chiusura/review finale | Nessun oggetto estraneo o diagnostico cancellato |
+
+## Checkpoint storico — 2026-10-02 16:39 UTC
 
 WECHAT-010 resta EXECUTION. Mini runtime v10/configurazione e sei fixture invariati.
 Prova autentica senza scritture: Account offline con sessione valida nasconde Sign out;

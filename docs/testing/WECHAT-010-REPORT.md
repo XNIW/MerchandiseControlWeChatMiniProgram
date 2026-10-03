@@ -1,6 +1,167 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Checkpoint corrente — 2026-10-02 16:39 UTC
+## Checkpoint corrente — 2026-10-03 03:20 UTC
+
+WECHAT-010 resta **EXECUTION**, con gate locali consegnati e accettazione autenticata
+ancora aperta. Mini PR47/sorgente applicativa `f68afed9`, runtime TEST v11/102 file, verify219 e
+CI post-merge37038908172 SUCCESS; configurazione protetta invariata. Admin PR129
+è integrata (`553c4568`); TEST registry155 e Worker `22107a6f` sono separati dalla
+versione di main. PR128/130 restano aperte con CI verde, in attesa dell'accettazione.
+Android corrente: 1110 test (1103 PASS, 7 SKIP noti), build/lint PASS e cinque test
+Compose effettivamente PASS; TEST APK `3ccf651e` verificato. Android PR14 è
+integrata normalmente su main `04f6fe26`, tree identico all’head `b440c4f2`;
+CI head37090849273 e main37091905186 SUCCESS, con i risultati effettivi
+di tutti i 1110 casi e le sette esclusioni invariati tra le due CI.
+iOS PR14/main `8dfbf9a0`, CI37084694560 SUCCESS: 1464 test (1428 PASS, 36 SKIP noti).
+Le build native correnti non hanno ancora un nuovo recovery autenticato accettato.
+
+Conflitto C04, logout offline v11/pending, convergenza quattro-client, misure
+residue e telefono restano distinti. CSV iOS03 è una prova interrotta dal
+supervisore, senza PASS applicativo o campioni prestazionali accettati. PSS
+Android264 è preparato/revisionato, **NOT_RUN e senza GO**: il processo Studio
+è presente ma il controllo JVM non lo enumera. Sblocco/rete DevTools Online,
+accesso Dashboard TEST e riapertura normale Studio sono richiesti all'utente;
+non viene aggirata alcuna autenticazione o restrizione OS. Nessun DONE o pilot.
+
+### Difetti corretti, con limiti delle prove
+
+- Mini Account nascondeva Sign out se il GET del profilo falliva offline pur con
+  sessione valida. Il fix usa la sessione in memoria e invalida callback su
+  revoca/hide; il dialogo pending ricontrolla generation/fingerprint/shop prima
+  del clear. PR47/219 test/CI e installazione v11 sono PASS; A03 offline/logout
+  autentico del nuovo codice è NOT_RUN. Il prepare precedente è scaduto senza logout.
+- Admin rifiutava nel browser stock1.25 per step1 prima della richiesta server.
+  PR129 introduce stepany; merge/CI e Save Admin autentico1.25 sono verificati.
+  La restituzione dei codici legacy mantiene ora maiuscole/minuscole: SQL
+  `20261002180757`/registry155,177 controlli PostgreSQL e postcheck invarianti PASS.
+  Non viene dedotta dal SQL una convergenza nativa. PR128 bounded product bytes e
+  PR130 conservano CI verdi; merge e accettazione finale restano aperti.
+- Android separa il ledger canonico dei prezzi dal sottoinsieme materializzabile
+  con parent provatamente tombstoned e conserva la prova atomica per i drain
+  incrementali ordinari. Il nuovo delta aggiunge una diagnostica di checkpoint
+  opzionale e corregge la cancellazione delle flight: `NonCancellable`/join attende
+  il vero finally prima di rimuovere la registrazione. I test rossi originali restano
+  conservati. Canonical1110 e Compose5 sono verdi; non provano F00/F01–F06 autentici.
+- iOS corregge l'ordine UUID nel readback SwiftData usando il confronto lessicografico;
+  i fix V6 conservano al reopen la fence locale già avanzata e la continuation
+  ordinaria ZERO. Le prove con trasporto controllato restano distinte dal cloud. PR14/main8df
+  e CI1464 sono verificati. I vecchi FAIL autentici restano storici e non diventano
+  PASS per effetto dei test isolati. L'artefatto firmato `2783283d` è distinto dal
+  checkout della CI e non è ancora accettato sul target autenticato preservato.
+
+### Build, runtime e integrazione
+
+| Componente | Sorgente e gate verificati | Runtime/limite |
+|---|---|---|
+| Mini | PR47/sorgente app f68afed9;219 PASS; CI main37038908172 SUCCESS | v11/102 file installati; AppID/configurazione invariati; A03/C04 residui non accettati |
+| Admin | PR129/main553c4568; CI/head/main e release selettiva TEST verificati; PR128/130 aperte con CI SUCCESS | Worker22107a6f, registry155; catalogo TEST ON solo nello scope autorizzato, enrollment/altri flag OFF, trace OFF |
+| Android | Authority264 `189d3e27`, map `510caf67`, sorgente dedicato814b137; canonical1110 e Compose5 PASS; PR14/main04f6fe26, CI head37090849273/main37091905186 SUCCESS | TEST3ccf651e/receipt160b222f; equivalenza metadata8/8 verificata, non installazione/READY autenticata |
+| iOS | PR14/main8dfbf9a0; tree17194c93 identico all'head verificato; CI37084694560 SUCCESS | Firmato2783283d/source326ac3; Debug/Release/Analyze/local full1464 distinti dal bundle runtime e dal recovery autentico |
+
+Android canonical:73 XML nuovi,1110 unici,1103 PASS/7 SKIP/0 FAIL; lint0 errori e29
+warning,27 uguali al baseline e2 UseKtx con sole coordinate spostate. I 10 warning
+non presenti nel nuovo report includono suggerimenti di disponibilità: non sono
+10 difetti applicativi corretti. Nel log canonico quattro compile KSP/Kotlin sono
+UP-TO-DATE; non viene dichiarata una compilazione fresca da quel log. La successiva
+build TEST corrente è effettivamente fresca e verificata separatamente.
+
+La CI Android di main ha eseguito checkout del merge `04f6fe26`, assemble, lint e
+test con tutti i 12 step PASS. I 73 XML ufficiali contengono gli stessi 1110 ID,
+stati e motivazioni SKIP della CI head: 1103 PASS, sette SKIP noti, zero FAIL/ERROR.
+Il report lint è byte-identico a quello head: 54 warning e zero errori. Il confronto
+head precedente conserva 52 firme esatte e due UseKtx spostati di sola riga rispetto
+al suo baseline; i 25 avvisi di disponibilità sono espliciti. Non sono dichiarati
+upgrade o warning corretti. Il log completo di main contiene compile Kotlin fresche,
+zero diagnostici Kotlin/deprecation e due avvisi JVM CDS. La review salvata
+`7c4dba65` approva questi risultati effettivi; il readback `11c8d476` lega
+origin/main, tree e tutti i 13 file pubblici approvati. La build TEST `3ccf651e`
+resta l’artefatto dedicato già verificato, senza rebuild o nuova etichetta.
+
+Compose API35/1080×2400/d420, AVD5580 isolato: cinque metodi PASS, codice finale−1,
+`OK (5 tests)`. Primo cleanup segnala gruppo ancora presente; la lettura successiva
+02:06:14.940885 conferma gruppo35707 assente. L'esito immediato resta conservato.
+Le assert owner prima/dopo legano source264 e APK app/testf3a902ee/d762cd28, ma non
+esistono righe digest pre/post persistite separatamente: attestazione qualificata.
+
+CI iOS1464=1428 PASS/36 SKIP,0 nuovi warning rispetto alla CI PR14. I risultati
+locali e CI sono inventari distinti; nessun bundle CI o xcresult pubblicato dedotto.
+La consegna Mini di questo checkpoint modifica solo otto Markdown: il riferimento
+applicativo resta `f68afed9` e il runtime v11/102 file non viene ricompilato o
+rinominato. Prima di una nuova prova, il guard SDK deve ammettere esplicitamente
+il nuovo HEAD documentale verificando la stessa configurazione e gli stessi byte
+applicativi; non si elimina il controllo del manifest.
+
+I checkout primari Android/iOS con lavoro preesistente non vengono sovrascritti.
+La copia sorgente Android dedicata resta immutata durante delivery/PSS/trace.
+
+### Convergenza e prestazioni effettivamente osservate
+
+La [matrice corrente39](WECHAT-010-COMPLETION-MATRIX.md) conserva ogni caso e il suo
+criterio. F01 Mini→Admin/Android/iOS, F02 Admin→Mini/Android/iOS, F03 Android→gli
+altri e F04 iOS→gli altri sono ancora NOT_RUN completi. Il reload Admin storico è
+un readback manuale. Servono recovery terminale durevole, ID/revisione/campi/History
+coerenti, ritorno foreground/rete e propagazione automatica senza refresh artificiale.
+Non sono stati prodotti nuovi eventi finanziari o dati finti per creare copertura.
+
+Sono preservate le misure Mini20warm/10search/6paging e i singoli Save/login con i
+limiti originali; nessun nuovo percentile è dedotto dai tempi di build/CI/Compose.
+Le serie cold, outbox, convergenza e immagini residue sono NOT_RUN. Pagina50,
+batch16, envelope128KiB e polling3–30s sono limiti tecnici, non una nuova SLA.
+
+PSS Android corrente264/3cc: la leaf `memory-descriptive-v3-current264-20261003`
+riusa il metodo esistente, con otto soli literal e tre helper per riferimento;
+review59b3be06, freeze649d40a7, equivalencec1a877a2. Prevede180 campioni ufficiali,
+18warmup esclusi e3 capability, API35/SignedOut/Room22/sette count zero, slot2100s,
+ADB≤10s/riserva90s/margine final720s. È **NOT_RUN, senza slot o GO**: jps-l non
+enumera Studio PID5493 pur presente in ps. La richiesta umana è normale
+chiusura/riapertura dell'IDE. Non si cambia la policy per produrre un PASS.
+Anche una futura misura valida descriverebbe il dataset vuoto e le condizioni
+resident IDE; non dimostrerebbe picco, causa, recovery o convergenza autenticata.
+
+iOS CSV03: staging CSV/XLSX hash verificati e full7 vuoto invariato prima/dopo
+(132 colonne/zero righe), ma nessuna visibilità picker/calibrazione accettata.
+L'owner riferisce timeout5s della lettura ps e SIGINT ai propri gruppi; il wrapper
+salvato registra KeyboardInterrupt/child−2. Getters ufficiali post-cleanup trovano
+xcresult incompleto (Info.plist assente), quindi nessun PASS/FAIL dell'app inferibile.
+Interruzione effettiva dopo19.175s: il budget480s non è stato esaurito. Il cap3/3
+dei tentativi del protocollo è esaurito; nessun CSV04/seed/History/nove metriche accettati.
+Propri gruppi terminati e FC4 shutdown; target autenticato459 preservato. Questa
+è un'interruzione dell'osservatore, distinta dal blocco Mac o da un difetto dell'app.
+
+### Residui e procedura di ripresa
+
+- Owner utente: sblocco Mac e DevTools Network Online/No throttling; poi fresh
+  session/scope e preparazione A03. C04v14 revisionato48 test è solo preparazione:
+  nuovo singolo Admin Save, singolo Mini stale Save e Reload latest nativo;
+  riconciliare gli effetti prima di ripetere. E02/E03/E05 seguono C04 accettato;
+  la scadenza900s deve essere reale, senza estensione TTL.
+- Owner utente: accesso personale al Dashboard TEST già aperto. Poi il solo
+  percorso apply_migration autorizzato e guardato per le operazioni DDL residue;
+  nessun DO/dynamic DDL o scrittura del ledger come workaround. Il probe rifiutato
+  resta conservato; niente nuovo benchmark o recovery SDK mentre il backend è bloccato.
+- Owner utente/ambiente: normale riapertura Studio e fresh JVM inventory prima
+  della PSS. Il processo presente non prova la classe attuale né autorizza il GO.
+- H01: nuovo inventario SDK03:02:59/03:04:20, Android: 0 dispositivi fisici online; unico
+  tunnel Apple connesso coincide con il simulatore iPhone 15 Pro Max preservato (SIM459), non
+  è una prova hardware. Due stati Apple non classificati e24 disconnessi restano
+  espliciti: nessun telefono con WeChat/shop TEST validato. Collegamento e nuova
+  verifica del contesto fisico sono la minima azione. I test compatibili con
+  simulatori restano separati e non vengono rinviati per hardware.
+- Root/native writer: installazioni preservate e smoke della combinazione finale
+  dopo i prerequisiti backend/auth; poi soli
+  cleanup applicativi delle fixture della run. D05 è già PASS, senza nuove
+  cancellazioni. I02 non consente di eliminare diagnosi o dati estranei.
+
+Riferimenti privati già autorizzati: packet `native-completion-20260928`, canonical
+Android fa7bd0c2/review666dad53, Compose review4e29195c e cleanup06dbc236,
+TEST160b222f/review3eadaaae/eightf6d87b56; Android mainCI review7c4dba65
+e readback11c8d476; iOS mainCI reviewfa4a8502,
+CSV03 adjudication37b3fcb1; matrice/deltacbfd1d49 e nota hoste1d546c3;
+inventari hardware0907586b/f8aeae02 (solo metadata, zero app/auth/data action).
+Nessuna credenziale, token, cookie, session_key o identificatore WeChat completo
+è incluso. Questo consolidamento non è approvazione DONE né readiness del pilot.
+
+## Checkpoint storico — 2026-10-02 16:39 UTC
 
 WECHAT-010 resta **EXECUTION**. Mini runtime v10/main07ff35c0, configurazione e
 sei fixture sono invariati. Nuova correzione locale ancora da integrare: Account
