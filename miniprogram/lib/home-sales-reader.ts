@@ -8,6 +8,13 @@ interface HomeSnapshot {
   readonly summary: DailySalesSummary;
 }
 
+/** A local read fence, never an authoritative server/session denial. */
+export class HomeSalesReadObsolete extends Error {
+  constructor() {
+    super("home_sales_read_obsolete");
+  }
+}
+
 /** One visible Home context. Secondary reads refresh on changes or within 30s. */
 export class HomeSalesReader {
   #cached: { key: string; at: number; snapshot: HomeSnapshot } | null = null;
@@ -36,7 +43,7 @@ export class HomeSalesReader {
     const generation = ++this.#generation;
     const task = (async () => {
       const summary = await client.dailySummary(shopId);
-      if (!isCurrent()) throw new AuthContractError("session_expired");
+      if (!isCurrent()) throw new HomeSalesReadObsolete();
       if (!summary) throw new AuthContractError("membership_missing");
       // Server time alone changes every poll; compare the actual financial fields.
       const { server_time: _time, ...state } = summary;
