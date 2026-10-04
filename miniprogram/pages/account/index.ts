@@ -1,9 +1,10 @@
 import type { MerchandiseControlApp } from "../../app";
 import { runtimeConfig } from "../../config/runtime-config";
 import type { AccountProfile, AuthorizedShop } from "../../lib/contracts";
+import { AuthContractError } from "../../lib/contracts";
 import type { CatalogOutboxEntry } from "../../lib/durable-catalog-outbox";
-import { type LocaleKey, translationsFor } from "../../locales/index";
-import { mutationErrorTranslationKey } from "../catalog-management";
+import { type LocaleKey, type TranslationKey, translationsFor } from "../../locales/index";
+import { mutationErrorTranslationKey, readErrorTranslationKey } from "../catalog-management";
 
 const app = getApp<MerchandiseControlApp>();
 const locales: readonly LocaleKey[] = ["zh-Hans", "en", "es", "it"];
@@ -34,7 +35,10 @@ Page({
   data: {
     enrollmentReady: runtimeConfig.miniEnrollmentEnabled === true,
     pending: [] as readonly (CatalogOutboxEntry & { label: string; stateLabel: string })[],
+    pendingShopName: "",
     outboxError: "",
+    errorKey: "" as TranslationKey | "",
+    errorMessage: "",
     account: null as AccountProfile | null,
     currentShop: null as AuthorizedShop | null,
     featureReady: app.featureReady,
@@ -54,7 +58,10 @@ Page({
     accountRequestGeneration += 1;
     this.setData({
       pending: [],
+      pendingShopName: "",
       outboxError: "",
+      errorKey: "",
+      errorMessage: "",
       account: null,
       currentShop: null,
       loading: false,
@@ -70,6 +77,8 @@ Page({
       this.setData({
         account: null,
         currentShop: null,
+        errorKey: "",
+        errorMessage: "",
         loading: false,
         providersText: "—",
         shops: [],
@@ -106,18 +115,57 @@ Page({
     };
     this.setData({ loading: true });
     try {
-      const [account, shops] = await Promise.all([
+      const [accountRead, shopsRead] = await Promise.allSettled([
         salesClient.account(),
         salesClient.authorizedShops(),
       ]);
       if (!isAccountRequestCurrent(context)) return;
-      const currentShop =
-        shops.find((shop) => shop.shop_id === app.activeShop?.shop_id) ?? shops[0] ?? null;
-      if (currentShop) app.selectShop(currentShop);
+      const sessionDenial = [accountRead, shopsRead].find(
+        (read) =>
+          read.status === "rejected" &&
+          read.reason instanceof AuthContractError &&
+          (read.reason.code === "account_suspended" || read.reason.code === "session_expired"),
+      );
+      if (sessionDenial?.status === "rejected") {
+        const errorKey = readErrorTranslationKey(sessionDenial.reason);
+        app.clearSessionContext();
+        this.refreshPending();
+        this.setData({
+          account: null,
+          currentShop: null,
+          errorKey,
+          errorMessage: this.data.text[errorKey],
+          loading: false,
+          providersText: "—",
+          shops: [],
+          signedIn: false,
+        });
+        return;
+      }
+      let currentShop = app.activeShop;
+      if (shopsRead.status === "fulfilled") {
+        const shops = shopsRead.value;
+        currentShop =
+          shops.find((shop) => shop.shop_id === app.activeShop?.shop_id) ?? shops[0] ?? null;
+        if (currentShop) app.selectShop(currentShop);
+        else app.clearShopContext();
+      }
       this.refreshPending();
+      const account = accountRead.status === "fulfilled" ? accountRead.value : null;
+      const shops = shopsRead.status === "fulfilled" ? shopsRead.value : [];
+      const failedRead =
+        accountRead.status === "rejected"
+          ? accountRead
+          : shopsRead.status === "rejected"
+            ? shopsRead
+            : null;
+      const readErrorKey = failedRead ? readErrorTranslationKey(failedRead.reason) : "";
+      const errorKey = readErrorKey === "retryableError" ? "error" : readErrorKey;
       this.setData({
         account,
         currentShop,
+        errorKey,
+        errorMessage: errorKey ? this.data.text[errorKey] : "",
         providersText:
           (account
             ? [...account.providers, ...(account.mini_identity_linked ? ["wechat-mini"] : [])]
@@ -132,9 +180,18 @@ Page({
             : "") || "—",
         shops,
       });
-    } catch {
+    } catch (error) {
       if (isAccountRequestCurrent(context)) {
-        this.setData({ account: null, currentShop: null, providersText: "—", shops: [] });
+        const readErrorKey = readErrorTranslationKey(error);
+        const errorKey = readErrorKey === "retryableError" ? "error" : readErrorKey;
+        this.setData({
+          account: null,
+          currentShop: null,
+          errorKey,
+          errorMessage: this.data.text[errorKey],
+          providersText: "—",
+          shops: [],
+        });
       }
     } finally {
       if (accountRequestGeneration === context.requestGeneration) {
@@ -147,19 +204,24 @@ Page({
     if (!shop) return;
     accountRequestGeneration += 1;
     app.selectShop(shop);
-    this.setData({ currentShop: shop });
+    this.setData({ currentShop: shop, loading: false });
     this.refreshPending();
   },
   chooseLocale(event: WechatMiniprogram.PickerChange) {
     const locale = locales[Number(event.detail.value)] ?? "zh-Hans";
     app.setLocale(locale);
-    this.setData({ localeIndex: Number(event.detail.value), text: translationsFor(locale) });
+    const text = translationsFor(locale);
+    this.setData({
+      errorMessage: this.data.errorKey ? text[this.data.errorKey] : "",
+      localeIndex: Number(event.detail.value),
+      text,
+    });
     wx.setNavigationBarTitle({ title: this.data.text.account });
     this.refreshPending();
   },
   refreshPending() {
     if (!app.sessionStore.load() || !app.activeShop || !app.outbox) {
-      this.setData({ pending: [], outboxError: "" });
+      this.setData({ pending: [], pendingShopName: "", outboxError: "" });
       return;
     }
     const text = this.data.text;
@@ -183,12 +245,17 @@ Page({
       }));
       this.setData({
         pending,
+        pendingShopName: app.activeShop.shop_name,
         outboxError: app.outbox.storageUnavailableForShop(app.activeShop.shop_id)
           ? text.retryableError
           : "",
       });
     } catch {
-      this.setData({ pending: [], outboxError: text.outboxDamaged });
+      this.setData({
+        pending: [],
+        pendingShopName: app.activeShop.shop_name,
+        outboxError: text.outboxDamaged,
+      });
     }
   },
   async discardPending(event: WechatMiniprogram.BaseEvent) {

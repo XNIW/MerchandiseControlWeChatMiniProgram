@@ -10,6 +10,7 @@ type ViewState =
   | "disabled"
   | "signed_out"
   | "loading"
+  | "shop_retry"
   | "ready"
   | "empty"
   | "offline"
@@ -132,18 +133,23 @@ Page({
     if (!app.salesClient) return;
     const generation = runtime(this).generation;
     const sessionGeneration = app.sessionStore.generation;
+    const cacheGeneration = app.sensitiveCaches.generation;
+    const shopId = app.activeShop?.shop_id ?? null;
+    const isCurrent = () =>
+      runtime(this).visible === true &&
+      runtime(this).generation === generation &&
+      app.sessionStore.generation === sessionGeneration &&
+      app.sensitiveCaches.generation === cacheGeneration &&
+      (app.activeShop?.shop_id ?? null) === shopId;
     this.setData({ viewState: "loading" as ViewState });
     try {
       const shops = await app.salesClient.authorizedShops();
-      if (
-        !runtime(this).visible ||
-        runtime(this).generation !== generation ||
-        app.sessionStore.generation !== sessionGeneration
-      )
-        return;
+      if (!isCurrent()) return;
       const currentShop =
         shops.find((shop) => shop.shop_id === app.activeShop?.shop_id) ?? shops[0] ?? null;
       if (!currentShop) {
+        this.clearSignedOutView();
+        app.clearShopContext();
         this.setData({
           errorMessage: this.data.text.unauthorized,
           shops,
@@ -156,12 +162,22 @@ Page({
       await this.refresh();
       this.startAutomaticRefresh();
     } catch (error) {
+      if (isCurrent()) this.applyError(error);
+    } finally {
       if (
         runtime(this).visible === true &&
         runtime(this).generation === generation &&
-        app.sessionStore.generation === sessionGeneration
-      )
-        this.applyError(error);
+        this.data.viewState === "loading"
+      ) {
+        this.stopAutomaticRefresh();
+        if (app.sessionStore.load() === null) this.clearSignedOutView();
+        else {
+          this.setData({
+            errorMessage: this.data.text.error,
+            viewState: "shop_retry" as ViewState,
+          });
+        }
+      }
     }
   },
   async chooseShop(event: WechatMiniprogram.PickerChange) {
@@ -232,7 +248,14 @@ Page({
   },
   startAutomaticRefresh() {
     this.stopAutomaticRefresh();
-    if (!runtime(this).visible || !app.activeShop || app.sessionStore.load() === null) return;
+    if (
+      !runtime(this).visible ||
+      !app.activeShop ||
+      app.sessionStore.load() === null ||
+      this.data.viewState === "loading" ||
+      this.data.viewState === "shop_retry"
+    )
+      return;
     const controller = new AdaptiveRefreshController({
       baseDelayMilliseconds: runtimeConfig.autoRefreshMilliseconds,
       maximumDelayMilliseconds: runtimeConfig.autoRefreshMaximumMilliseconds,

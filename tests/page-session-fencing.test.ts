@@ -4,6 +4,8 @@ import type {
   AuthorizedShop,
   SyncHistoryEntry,
 } from "../miniprogram/lib/contracts";
+import { AuthContractError } from "../miniprogram/lib/contracts";
+import { translationsFor } from "../miniprogram/locales/index";
 import { assert, assertEqual } from "./fakes";
 
 interface Deferred<Value> {
@@ -224,11 +226,47 @@ test("history and account pages clear old scope and reject late session/shop/cac
     const accountRequests: Deferred<AccountProfile | null>[] = [];
     const shopsRequests: Deferred<readonly AuthorizedShop[]>[] = [];
     const selectedShops: string[] = [];
+    const pendingEntries = [
+      {
+        attempts: 0,
+        entityType: "product",
+        operationId: "30000000-0000-4000-8000-000000000302",
+        payload: { productName: "Pending B" },
+        shopId: shopB.shop_id,
+        state: "pending",
+      },
+    ];
+    let discardedPending = 0;
+    let clearedShopContexts = 0;
     const accountApp = {
-      activeShop: shopA,
-      clearSessionContext() {},
+      activeShop: shopA as AuthorizedShop | null,
+      clearSessionContext() {
+        accountSession.active = false;
+        accountSession.generation += 1;
+        this.clearShopContext();
+        for (const listener of accountSessionListeners) listener();
+      },
+      clearShopContext() {
+        clearedShopContexts += 1;
+        this.activeShop = null;
+        accountCaches.generation += 1;
+      },
       featureReady: true,
       locale: "en",
+      outbox: {
+        discard() {
+          discardedPending += 1;
+        },
+        pendingForCurrentShop(shopId: string) {
+          return pendingEntries.filter((entry) => entry.shopId === shopId);
+        },
+        storageUnavailableForShop() {
+          return false;
+        },
+        subscribe() {
+          return () => {};
+        },
+      },
       salesClient: {
         account() {
           const request = deferred<AccountProfile | null>();
@@ -317,6 +355,8 @@ test("history and account pages clear old scope and reject late session/shop/cac
     );
     assertEqual(accountPage.data.loading, false, "offline profile loading ends");
     assertEqual(accountPage.data.signedIn, true, "offline profile failure preserves local logout");
+    assertEqual(accountApp.activeShop?.shop_id, shopB.shop_id, "network failure preserves scope");
+    assertEqual(clearedShopContexts, 0, "network failure is not confirmed loss of membership");
 
     invoke(accountPage, "onShow");
     accountSession.generation += 1;
@@ -334,14 +374,204 @@ test("history and account pages clear old scope and reject late session/shop/cac
     invoke(accountPage, "onShow");
     invoke(accountPage, "onHide");
     accountRequests[4]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
-    shopsRequests[4]?.resolve([shopB]);
+    shopsRequests[4]?.resolve([]);
     await settleAsyncPageUpdate();
     assertEqual(
       accountPage.data.account,
       null,
       "hidden page rejects the outstanding profile response",
     );
+    assertEqual(
+      accountApp.activeShop?.shop_id,
+      shopB.shop_id,
+      "hidden empty list cannot clear scope",
+    );
 
+    const membershipGeneration = accountSession.generation;
+    const membershipCacheGeneration = accountCaches.generation;
+    invoke(accountPage, "onShow");
+    accountRequests[5]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
+    shopsRequests[5]?.resolve([]);
+    await settleAsyncPageUpdate();
+    assertEqual(clearedShopContexts, 1, "confirmed empty membership list clears the active shop");
+    assertEqual(accountApp.activeShop, null, "revoked shop is no longer available to other pages");
+    assertEqual(accountCaches.generation, membershipCacheGeneration + 1, "shop caches invalidate");
+    assertEqual(accountSession.generation, membershipGeneration, "membership loss is not logout");
+    assertEqual(accountSession.active, true, "personal identity remains valid without a shop");
+    assertEqual(accountPage.data.signedIn, true, "sign out remains available without memberships");
+    assertEqual(accountPage.data.currentShop, null, "account displays no revoked shop");
+
+    accountApp.activeShop = shopB;
+    accountCaches.generation += 1;
+    invoke(accountPage, "onShow");
+    accountRequests[6]?.reject(new Error("temporary profile failure"));
+    shopsRequests[6]?.resolve([]);
+    await settleAsyncPageUpdate();
+    assertEqual(clearedShopContexts, 2, "profile failure cannot hide a successful empty shop list");
+    assertEqual(accountApp.activeShop, null, "independent membership result clears revoked scope");
+    assertEqual(accountSession.active, true, "profile timeout is not a logout");
+
+    accountApp.activeShop = shopB;
+    accountCaches.generation += 1;
+    invoke(accountPage, "onShow");
+    accountRequests[7]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
+    shopsRequests[7]?.reject(new Error("temporary shops failure"));
+    await settleAsyncPageUpdate();
+    assertEqual(accountApp.activeShop?.shop_id, shopB.shop_id, "shop timeout preserves scope");
+    assertEqual(clearedShopContexts, 2, "failed membership read is not an empty membership list");
+
+    invoke(accountPage, "onShow");
+    accountRequests[8]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
+    shopsRequests[8]?.resolve([shopA]);
+    await settleAsyncPageUpdate();
+    assertEqual(
+      accountApp.activeShop?.shop_id,
+      shopA.shop_id,
+      "remaining authorized shop replaces scope",
+    );
+    assertEqual(accountPage.data.currentShop, shopA, "account displays the authorized replacement");
+    assertEqual(clearedShopContexts, 2, "valid replacement uses the existing shop transition");
+
+    invoke(accountPage, "onShow");
+    accountRequests[9]?.reject(new AuthContractError("timeout"));
+    shopsRequests[9]?.resolve([shopB]);
+    await settleAsyncPageUpdate();
+    assertEqual(
+      accountApp.activeShop?.shop_id,
+      shopB.shop_id,
+      "profile timeout cannot retain a shop absent from the successful membership result",
+    );
+    assertEqual(accountPage.data.account, null, "profile timeout exposes no cached identity");
+    assertEqual(accountSession.active, true, "authorized shop replacement preserves identity");
+    assertEqual(
+      accountPage.data.currentShop,
+      shopB,
+      "partial account result identifies active shop B",
+    );
+    assertEqual(
+      pageArray<AuthorizedShop>(accountPage, "shops")[0],
+      shopB,
+      "partial account result preserves authorized shop choices",
+    );
+    assertEqual(
+      accountPage.data.pendingShopName,
+      shopB.shop_name,
+      "pending work identifies scope B",
+    );
+    assertEqual(
+      pageArray<{ shopId: string }>(accountPage, "pending")[0]?.shopId,
+      shopB.shop_id,
+      "partial result exposes only pending B",
+    );
+    assertEqual(
+      accountPage.data.errorMessage,
+      "Request timed out. Retry.",
+      "profile timeout is explicit",
+    );
+    invoke(accountPage, "chooseShop", { detail: { value: "0" } });
+    assertEqual(
+      accountPage.data.currentShop,
+      shopB,
+      "partial result remains selectable without a profile",
+    );
+    const heldRefresh = accountRequests.length;
+    void invoke(accountPage, "load");
+    assertEqual(accountPage.data.loading, true, "Retry starts a refresh");
+    invoke(accountPage, "chooseShop", { detail: { value: "0" } });
+    assertEqual(accountPage.data.loading, false, "shop selection releases the cancelled refresh");
+    assertEqual(
+      accountPage.data.errorMessage,
+      "Request timed out. Retry.",
+      "cancelled partial refresh preserves the visible Retry action",
+    );
+    accountRequests[heldRefresh]?.resolve(
+      account("20000000-0000-4000-8000-000000000302", "Late profile"),
+    );
+    shopsRequests[heldRefresh]?.resolve([shopA]);
+    await settleAsyncPageUpdate();
+    assertEqual(
+      accountPage.data.currentShop,
+      shopB,
+      "cancelled refresh cannot replace selected shop B",
+    );
+    assertEqual(
+      accountPage.data.pendingShopName,
+      shopB.shop_name,
+      "cancelled refresh preserves pending scope B",
+    );
+    assertEqual(accountPage.data.loading, false, "late refresh leaves the loading owner released");
+    const freshRefresh = accountRequests.length;
+    void invoke(accountPage, "load");
+    assertEqual(
+      accountRequests.length,
+      freshRefresh + 1,
+      "Retry remains usable after shop selection",
+    );
+    accountRequests[freshRefresh]?.reject(new AuthContractError("timeout"));
+    shopsRequests[freshRefresh]?.resolve([shopB]);
+    await settleAsyncPageUpdate();
+    assertEqual(accountPage.data.loading, false, "new Retry completes normally");
+    for (const [index, locale] of (["zh-Hans", "en", "es", "it"] as const).entries()) {
+      invoke(accountPage, "chooseLocale", { detail: { value: String(index) } });
+      const text = translationsFor(locale);
+      assertEqual(
+        accountPage.data.errorMessage,
+        text.requestTimeout,
+        "partial-result error follows locale",
+      );
+      assertEqual(
+        accountPage.data.pendingShopName,
+        shopB.shop_name,
+        "locale change preserves pending scope name",
+      );
+    }
+
+    for (const code of ["account_suspended", "session_expired"] as const) {
+      accountSession.active = true;
+      accountSession.generation += 1;
+      accountApp.activeShop = shopB;
+      accountCaches.generation += 1;
+      const selectedBeforeDenial = selectedShops.length;
+      const denialRequest = accountRequests.length;
+      const sessionBeforeDenial = accountSession.generation;
+      invoke(accountPage, "onShow");
+      accountRequests[denialRequest]?.reject(new AuthContractError(code));
+      shopsRequests[denialRequest]?.resolve([shopA]);
+      await settleAsyncPageUpdate();
+      assertEqual(
+        selectedShops.length,
+        selectedBeforeDenial,
+        "confirmed denial cannot select a concurrent shop result",
+      );
+      assertEqual(accountApp.activeShop, null, "confirmed denial clears business scope");
+      assertEqual(
+        accountSession.active,
+        false,
+        "confirmed global denial invalidates the personal session",
+      );
+      assertEqual(
+        accountSession.generation,
+        sessionBeforeDenial + 1,
+        "global denial changes session generation once",
+      );
+      assertEqual(accountPage.data.signedIn, false, "global denial clears signed-in presentation");
+      assertEqual(
+        accountPage.data.loading,
+        false,
+        "global denial ends loading despite session callback",
+      );
+      assertEqual(accountPage.data.currentShop, null, "global denial exposes no shop");
+      assertEqual(pageArray(accountPage, "pending").length, 0, "global denial hides prior pending");
+      assertEqual(discardedPending, 0, "global denial never discards pending work");
+      assertEqual(pendingEntries.length, 1, "pending work remains retained for the original scope");
+    }
+
+    accountSession.active = true;
+    accountSession.generation += 1;
+    accountApp.activeShop = shopB;
+    accountCaches.generation += 1;
+
+    const revokedRequest = accountRequests.length;
     invoke(accountPage, "onShow");
     assertEqual(accountSessionListeners.size, 1, "onShow replaces the session subscription");
     accountSession.active = false;
@@ -354,8 +584,10 @@ test("history and account pages clear old scope and reject late session/shop/cac
       0,
       "revocation clears shops",
     );
-    accountRequests[5]?.resolve(account("20000000-0000-4000-8000-000000000302", "Account B"));
-    shopsRequests[5]?.resolve([shopB]);
+    accountRequests[revokedRequest]?.resolve(
+      account("20000000-0000-4000-8000-000000000302", "Account B"),
+    );
+    shopsRequests[revokedRequest]?.resolve([shopB]);
     await settleAsyncPageUpdate();
     assertEqual(accountPage.data.account, null, "late response cannot restore revoked profile");
     assertEqual(accountPage.data.signedIn, false, "late response cannot restore revoked logout");
