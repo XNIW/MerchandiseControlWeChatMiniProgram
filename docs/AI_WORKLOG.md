@@ -500,3 +500,269 @@ Review salvata7c4dba6579e8457383ba523846ebc99dccf201d4dcba87b0cc439087d210dc4c;
 readback11c8d4761705b96934093b2b7e7eeca79a5aebdc8435ba3edcd8ef4147923ea5:
 main04f6fe26/treeedd56701 uguale all’headb440c4f2,13 file pubblici approvati,
 Git pulito. Nessun nuovo install/READY/recovery/performance o GO.
+
+
+## 2026-10-04 01:35 America/Santiago — exact source integration and runtime preparation
+
+- Admin130 premerge receipt privata `admin-pr130-premerge-tested-tree-20261004T041153Z.json`, SHA256 `3deb37786a7f69d154e5ca4227bfeef224863a09a7aba7a26ae73670c6fd417e`; tre job reali checkoutc0837c4e/treeb8ed55b2, identico candidata e04603e3. Reviewer contract APPROVED_STATIC_COMPATIBILITY, zero findings; SQL155/runner/test invariati.
+- Normal merge PR130 `82af13ef0005ecfb767809bd362327e91692b5ba` alle01:12:42 Santiago. Postmerge CI37176343479/Cloudflare37176343496 SUCCESS con actual checkout82af13ef/treeb8ed55b2, deploy entrambiSKIPPED. Receipt `admin-pr130-merged-postmerge-ci-20261004T042002Z.json`, SHA256 `f6c91b68f4cd2aae9378f4bf1c4c197651185e68946b4e50494416e12e242139`. Primary Admin553c clean e staging221582 cinqueSTAGED preservati.
+- Mini current source-pin reconciliation: login1d2ea078, offlinev3 84b8bc5a, stalev15 1d0f5260, pendingv15 f6f9c3b8; SHA completi in istruzioni private `mini-current-source-runtime-20261004.md`. Review APPROVED_STATIC0finding,16/16 test puri del nuovo sourceguard, quattro `node --check` PASS. Nessuna replica delle suite immutabili. Primary00c clean, f68→00c otto soliMarkdown M, dist102/102 esatte; configdist e receipt/PATCH storici invariati. Ownershipv2, intenti, fence, namespace e state machine preservati.
+- Preflight Worker refresh read-only c04b057e verificato04:24:31.722UTC; Worker22107a6f/config TEST invariati, snapshotSHA344b3a86. SELECT read-only registry04:25:17.781UTC:155/latest20261002180757/1statement/MD5 9e4741b64d7b0999b3000f06990e922f. Receipt `runtime-registry-readonly-20261004T042517Z.json` conserva query e risposta connector, senza SQLwrites.
+- Unico accesso WeChat ordinario: `v11-login-bb5ed351-90e5-4bbf-a594-5236cd6f7e7d/report.json` FRESH_AUTH_SCOPE_VERIFIED; Home empty/session895s osservata, Account canonico TEST letto. Nessun businesswrite/native auth/device toccato; SDK disconnesso.
+- A03 nuova preparazione `offline-account-v11-1f6b5238-2f7e-4b45-bdd3-34be0653df5d/prepare.json` PREPARED_ONLINE, SHA256 `423bc608952d312d54b2b10f9141500fd642920e796e60c2bd368f8f4664a084`. Nessun observe/logout/Offline ACK: Throttling non si apre dopo Raise, coordinate input noWindowsAvailable; rebind consente solo letture. Rete non modificata. Nessun fake network, wx override, retry Save o auth injection. Richiesto soltanto portare davanti finestra/Network, senza ricompilare o salvare; prerequisito input dipende dall'utente/controllo Mac, non è prova OSlock.
+- Slot leggero liberato e zeroheavy comunicato a N; Android build finale seriale avviata da N, W solo source/docs. Residui C04/pending/four-client/performance/phone non accettati. Task EXECUTION, niente DONE, deploy produzione o scritture SQL dirette.
+
+Check della documentazione locale: `git diff --check` e `npm run check:secrets` PASS; sei soli Markdown modificati nel WT. Nessuna suite/build applicativa invariata rieseguita durante la build seriale N, nessun commit/push Mini.
+
+
+## 2026-10-04 01:55 America/Santiago — prepared A03 expired; native build handoff
+
+A03 prepare originale423bc608 invariata; scadenza salvata04:44:03UTC e Home osservata con accesso WeChat disponibile. Receipt privata root-not-run-expired-observation-20261004.json SHA256e8ea75f1aff5b347ffab2fa55add4fd2a7886a04803506740bda433d7e1da6aa; screenshot expired-home-online.png SHAc246e3cf. Nessun observe/logout/Offline ACK, businessSave o nuovo login. Stato NOT_RUN_PREPARATION_EXPIRED: non E05 accettato, non prova generation corrente o evento logout. Click Throttling senza menu; letture possibili, richiesta foreground ancora pendente. Nessuna riattivazione del vecchio contesto.
+
+N ha comunicato build Android PASS04:37:13UTC e iOS PASS04:46:33UTC, PG posseduti chiusi;20fe/c6a2 non installati, ordine baseline/install del coordinatore C. W zero heavy/runtime/benchmark concorrenti. Private note mini-performance-v14-current-source-20261004.md SHA25699fc1b8be9c8d848b18183440df6f24e702dcab08c43c0c189c44e2f01d6d267: copia ca1dc370 con pin/path login correnti e relativi codici di errore, review static delta-only, node syntax PASS; no suite/collectv14.45purev13 PASS restano storici riferiti ai loro byte; SDK CLOSE/LAUNCH solo statico.
+
+Base ricevute Admin130: /Users/minxiang/Projects/MerchandiseControl-Ecosistema/evidence/operational-completion-20261003/resumed-executor/. Premerge3deb3778 e postmergef6c91b68 restano prove di checkout/tree/CI con deploy SKIPPED, non accettazione runtime. Sei docs precedenti APPROVED_DOC_ONLY da reviewer contract; nuovo delta di questo aggiornamento da verificare. Nessun sorgente applicativo, config, native session o SQL write modificato. Task EXECUTION e residui espliciti, niente DONE/GO.
+
+Revisione finale documentale: unico P3 sulla descrizione del delta performance (omessi due codici fissi) corretto in pin/path e relativi codici di errore. Altri fatti/receipt/history approvati staticamente; controllo locale conferma quattro checkpoint identici e sei soli Markdown. git diff --check PASS, secret scan PASS prima della correzione testuale. Nessun test applicativo o runtime aggiuntivo.
+
+
+2026-10-04 01:59 America/Santiago — comunicazione successiva N: iOS c6a2 installazione in-place EXIT0, binary/profile corrispondenti e stessa identità keychain; container dati spostato, business DB popolati/quickcheck OK. Continuità sessione UI, retention funzionale, recovery e convergenza non ancora verificati. Android8a precedente resta installato;20fe non installato. N unico executor UI nativo, W zero heavy/device input/Mini runtime/benchmark per mantenere serialità. La comunicazione N non è una nuova osservazione diretta W né una qualifica globale.
+
+
+## 2026-10-04 02:16 America/Santiago — communicated native installation and CI results
+
+N comunica Android20fe in-place SUCCESS, SHA installed esatta;19 tabelle Room pre/post identiche perCOUNT/digest righe tipizzate/ordine schema, Room22/quickcheck OK, receiptpost d9f6b39 (solo prefisso ricevuto, nessun hash completo inventato). Nessun launch/logout/reset eseguito da N in questo passaggio. iOSc6a2 installEXIT0/profile154a ekeychainidentitysame, path dati ricollocato/storepopolati integrityOK; sessione e retention completa UI ancora da qualificare. CI mainiOS37177424913 SUCCESS05:07:13UTC, exact433e/1442PASS36SKIP. Esiti attribuiti a N, nessuna ispezione diretta W o qualifica recovery/convergenza. Native CUA noWindowsAvailableAndroid/DeviceHubtimeouts, stesso prerequisito input aperto del Mini, foreground umano pendente. N/W0heavy/benchmark/SDK dichiarati; W nessun nuovo input/SQL o auth retry. EXECUTION/resti runtime invariati.
+
+Review finale checkpoint02:16: APPROVED_DOC_ONLY, zero findings, deltaSHA5b529edca03200a7754617a97084cf4bfdc7c8bec5734c805466c2f7c71c0b5b. Sei soli Markdown/quattro checkpoint identici/history preservata; risultati nativi attribuiti a N, runtime non accettato. check:secrets e git diff --check PASS; nessuna prova applicativa aggiuntiva.
+
+
+## 2026-10-04 02:33 America/Santiago — independent saved native receipt reread
+
+W legge e verifica SHA dei file già salvati, senza API/SDK/UI/DB o build. CI iOS receipt independent-ci-receipt.json SHA256a8aaf5ac2bd06dbb58f6bbab5ed08e6b6ed91d858c3fc6f78933ae446cbc30bc: run37177424913 officialsuccess, checkout/head433e7dafaa3ebc093082eaf22320f0070c2d40a2,1478 casi/1442PASS36SKIP0FAIL, ID/status/36motivi skip equivalenti PR15. Nessun xcresult remoto disponibile; non nuovo fetch live della CI. Base: resumed-executor/native-final-integration-final-ios-attempt01/remote-main-pr15.
+
+Base native-integrated-builds-20261004: android-post-install-data-readonly.json SHAd9f6b39c9591ee46c4754b43f8f5e437c2b5788abaae11f2d6a789d59fa9497b,19tabelle,readstabletrue/allTablesEqualtrue/version22 preserved/quickcheckok/installedmatchestrue/READYclaimfalse. ios-inplace-install-attempt01.json SHA844ca4e9614d1c5f31a69b6f5e9bf8d11e81bdcd4e61eb91fc450574da6936a8: EXIT0,binary/profile/keychainidentity matchtrue,pathpreservedfalse,sessionUI/recoveryconvergenceperformancefalse,overallpassfalse. ios-post-install-store-readonly.json SHA5dc559a633f6e8fafb28713528848d92da9f1904d8bb76b11bbd07f3b2d4d711: read-onlytrue,beforeAfterBusinessComparisonfalse,authUIverifiedfalse. Aggregate native report SHA59e30f9ea7de8160577961bceccc96beab09f5a721ba96bc4af48364fecc2d5b verificata. Nessuna piena retention iOS dedotta dagli store popolati. Native N unico inputowner, W zeroSDK/heavy/runtime; foreground umano pendente. EXECUTION e nonDONE/GO invariati.
+
+Review read-only finale di questo checkpoint: APPROVED_DOC_ONLY, zero findings, deltaSHA61e00c99ddec6558bb8538a8b3ccbc603aff6a64b0c86bb428d0f7448633c501. Hash delle quattro ricevute confermati; confronto Android distinto da piena retention iOS e collaudo runtime. Quattro checkpoint identici, sei soli Markdown, secret scan/diffcheck PASS; nessun nuovo test o GO.
+
+
+2026-10-04 02:40 America/Santiago — N comunica avvio di una sola esecuzione dei4Compose rimanenti su AVD isolato emu5582, APKkeyless212315/testfdcd767/source463treef301main-equivalent/samecertb4af. Nessun input/install/reset/logout sui simulatori autenticati5554/459, nessuna build/JVMrepeat. Timeout900/reserve90/normalshutdownownedfinally, esito ancora pending e distinto da authsync. C informato lane occupata; W zero heavy/SDK/nativeinput/runtime/benchmark.
+
+
+2026-10-04 02:49 America/Santiago — N rettifica lo stato della prova isolata: preflight ABORTED perpreviousAPK96b atteso non corrispondente, prima di0install/0instrumentinvocations; classe4Compose NOT_RUN, non FAIL/PASS. Emulatore owned5582 chiuso ePGgone, seguito passivoADB confermaassenza dopo ghost iniziale. Nessun foreignkill/serverreset/authreset;5554/459untouched. N riconcilia ricevute esistenti,139d descrittivo storico non assume baseline attuale; nessun retry. W0nativeheavy/SDK/runtime/benchmark fino a risoluzione N; C informato senzaGOperf.
+
+
+2026-10-04 02:54 America/Santiago — N comunica la prima effettiva invocazione della classe isolata:3 PASS/1 FAIL/0 SKIP. La precedente attempt preflight non aveva invocato instrumentation; nessun replay di operazione business autenticata. W legge soltanto il log salvato isolated-compose-attempt02/instrumentation.txt, SHA25659251eef184dc13ec1cbcce5cbd2162fc83bc20725bc4d26c5d0cb14ea79bf40,5352 byte:4test/1failure, ComposeTimeoutException5000ms in failedRepositorySaveKeepsDraftOpenAndRetryAddsOneHistoryPoint al testline138. Causa non attestata; N avvia analisi readonly di possibile fixture keyless/Application CHECKING/memoryDBguard, senza dedurre difetto produzione. W delega seconda review causale solo source/log a review_compose_retry, nessuna esecuzione/modifica/retry. N comunica owned5582 PG/serialgone e0azioni5554/459; W0heavy/SDK/nativeinput/benchmark. Residui runtime autenticati e foregroundinput restano aperti.
+
+
+2026-10-04 02:58 America/Santiago — seconda review causale readonly W completata sul FAIL isolato. La fixture renderizza prodotto persistito senza VM.openProductEditor(test90–113); target iniziale null(VM355), baseline creata498–504; save2986–2988 rifiuta persisted ID senza target con product_editor_conflict prima del repository. UI dismiss solo Saved(dialog399–403), reset operation state non crea target(VM1314–1317): retry ripete conflict. Primo assert genericerror(test128) non attesta hook iniettato; unchanged rows/history non provano repository chiamato. Fixture repository usa unmanaged guard(default353–354), diverso da repo Application tracker193/214; CHECKING non spiegazione causale di questo guard locale. Log non prova callback scopeclear. Fix minimo proposto a N unico writer: normale openProductEditor prima render, intendederror/hookcount1 e2 alretry, conservando5000ms/rollback/oneHistory assertions; JVMtest301 già apre editor. Nessun fix/test/retry eseguito da W, nessun productiondefect dedotto. N/C informati; risultato originale3P1F0S preservato.
+
+
+2026-10-04 03:02 America/Santiago — N comunica fix test-only su branch codex/android-compose-retry-fixture da dbeb, file CrossPlatformReliabilityComposeDeviceTest.kt SHA62e3afa9f4dde86f7929ad8a3433a9cf2a2603c37eb96f2fd3860ef882124594. Normale openVM dopo setContent/prima input e targetassert, hook AtomicInteger primo fail e count1/count2, waitUntil5000 primo errore Room; originalasserts/5000ms/altri3test/setup/import invariati. N focusedreviewAPPROVED_STATIC, appbyte/keyless212 invariati. Build01 SDK env assente prima compiler, build02 runner con ANDROID_HOME esistente in corso; zero nuove invocationinstrument fino a testAPKbyte verificati. W verifica mirata readonly rispetto al precedente falso positivo, non nuovo gate; zeroheavy/SDK/UI/benchmark, N solebuildowner.
+
+
+2026-10-04 03:04 America/Santiago — W verifica mirata fix fixture CONFIRMED_STATIC,0finding: HEADdbebcd0e6ee2bfb7d53276d1d13a39659d0f5e9b/file62e3afa9 esatti. openProductEditor onIdle118–120 prima input/Save con targetassert; baseline resta suFailed/reset; hook primo fail e assert count1(141)/2(155) eliminano falsa qualificazione da conflict senza target. Nuovo wait5000 Room asincrono, originale retry5000/draft/focus/rollback/recovered/history invariati; solo metodo target modificato. Nessun nuovo gate o test/build/API/UI/SDK da W. N/C ricevono conferma, nuova runtime ancora pending.
+
+
+## 2026-10-04 03:15 America/Santiago — saved isolated Compose green and client read-only recovery
+
+W rilegge green/instrumentation.txt SHA8f1acda0ac4c14b2be2f0e0f38e6a4a14fba7bd6f710bbcfd000d379983205c8,3337 byte/fourstatus0/OK4tests; receiptSHA471d727e33bc8aef17f0b00292604b78f53bc0d6f317d2b928a02d91814ec05d, sourceHEADdbeb/fixedtest62e/oneinvocation/ownedPGgone/serialabsent/authTargetsTouchedfalse/ended06:03:13.421955UTC. Independent reviewSHA c65aa90efb8cb8c6adf9960095ab833e31421e3a89ca2679b19f9d2d5316c746 confirms4PASS0FAIL0SKIP solely synthetic isolated fixture; cleanup adjudicated saved receipt, no new livePID/ADB inspection. RED receipt/log retained. N PR16 draft head db6f110ac58e60c57b8a0e9d76b2c2d9a9bb911f, CI37181929838 inprogress; attached to W task. Appproduction/212/20fe unchanged; no authsync/retention/performance/phone acceptance.
+
+Root CUA client reset supported tool, then sole APIinventory bootstrap and ownMiniDevTools read/rebind/screenshot. Correct primary project/Home ordinary Sign in visible; Network present in screenshot but initialAX debugger child omitted. No click/login/SDK/AVD/app reset; inputavailability untested, blocker not claimed resolved. N confirms0localheavy/owned5582gone, permits only these reads while remoteCI/helperprep closes; W remains0runtime/nativeinput/SDK/benchmark. Binding CUA ripristinati e inventario browser letto, nessun tab toccato o privatevalue salvato. C/N kept distinct source/install/UI/case states.
+
+
+2026-10-04 03:19 America/Santiago — W sola lettura metadata GitHub: run37181929838 completed/success/headSha db6f110ac58e60c57b8a0e9d76b2c2d9a9bb911f/updated06:17:38UTC. PR16 OPEN/DRAFT stessohead/merge null; nessuna nuova doppia review dei log CI/casi/lint, da N. N reset client CUA fresh conferma read/screenshot AndroidStudio ma input drag noWindowsAvailable/AXclick timeout eDeviceHubtimeout, Raise/Tab senza UIchange/businessinput. MiniW solo read/NetworkHome, input proprio non testato; disponibilità provider non promossa. W zeroheavy/input/SDK/benchmark finché sourceCI/helperclosure e schedule, no nuovo DONE.
+
+Review documentale finale del checkpoint03:21: APPROVED_DOC_ONLY, zero findings, deltaSHA39af7568a1074d6d732c0d0b9e5cdb98f5312608d477d34f445ec3e2c48244b8. Sei soli Markdown, quattro blocchi identici, RED/green/cleanup e limiti sintetici preservati; metadata CI distinta da review/merge e input non dichiarato ripristinato. Secret scan/diffcheck PASS; nessuna nuova esecuzione applicativa.
+
+
+## 2026-10-04 03:33 America/Santiago — normal PR16 merge and source-only metrics preparation
+
+W metadata GitHub attuale conferma PR16 MERGED06:22:45UTC/mainfe0927c379082925864b200b747bf9d152c5b750/head db6f110ac58e60c57b8a0e9d76b2c2d9a9bb911f; CI main37182631429 inprogress/exactheadfe0927 (updated06:22:52). N comunica headCI independent3b27 con1127PASS7SKIP/same54lint0Kotlin, primaryFF667cdc06:24:20 con3localpublic/hash+stat/private/stashes preservati senzaautostash. Solo testfixture/Executiondoc, production e installed20fe invariati. Reviewer N qualifica actualcheckout/casi; W nessun auditCI duplicato o nuovo SDK/runtime.
+
+N comunica helper217CSV04 preparationAPPROVED_STATIC_ONLY/handoff6314eaa1 binds8pins/source1a350/current447readback; future4CrefsNULL, qualificationGO/install/full11 ancora necessari, runtime0. Nessuna ulteriore authoring prevista da N, postmergeCI pending. W0nativeinput/SDK/heavy/benchmark, inputCUA non recuperato; no nuova finestra Mini o authqualifica. Stato EXECUTION, nonDONE.
+
+
+### 2026-10-04 03:42 America/Santiago — PR16 main CI conclusiva e consegna N
+
+- W verifica metadata GitHub mainCI37182631429 SUCCESS/headfe0927 e rilegge la receipt indipendente `a8ed458c2142f020d91216facf7dd0ebc17feee378c0e05de8eb3f555ff54611`:1127 PASS/7 SKIP/0FAIL,74XML/12step e54lint storici invariati. Nessun nuovo build/test o CI rerun da W.
+- Report finale N `80b2c1d272323f0ff4157624d7ff3a87d1c0568ba6a4b03d01cc0b675947dcfe` e handoff `9a398b985a526dda4d9d9a7bc7605d286bbb378e7d6df5d5344dd7f069e31ef3` riletti/hash verificati. N conferma corsia libera e simulatori autenticati preservati.
+- W rilegge DevTools: Network visibile/Home offre accesso ordinario; input ancora non provato. Richiesta a C una sola finestra seriale Mini; nessun nuovo SDK/gesto/autenticazione/Save/rete. A03 precedente resta NOT_RUN_PREPARATION_EXPIRED.
+- WECHAT-010 resta EXECUTION: offline/conflitto/pending/convergenza/prestazioni autentiche e telefono aperti; nessun DONE, deploy o SQL apply/reapply.
+
+
+### 2026-10-04 03:46 America/Santiago — verifica reale input dopo reset
+
+- Dopo liberazione esplicita della corsia N, notifica a C/N e nuova lettura/screenshot, W invoca Raise supportato e una sola apertura del menu Throttling. Il click restituisce server `-10005:noWindowsAvailable`; menu non apparso, Network leggibile e Home offre accesso ordinario. Nessun OSlock o difetto applicativo dedotto.
+- Receipt osservazionale privata `root-input-probe-20261004-f0e3b691-8c3a-4783-97e5-5d721aa7e6bf/receipt.json`, SHA256 `38cfff302600c2a84664f3d2d82290286316e3f2bfb27a98a2d75fb348ff1392`; screenshot `51a9299158a213ea22bb582d213b3e3714031aa119154f88a520345914cdd57a`. Entrambi0600/riletti/hash verificati. È solo osservazione input, non un nuovo test applicativo o attestazione network/sessione/build caricata.
+- Corsia subito rilasciata; N conferma zero attività native ulteriori. Zero SDK/autenticazione/selezioni Offline/Save/benchmark; nessuna nuova A03 prepare o retry di fase incerta. Richiesto all'utente di portare davanti DevTools e cliccare Network; nessuna nuova richiesta di permesso.
+
+
+### 2026-10-04 12:59 America/Santiago — ripresa seriale e nuovo impedimento Mac
+
+- Ripresa comunicata dal relay ufficiale dopo lo sblocco umano delle12:32 Santiago. N sole native inputowner; W zero UI/SDK/heavy nella prima finestra. Nessun merge/build/install immutato ripetuto.
+- Lettura filesystem: quattro runner current-source conservano gli hash approvati; runner.lock/globalarmC04/sharedpendingroot assenti. Vecchia prepare423bc608 preservata/scaduta, nessun nuovo intento o fase A03. Questi controlli non attestano runtime AppService o READY.
+- N installed-identity-preflight.json alle12:44:00–12:44:01 Santiago: Android20fe/iOSc6a effettivi match. Receipt SHA256 `34ca81365ebf32ac34db4347ab6d6f9fd72b21cfc7d71480c5dae0ff5d82c48a` riletto/verificato da W. Path iOS uguale al postinstall non accetta retention o sessione.
+- N nuovo controllo supportato UI restituisce «The Mac is locked and automatic unlock could not unlock it. Ask the user to unlock the Mac manually before continuing.» Receipt fresh-ui-lock-observation.json, registrata12:50:26 Santiago, SHA256 `9e15e7ce2e03250553d838f835825367eabcc6e2169b3490468c526d7f9d0373` riletto/verificato da W. Distinto dal vecchio noWindowsAvailable, non appdefect. Zero nuove azioni runtime o campioni; sessione/scope/READY UNKNOWN.
+- N rilascia corsia fisica, C conferma tutti tool conclusi/zero jobSDKinflight e chiede zero nuove A03/login/UI prima di segnale utile di sblocco. Richiesta operativa umana già inviata da N; W non la duplica e non chiede nuovo GO. WECHAT-010 resta EXECUTION, nessun DONE o accettazione autentica nuova.
+- Canonical database-preflight storico147/Oct1 non aggiornato artificialmente. Trovata la normale fonte jpeg-business-preflight.sql: schema target completo, adattamento read-only proposto aggiunge registry.last dal valore reale max(version). Nessuna SQL eseguita o snapshot fresco inventato.
+
+
+### 2026-10-04 14:23 America/Santiago — Account membership result applied independently
+
+- Product RED reproduced on the actual compiled Account Page: a successful empty authorized-shops list left the prior app.activeShop in place (expected context-clear count 1, actual 0).
+- Account now settles profile and membership reads independently, checks the existing request/session/cache/shop fence, and applies successful membership results through the existing selectShop/clearShopContext methods. A failed membership read retains the prior context; a failed profile read cannot conceal confirmed membership loss. Personal sign-in and durable pending work are preserved.
+- Targeted GREEN: 2 PASS/0 FAIL/0 SKIP, including empty memberships, replacement shop, profile/shops timeout distinction, hidden/stale callbacks, session revocation and real clearShopContext storage/session preservation. Full verify: 220 PASS/0 FAIL/0 SKIP; governance/privacy/secret/typecheck/lint/build PASS; unchanged lint baseline 1 warning/7 infos. git diff --check PASS.
+- Stable three-file product candidate delivered to C for independent review. No UI/SDK/install/login/SQL/deployment; generic build retains OFF flags. Authenticated runtime remains NOT_RUN pending the already-recorded OS access dependency. WECHAT-010 remains EXECUTION.
+
+
+### 2026-10-04 14:34 America/Santiago — Independent review findings fixed and reproduced
+
+- C reviewers requested changes to the first Account candidate: partial profile failure hid the selected shop/picker while exposing its pending work; typed account_suspended/session_expired could incorrectly select a concurrent successful membership result. Both RED cases reproduced before their respective fixes.
+- Revised Account preserves successful shop results in the page independently of profile availability. Picker/language controls no longer require a profile; pending work names its shop; read errors and Retry use existing localized strings. Typed global session denial is handled before selectShop using the existing clearSessionContext policy from Home; no pending work is discarded. Other read failures retain the valid session/scope.
+- Targeted tests 2 PASS. Final verify 220 PASS/0 FAIL/0 SKIP, unchanged lint baseline 1 warning/7 infos; governance/privacy/secret/typecheck/lint/build and diff check PASS. Tests include both denial codes, generation +1, no concurrent shop selection, pending retention and locale changes. Actual clearShopContext and clearSessionContext preserve the durable journal bytes.
+- Four-file revised candidate frozen and delivered for re-review. Original rejected patch/results preserved. No commit/push or authenticated runtime acceptance yet. Later supported UI reads reported by C supersede the old Mac-lock observation as the latest read state; input remains unverified, N owns the input lane, and W performs no UI/SDK/install/SQL/deployment.
+
+
+### 2026-10-04 14:44 America/Santiago — Final Account/Home scope candidate
+
+- Additional UX RED: selecting the same shop during a held Account refresh left loading=true after the request generation was cancelled. Minimal fix releases loading in chooseShop; late response cannot replace the shop, and a new Retry starts/completes normally.
+- Home RED reproduced on the actual compiled Page before changing its source: a successful empty authorized-shops list left old app scope active (expected clear 1, actual 0). Home now clears its view and existing shop context before unauthorized, retaining the personal session and pending work. Membership read guards also fence cache/shop changes; timeout/offline/backend-temporary and stale hidden/session/shop/cache responses cannot revoke the current context.
+- Six targeted tests PASS. Final full verify 221 PASS (111 TS + 110 JS), 0 FAIL/0 SKIP; all required checks/build/secret/diff PASS, unchanged lint baseline. Actual App clear helpers preserve durable journal bytes.
+- One six-file revision-3 product candidate and its delta from revision-2 delivered to the same two C reviewers. Prior RED/rejected review/results retained; publication and authenticated runtime acceptance remain pending. No UI/SDK/install/SQL/deploy, no added writer/reviewer, no changes to primary checkout or earlier dirty documents.
+
+
+### 2026-10-04 15:21 America/Santiago — Final source review, PR49 and main integration
+
+- Final Home stale-read loading RED reproduced (actual loading, expected Retry). Existing request/scope/cache fences retained; own visible loading completion hands off to a genuine Retry branch. Automatic polling is gated during loading/Retry; stale timeout also ends loading without revocation. Account visible Retry regression and all earlier source REDs retained.
+- C data/UX reviewers both APPROVED final3c, zero open findings; patch6838ac664799dfc2e10080ddfe15914fcd29bd1b500900902cbabb83a14d4c60. Six targeted PASS; full verify221PASS/0FAIL/0SKIP with unchanged lint baseline. Commit2068a77c stages only seven approved code/test files; six earlier Markdown edits stay unstaged/preserved.
+- Normal push/PR49/attach followed by head CI37223564169 SUCCESS (actual checkout5ae2a538,221PASS), normal merge18:14:36UTC→main969f5d51 and main CI37223667569 SUCCESS18:15:00UTC (actual checkout969f5d51,221PASS). Logs retained privately in account-shop-context-20261004; no repeated local verification for identical source. Published branch retained.
+- Primary was verified clean, fast-forwarded to969f5d51 and remains clean; source7/7 and full tree equivalent to approved head. Config/dist104 files hash-identical before/after. Generic functional build OFF; preserved primary dist/AppService is not the new source build. No actual TEST rebuild/install, UI/SDK, login, SQL or deploy. Runtime remains NOT_RUN pending N serial lane; task remains EXECUTION, no global DONE.
+
+
+### 2026-10-04 16:24 America/Santiago — Home automatic cache recovery, PR50 and main CI
+
+- Direct-user addendum point 4: actual Page RED 5 FAIL/1 PASS showed duplicate membership RPCs, absent automatic successor, ignored same-scope denial and stale summary application. Existing AdaptiveRefreshController now coalesces shop reads and recovers automatically with bounded 3→6→12→24→30 second backoff; valid session/shop retained, hidden/revoked/changed scope cannot revive old replies.
+- The same two reviewers requested P1 concurrent summary cancellation/logout and P2 secondary-read backoff reset fixes. Both reproduced in original revision-2-red.log (0 PASS/2 FAIL). HomeSalesReadObsolete provides task-shared local cancellation provenance; real server denials remain authoritative. Cache-stale summary completion cannot reset the recovery controller. Extended permission_denied/shop_suspended coverage clears only shop scope. Original rejected freeze and proofs preserved.
+- Final 18 targeted PASS (14 Home + 4 reader); full verify 231 PASS/0 FAIL/0 SKIP, all required checks/build/secrets/diff PASS, unchanged lint baseline. Both reviewers APPROVED final patch faeb5a07007662452a8fa5c57e3247caf230813b440f499ed18dd67f350f4f95, zero open findings. Selective commit 1e1cda39 includes only reader, Home Page and its regression file; normal push, PR50 creation and attachment, normal merge 19:20:48 UTC → main e305f083. Published branch retained; six existing owned Markdown edits remain unstaged.
+- Actual PR CI37227808007 checkout769d6b2c (tree equal to approved head), Node26.7.0,231PASS/all8stepsPASS; mainCI37227922782 checkoute305f083, Node26.7.0,231PASS/all8stepsPASS, SUCCESS19:21:13UTC. Original raw logs/hash receipts in private home-cache-successor-20261004/publication.json. Primary verified clean and fast-forwarded; source3/3 and config/dist104/104 preserved. Six document bytes preserved during FF, then this owned factual update appended. Generic build OFF; no new TEST build/install, UI/SDK, login, SQL/deploy or authenticated acceptance. Task EXECUTION; N retains heavy/input lane, runtime A03/C04/pending and later convergence remain separate.
+
+## 2026-10-08 21:48 America/Santiago — debugger reply and current access boundary
+
+- Resumed after the user's personal `debugger pronto` reply. Fresh CUA discovery reports `The Mac is locked`; no native app state or debugger input is available. One manual-unlock request sent; N/C informed. No UI input, SDK connection, login, network change, Save, installer or DevTools compile performed. Historical A03 preparation remains expired and is not resumed.
+- Primary HEAD and local origin/main both resolve to e305f083e8c16aac43b361ffabc9c9f08a3af493; primary status clean. Comparing f68afed9 to e305f083 changes exactly five runtime sources: Home sales reader, Account TS/WXML and Home TS/WXML. Existing v11 receipt/config and source guards remain untouched. A new TEST candidate and a separate AppService observation are required before authentic acceptance.
+- Bounded helper review found an obsolete test expectation: mini-offline-account-v11-v3.cjs requires currentShopNull after both Account reads fail. PR49 intentionally retains the authorized shop on failed membership reads. A new helper must check preserved canonical shop/session/generation, settled error and visible logout; updating source pins alone would produce a false timeout. This is a static runner contradiction, not a newly reproduced application failure or runtime PASS.
+- Existing SDK-free build/manifest procedure can prepare an isolated candidate with five new output files and unchanged TEST configuration; no build was executed in this turn. Current default Node reports26.10.0, whereas the recorded build uses26.7.0; no alternate-version build is represented as the recorded one. Primary dist, private configuration, sessions and durable work preserved. WECHAT-010 remains EXECUTION; authenticated runtime, four-client convergence, performance and phone gates remain open.
+
+## 2026-10-09 19:55 America/Santiago — SDK-free Mini TEST v12 preparation
+
+- Fresh CUA discovery confirms accessible Mac; host reboot reported by N invalidates prior PIDs. Native first slot retained by N/C; W0UI/SDK/Save/network/installer actions. Primary e305f083/origin-main equal and clean, owned six Markdown changes preserved.
+- Isolated immutable Git archive compiled using official private Node26.7.0 (archive SHA7ee659a7) and TypeScript7.0.2 equal to package/lock. Canonical build exit0. New candidate102 files; only five Home/Account/reader outputs differ,97 files and configuration37d94cf4 unchanged. Receipt0bb11950/patchd54f9e5b/deltaManifestcd151fa4 retained in mini-sales-build/v12-e305f083-20261009. Primarydist and project/private configuration byte-identical to v11. Initial empty compile directory from pre-build archive-buffer failure retained; second fresh compilation succeeded, no runtime operation to reconcile.
+- New selective installer preserves pristine60s, sealed manifests/source/config, global O_EXCLlock, one install intent and no automatic replay/rollback;14 pure checks PASS. Independent source review requested from C on concrete bytes, no new human GO requested. Pristine observer is read-only, bounded and NOT_RUN; no attestation fabricated.
+- Offline runner oracle RED reproduced on old helper:2FAIL/2PASS. Four unchanged semantic tests GREEN4PASS against new namespace/source guard. Requires preserved displayed canonical shop plus error feedback; session/generation/registry/ACK/SDK-timeout/late-cleanup guards unchanged. Old A03 artifacts remain expired. Tests are runner-only, not new authenticated app evidence.
+- New install/AppService/A03/runtimePR49-50 remainNOT_RUN pending coordinated slot and review. Native/cloud/integration/phone lanes remain distinct. No SQL/cron/deploy/shared TEST exclusion by W; taskEXECUTION, noDONE.
+
+## 2026-10-09 20:28 America/Santiago — Mini v12 review e setup reale DevTools
+
+Root sole writer. Due reviewer read-only approvano il pacchetto effettivo; P2
+observer riprodotto RED2FAIL/3PASS e corretto GREEN5PASS, freeze R3 a2b785e2.
+Slot N 23:20:26→23:27:59 UTC: UI DevTools welcome, poi noWindowsAvailable/timeout;
+Finder risponde, CLI auto255 senza listener, quit15s non confermato e CUA nuova
+ancora timeout. Zero SDK/pristine/install/login/business write o cambio rete.
+Readback SDK-free conferma102 dist v11/108 source/config invariati. Slot rilasciato
+esplicitamente a N/C/Client. Owner operatore: normale riapertura/Compile/Home;
+richiesta inviata. Runtime Mini BLOCKED_EXTERNAL per tool; task EXECUTION.
+Nessun nuovo PR applicativo, commit/push, SQL, cron, deploy o produzione.
+
+Ulteriore fallback read-only CLI `islogin` sul port IDE esistente: timeout6s
+alle23:29:42UTC, nessuno stato Auth o UI attestato; zero SDK/business writes.
+
+## 2026-10-09 20:35 America/Santiago — GUI riaperta, passaggio nativo richiesto
+
+Utente riapre DevTools. Nuovo PID e nuova Home osservati realmente: WeChat login
+visibile, Network Online, AX disponibile. R3/statici v11 invariati, zero SDK/install.
+N mantiene NEWTESTSave/QA; nuovo passaggio richiesto, nessun vecchio slot riusato.
+
+### 2026-10-09 21:08 America/Santiago — v12 installata, caso offline incompleto
+
+Pristine R3 PASS e install selettiva cinque output PASS; source e305/config TEST
+conservati, nuova AppService e login/profile/shop canonici osservati. Helper
+prepare PASS/observe FAIL REAL_OFFLINE_REQUIRED prima di Account: DevTools
+Offline blocca HTTPS ma wx riporta wifi. Due review autorizzano protocollo
+manuale separato; Account offline/shop/errore/logout visibile osservati e
+sessione/gen/registry invariati. Metodo GET Shops osservato; dettaglio GET
+Account incompleto, SDK screenshot fallita. Zero tap logout o business write;
+nessun PASS logout/pending/hardware. Deadline dichiarata21:06:17, release
+Online/lock assente21:08:50 oltre deadline, nessuna estensione; N/C informati,
+nessun target nativo o rete host toccato. Cattura tool con header privati TEST
+esclusa dagli artefatti; nessun token copiato nei receipt. Nuovo slot richiesto,
+vecchio helper/tentativo immutati; source checks invariati non ripetuti.
+
+## 2026-10-09 21:22 America/Santiago — observer R2 revisionato; runtime fermato dal lock OS
+
+Due reviewer read-only APPROVED su `e1070529`; P2 deadline chiuso con budget
+assoluto e60s per ripristino Online. Root richiede150s residui prima di intent/tap
+logout e prelogout fresco <=60s.25 prove pure PASS sullo stesso SHA, SDK/UI/main
+NOT_RUN; freeze privato preservato. Build/config v12 SDK-free invariati, lock
+runner assente. N conferma Save B iOS locale14/22/tre pending, ACK non attestato;
+riapertura ordinaria Mac locked/automatic unlock failed. Nessun nuovo GO W;
+sblocco manuale richiesto, nessun nuovo login, tap o SDK. EXECUTION, nessun DONE.
+
+## 2026-10-10 15:45 America/Santiago — due guard abort, cleanup anticipato e formato corretto
+
+Sblocco umano e CUA DevTools accessibile, v12/source/config SDK-free invariati.
+GO N18:33:19→18:48:19UTC: login ordinario e profilo/shop canonici osservati;
+41c41cea prelogout FAIL FRESH_OBSERVATION_REQUIRED, e8490bea prelogout FAIL PNG_REQUIRED,
+0logout tap/0business write. GET Account/Shops reali offline con codice trasporto
+ERR_INTERNET_DISCONNECTED e metodo GET; shop/sessione conservati, nessun claimlogout.
+Online reale+GETsummary/sales200/Homeupdated18:40:12, release18:40:38 prima deadline,
+lock assente/0SDKW/nessun target nativo o rete host toccati. Originali immutabili.
+PipelineJPEG nativa identificata; conversione PNG distinta FORMAT_ONLY pixelidentici
+1796x1932/ICCpreservato verificata; probe sips fallito pixelidentity preservato.
+Normalizer7ac07bb3/observerR367f3eb9a inreview2/2, runtimeNOTRUN e nuovo handoff necessario.
+EXECUTION; A03 pending/expiry/convergenza/misure/telefono restano aperti.
+
+2026-10-10 15:47 Santiago: due reviewer APPROVED pipelineformat su hash7ac07bb3 e67f3eb9a;
+readback indipendenti pixelRGBA eICC identici1796x1932, nessun SDK/UI/write da reviewer.
+Freeze18f91137 e nuova windowR3 assente. N comunica BReopen ordinaria riuscita con
+barcode/nome/stock0/prezzi14/22/relazioni vuote e3pending; ACK non attestato.
+W mantiene SDK-free/input-free dopo release e attende nuovo GO concreto.
+
+## 2026-10-10 16:10 America/Santiago — logout locale offline e rientro autentici
+
+GO N18:55:06→19:10:06 UTC dopo checkpoint nativo; v12/build/config invariati.
+Sessione precedente scaduta realmente, nuovo login ordinario. Caso5258e46a:
+Account errore/offline con shop e Logout, GET Account/Shops entrambi GET/failure
+ERR_INTERNET_DISCONNECTED. JPEG/PNG nuovi con pixel/ICC identici, senza header.
+Prepare3e16726c/prelogout304212df; un tap Logout reale; afterlogout4f640e0a,
+gen5→6/sessione e shop rimossi/Home signed out/pending0/registry invariato.
+Online reale e nuovo login ordinario; sidecar sola lettura aa02e734 gen7/profile e
+shop canonici/pending0; Account/Shops nuove GET200. Terminal5125a336 PASS ristretto.
+Release55679684 alle19:01:44, prima deadline, lock assente/zeroSDKW/zero business
+write/nessun target nativo o rete host/install/Compile. Reviewer indipendenti
+v12_install_review e v12_offline_review APPROVED catena runtime e immagini; nessun
+SDK/UI/write da reviewer. Vecchi abort preservati. Revoca server, pending branches,
+expiry pending, convergenza, prestazioni e telefono non accettati; EXECUTION.
+
+## 2026-10-10 16:58 America/Santiago — C04 v12 preparato, runtime non avviato
+
+Aggiornamento16:58 Santiago: canale MCP SELECT TEST disponibile (registry155
+verificato dal DB owner); PG apply/TLS restano un gate distinto. Preflight Worker
+readonly19:50 UTC rinnova versione/binding/allowlist/tracing invariati. Adapter C04
+v16 `7c986c17`, guard build v12 e deadline assoluta:55 test puri PASS dopo RED
+54PASS/1FAIL sul tap SDK senza timeout. Originali v14/v15 e nuovo R1 preservati;
+nessun nuovo case/draft/Save/SQL/SDK/UI. Review indipendente in corso, C04 runtime
+NOT_RUN; G02 attende nuovo handoff N, senza riusare lo slot R3 chiuso.
+
+## 2026-10-10 17:08 America/Santiago — G02 Account autentico nelle quattro lingue
+
+GO N19:59:16→20:14:16UTC, v12/sourcee305 invariati. Homeoffre login dopo scadenza
+naturale, un solo login WeChat ordinario/zeroLogout. CUA/pickerlingua/navigazione
+normali, NetworkOnline/Offline reali: otto JPEG nativi nuovi Account nelle quattro
+lingue, tutti ispezionati; nessun clipping/sovrapposizione osservato. Shop, versione,
+Retry e uscita visibili offline; errore esistente ritradotto en→es→it senza login.
+Ritornozh-Hans/Online; Networksvuotato primaRetry, nuoviGETAccount/Shops200 eprofilo
+canonico/errore rimosso. Terminal80591422; finalJPEGc2468e30. Release effettiva
+20:08:21UTC/18182acf, prima deadline; lockassente/0SDK/SQL/Save/Compile/install/
+retehost/targetnativi. N/C/Client informati; slotchiuso. Nessun headerprivato nelle
+catture. Packetg02-account-locales-20261010. G02globale/dialoghipending/conflitto,
+C04live, convergenza, prestazioni e telefono restanoaperti; EXECUTION,nessunDONE.
