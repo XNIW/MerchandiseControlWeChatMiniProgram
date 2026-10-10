@@ -1,6 +1,381 @@
 # Active task
 
-## Checkpoint corrente — 2026-10-03 03:20 UTC
+## Checkpoint corrente — 2026-10-10 17:08 America/Santiago
+
+**PASS autentico limitato G02: Account online e offline nelle quattro lingue
+zh-Hans/en/es/it.** V12/source `e305f083` invariati. Nuovo handoff N
+19:59:16→20:14:16 UTC; Home offriva il login dopo scadenza naturale, un solo
+rientro WeChat ordinario e nessun logout. Picker lingua reale, navigazione
+ordinaria e preset Network effettivo: otto JPEG nativi nuovi, tutti ispezionati,
+shop/versione/uscita leggibili e nessun testo troncato o controllo sovrapposto
+osservato. L'errore già presente si ritraduce passando en→es→it senza nuovo login.
+
+Ripristino finale reale zh-Hans + Online. Network svuotato prima di Retry;
+nuovi GET Account e Shops entrambi200, profilo/shop canonici osservati e errore
+rimosso. Screenshot finale `c2468e30`, terminal `80591422`. Release anticipata
+20:08:21 UTC, receipt `18182acf`: lock assente, SDK/SQL/business Save/Logout/
+Compile/install/rete host/target nativi zero. N/C/Client informati; nessun riuso
+di questo slot. Catture complete JPEG originali, senza header privati.
+
+Packet privato `mini-sales-build/v12-e305f083-20261009/g02-account-locales-20261010/`.
+Il PASS logout offline senza pending del16:10 e le sue due review restano validi.
+G02 globale/dialoghi pending e conflitto, C04 live, convergenza, prestazioni e
+telefono restano aperti. Adapter C04v16/55pure preparato, review indipendente
+pendente; SELECT TEST disponibile, nessuna nuova finestra C04 o query emessa.
+**WECHAT-010 resta EXECUTION; nessun DONE o rilascio pubblico.**
+
+## Checkpoint storico — 2026-10-10 16:10 America/Santiago
+
+**PASS ristretto: logout locale con Account offline, senza pending, e rientro
+ordinario.** V12/source `e305f083`, build/config invariati. Nuovo GO N
+18:55:06→19:10:06 UTC; sessione precedente scaduta naturalmente, nuovo login
+WeChat ordinario. Account conserva lo shop e mostra errore/Logout; i due GET
+reali falliscono con `net::ERR_INTERNET_DISCONNECTED`. Cattura JPEG nativa nuova
+convertita in vero PNG con pixel1796×1932 e ICC identici, nessun header privato.
+
+Un solo tap Logout reale: generation5→6, Home signed out, sessione/shop rimossi,
+registry invariato e pending0. Online ripristinato e un rientro WeChat ordinario:
+generation7, Account/Shops nuove GET200, profilo/shop canonici e pending0.
+Terminal `5125a336`, afterlogout `4f640e0a`, sidecar rientro `aa02e734`.
+Due reviewer indipendenti **APPROVED** sulla catena e sulle catture reali; il
+sidecar è soltanto osservazione del rientro, non un secondo caso offline.
+
+Release effettiva19:01:44 UTC, oltre otto minuti prima della deadline, receipt
+`55679684`: Online reale, lock assente, zero SDK W attivo, zero business write,
+nessun target nativo/rete host/install/Compile. N riprende i simulatori; nessun
+riuso dello slot chiuso. Vecchi FAIL41c41cea/e8490bea preservati con zero tap.
+Revoca remota, conserva/elimina pending, expiry con pending, convergenza, misure
+e telefono restano separati e aperti. **WECHAT-010 resta EXECUTION.**
+
+Aggiornamento16:58 Santiago: canale MCP SELECT TEST disponibile (registry155
+verificato dal DB owner); PG apply/TLS restano un gate distinto. Preflight Worker
+readonly19:50 UTC rinnova versione/binding/allowlist/tracing invariati. Adapter C04
+v16 `7c986c17`, guard build v12 e deadline assoluta:55 test puri PASS dopo RED
+54PASS/1FAIL sul tap SDK senza timeout. Originali v14/v15 e nuovo R1 preservati;
+nessun nuovo case/draft/Save/SQL/SDK/UI. Review indipendente in corso, C04 runtime
+NOT_RUN; G02 attende nuovo handoff N, senza riusare lo slot R3 chiuso.
+
+## Checkpoint storico — 2026-10-10 15:45 America/Santiago
+
+DevTools torna accessibile dopo lo sblocco umano. V12/build/config restano
+invariati; nuovo login WeChat ordinario e Account Online canonici osservati.
+Nel GO esplicito18:33:19→18:48:19UTC, due casi distinti si fermano prima del
+logout: `41c41cea` **FAIL FRESH_OBSERVATION_REQUIRED**, `e8490bea` **FAIL PNG_REQUIRED**.
+Sono limiti del raccoglitore: i due GET reali falliscono con
+`net::ERR_INTERNET_DISCONNECTED`, Account conserva lo shop e mostra errore/uscita;
+nessun logout tap o business write, nessun PASS/FAIL logout applicativo dedotto.
+
+Online ripristinato e nuove letture HTTPS GET summary/sales200 con Home aggiornata
+18:40:12UTC. Release effettiva18:40:38UTC, prima della deadline; lock assente,
+zero SDK W attivo, nessun target nativo/rete host/install/Compile toccato.
+Receipt release `4a6179e4`, originali FAIL e catture native JPEG preservati.
+La cattura nativa è JPEG: conversione privata in vero PNG verificata con pixel
+1796×1932 identici e profilo ICC preservato. Il probe è soltanto FORMAT_ONLY.
+Normalizer `7ac07bb3` e observer R3 `67f3eb9a` (solo nuovo filename di receipt
+finestra) **APPROVED 2/2**, freeze `18f91137`; runtime R3 **NOT_RUN**, richiede nuovo handoff N e sessione
+fresca tramite flusso ordinario dopo scadenza reale. Nessuna precondizione forzata.
+N riprende il controllo ordinario della bozza B locale/pending; ACK separato.
+WECHAT-010 resta **EXECUTION**; gli altri residui e i limiti telefono sono aperti.
+
+## Checkpoint storico — 2026-10-09 21:22 America/Santiago
+
+Mini v12 resta installata; il logout offline e il successivo rientro sono
+**NOT_RUN**. Observer manuale distinto R2 `e1070529` approvato da due reviewer
+read-only: deadline assoluta SDK, 60s riservati a Online e controllo root di150s
+prima dell'unico logout tap. Le25 prove pure sui byte R2 sono PASS; non sono
+prova runtime. Freeze privato `manual-observer-r2-review-freeze.json` preparato.
+
+N conferma B salvata localmente su iOS con prezzi14/22 e tre pending; recovery
+cloud/ACK restano separati. La riapertura ordinaria fallisce per Mac locked e
+automatic unlock failed; nessun nuovo GO Mini concesso. W mantiene zero nuovi
+SDK/input/login e non riusa la finestra scaduta. Sblocco manuale richiesto
+all'utente; poi nuovo handoff, sessione e caso breve senza reinstallare v12.
+I risultati limitati21:08 e le evidenze storiche sotto restano invariati.
+
+## Checkpoint storico — 2026-10-09 21:08 America/Santiago
+
+WECHAT-010 resta **EXECUTION**. Mini v12 è ora installata e caricata in DevTools;
+login TEST e Account Online sono osservati, logout offline ancora **NOT_RUN**.
+
+- Pristine R3 reale **PASS**: Home signed out prima/dopo, sessione assente,
+  generation stabile, journal/image/draft vuoti. Disconnect confermato, chiusura
+  ordinaria IDE e install selettiva dei cinque file alle20:52 Santiago:
+  `FILES_INSTALLED_VERIFIED`, 102 file/configurazioni corrispondono alla receipt.
+- DevTools ufficiale ora `2.02.2610092 Nightly`; comando normale Compile e nuova
+  AppService con i tre metodi Home osservati. Login WeChat ordinario e profilo/shop
+  canonici letti dal server. Non è accettazione completa dei casi PR49/50.
+- Helper offline immutato: prepare **PASS**; observe **FAIL REAL_OFFLINE_REQUIRED**
+  prima dello switch Account/logout. Il vero preset Network Offline blocca HTTPS,
+  ma `wx.getNetworkType()` dichiara `wifi`. Zero logout tap; FAIL preservato.
+- Due review indipendenti **APPROVED** per un nuovo caso manuale distinto. Account
+  offline stabilizzato, shop canonico e sessione/generation/registry invariati,
+  errore e logout visibili osservati. Le due richieste falliscono per trasporto;
+  metodo GET Shops osservato, riscontro metodo Account nel log incompleto. SDK
+  screenshot fallita; nessuna PNG accettata. Questo non chiude G02/A03/logout.
+- Slot dichiarato20:51:17→21:06:17 Santiago; release con cleanup alle21:08:50,
+  oltre deadline. Online reale verificato via CUA, lock assente, nessun SDK W
+  attivo, zero logout/business write; target nativi e rete host intatti. Nessuna
+  estensione inferita e nessuna quiete globale. Nuovo handoff richiesto per una
+  nuova sessione e prova breve; non reinstallare né riusare il tentativo scaduto.
+- Una cattura diagnostica ha incluso header privati della sessione TEST: esclusa
+  dall'accettazione e mai copiata negli artefatti. Prossima prova usa soltanto
+  tabella Network/metodi/errori e screenshot senza dettaglio header.
+
+Evidenze: packet privato `mini-sales-build/v12-e305f083-20261009/`, receipt
+install/nuova AppService, `offline-account-v12-772967de…/observe.json`, nuovo
+`manual-offline-v12-1f645b42…/terminal-result.json` e release. A03 pending,
+C04, convergenza, misure e telefono restano aperti; nessun nuovo deploy o SQL.
+
+## Checkpoint storico — 2026-10-09 20:35 America/Santiago
+
+WECHAT-010 resta **EXECUTION**. La preparazione Mini v12 è revisionata; il
+collaudo applicativo resta pendente; il blocco GUI iniziale è ora superato.
+
+- Due reviewer indipendenti read-only: offline A03 **APPROVED** sui byte invariati;
+  installazione/observer **APPROVED R3**, freeze `a2b785e2`. Finding P2 riprodotto
+  RED 2 FAIL/3 PASS, poi GREEN 5 PASS: Home già signed out prima/dopo il read e
+  `stableGeneration === true` obbligatori. Un cleanup canonico della sessione
+  durante la lettura fa rifiutare pristine. Installer14 e oracle offline4 PASS
+  preservati; nessun nuovo sorgente applicativo o test completo ripetuto.
+- Slot Mini ricevuto da N **23:20:26 UTC**, rilasciato **23:27:59 UTC**, prima della
+  deadline. DevTools ufficiale `2.02.2609292 Nightly` aperto sul primario mostra la
+  welcome page; tap Compile non confermato, poi `noWindowsAvailable`/timeout.
+  Finder risponde. CLI ufficiale auto termina255 senza listener9420; quit ordinario
+  non confermato entro15s. Anche una sessione CUA nuova riceve timeout. Questo è
+  **FAIL di setup**, non un difetto applicativo o una prova di logout/sessione.
+- Verifica SDK-free dopo i tentativi: receipt/candidato102/sorgenti108, dist v11,
+  configurazione TEST e privata **PASS invariati**, primario e305 clean. Zero SDK,
+  pristine, intent/install v12, nuovo login, Business Save o cambio rete. La rete
+  Online fresca non è attestata. IDE ancora avviato/non rispondente; nessun comando
+  CLI, runner o gruppo SDK di W attivo. Release comunicata a N/C/Client.
+- Dopo la riapertura comunicata dall’utente, nuova istanza DevTools osservata
+  alle20:32 Santiago: Home `pages/index/index`, pulsante WeChat login, Network
+  Online e AX rispondente. Il precedente blocco GUI è superato. Manifest R3 e
+  statici v11 invariati; listener9420 ancora assente, zero SDK/test input/install.
+  N mantiene il passaggio nativo NEWTESTSave/QA, nuovo slot Mini richiesto ma non
+  ancora rilasciato. Prossimo passo: handoff concreto, automazione ufficiale,
+  pristine reale fresca <60s, install selettiva/Compile v12 e prova offline/logout.
+  La sola Home visibile non attesta sessione, journal vuoti o accettazione runtime.
+
+Packet: `mini-sales-build/v12-e305f083-20261009/`; review R3, log RED/GREEN,
+`devtools-setup-20261009.json`, `after-setup-readonly-check.json` e release slot.
+A03 pending, C04, convergenza quattro-client, misure e telefono restano aperti.
+
+## Checkpoint storico — 2026-10-09 19:55 America/Santiago
+
+WECHAT-010 resta **EXECUTION**. Mac accessibile nella discovery fresca; dopo il
+riavvio host, vecchi PID e stato AppService non sono riusati. N/C mantengono il
+primo slot nativo; W non ha aperto DevTools né connesso un SDK.
+
+- Primary Mini e origin/main verificati `e305f083`, clean. Nuovo candidato TEST
+  privato compilato da Git archive esatto con Node26.7.0 e TypeScript7.0.2
+  corrispondente al lock. Build PASS; 102 file, cinque output Home/Account/reader
+  nuovi e 97 byte-identici al v11, configurazione TEST `37d94cf4` preservata.
+- Receipt nuova `0bb11950` **PREPARED_NOT_INSTALLED**, runtimeAcceptance=false.
+  Installer selettivo nuovo: 14 test puri PASS; osservazione pristine reale e
+  review indipendente richieste prima dell'uso. Nessun dist/config del primario,
+  dato locale, sessione, pending o artefatto storico sovrascritto.
+- Oracle offline precedente riprodotto RED 2 FAIL/2 PASS: pretendeva shop nullo
+  dopo read fallite. Nuova copia richiede shop canonico preservato, errore
+  stabilizzato e sessione/generation/registry invariati: 4 test puri PASS.
+  Pin nuovi e namespace distinti; vecchia A03 scaduta non riusata.
+- Installazione, normale Compile DevTools, nuova AppService, A03 autentica e
+  runtime PR49/50 **NOT_RUN**. F00/F01–F06, altri casi residui, prestazioni e
+  telefono restano aperti; nessun nuovo Worker deploy, SQL o pausa cron da W.
+
+Packet privato: `mini-sales-build/v12-e305f083-20261009/`, nuova receipt,
+manifest, installer, observer e log oracle RED/GREEN. Questi risultati non
+promuovono CI o preparazione locale in accettazione autenticata.
+
+## Checkpoint storico — 2026-10-04 16:24 America/Santiago
+
+WECHAT-010 resta **EXECUTION**. Il punto 4 dell’addendum sul recupero automatico
+Home è integrato con [PR50](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/50):
+head `1e1cda39f4a905072d535ed4454cdeff111c750d`, merge/main
+`e305f083e8c16aac43b361ffabc9c9f08a3af493` alle 19:20:48 UTC.
+L’integrazione precedente PR49 rimane valida.
+
+- Una normale invalidazione cache, con pagina/sessione/shop ancora validi,
+  accorpa i chiamanti della Home e avvia un successore senza tap. Il controller
+  esistente mantiene backoff 3→6→12→24→30 secondi anche durante i read secondari;
+  Retry resta disponibile. Hide, cambio sessione/shop e dinieghi interrompono il
+  recupero. Nessuna risposta obsoleta applicata o riattivazione di scope revocato.
+- La cancellazione locale del reader ha un errore tipizzato condiviso dalla
+  richiesta; non è scadenza autorevole della sessione. Due refresh concorrenti
+  conservano la sessione; dinieghi server reali restano distinti, compresi
+  permission_denied/shop_suspended che rimuovono solo il contesto negozio.
+- RED iniziale 5 FAIL/1 PASS; due finding di review riprodotti con 2 FAIL, poi
+  **18 mirati PASS** (14 Page Home + 4 reader). Verify locale e CI reali:
+  **231 PASS/0 FAIL/0 SKIP** (111 TS + 120 JS), required checks/build/secrets/diff
+  PASS, lint storico 1 warning/7 infos. I due reviewer esistenti APPROVED R2,
+  zero finding aperti; freeze SHA256
+  `faeb5a07007662452a8fa5c57e3247caf230813b440f499ed18dd67f350f4f95`.
+- PR CI `37227808007` testa checkout virtuale `769d6b2c`, tree identico alla head
+  approvata; main CI `37227922782` testa `e305f083`, SUCCESS 19:21:13 UTC.
+  Entrambe Node 26.7.0 e otto step PASS, verificati nei log originali.
+- Primary fast-forward e clean, tre source uguali al freeze, tutti 104 file
+  config/dist preesistenti byte-identici. Solo tre file codice/test committed;
+  sei documenti owned restano unstaged, branch conservato. Generic build **OFF**.
+- Nuovo artefatto/install TEST, versione AppService nuova e collaudo autenticato
+  Mini/Admin **NOT_RUN**; A03/C04/pending/convergenza/prestazioni restano aperti.
+  Il debugger pronto comunicato dall’utente non attesta il nuovo runtime. N
+  mantiene la corsia input/heavy; nessun UI/SDK, SQL, deploy o produzione da W.
+
+Evidenze private originali: `home-cache-successor-20261004/publication.json`,
+freeze R2 e log RED/mirati/verify/CI; checkpoint precedenti conservati come storici.
+
+## Checkpoint storico — 2026-10-04 15:21 America/Santiago
+
+WECHAT-010 resta **EXECUTION**. La correzione Mini di autorizzazioni e lifecycle è
+integrata con [PR49](https://github.com/XNIW/MerchandiseControlWeChatMiniProgram/pull/49),
+merge `969f5d51510686fcaaeb007e3e08e35a7fb6bc73` alle18:14:36UTC; head approvata
+`2068a77c6f68654e2be3f906576bc3cd0c8b5a8c`. Review dati e UX finale3c **APPROVED**,
+zero finding aperti, candidate SHA256 `6838ac664799dfc2e10080ddfe15914fcd29bd1b500900902cbabb83a14d4c60`.
+
+- Home e Account rimuovono il vecchio contesto solo dopo membership assente
+  confermata. Timeout/read fallite mantengono il contesto valido; risultati
+  obsoleti restano fenced. Account distingue sospensione/sessione scaduta prima
+  di applicare risultati concorrenti, mostra shop/pending anche senza profilo e
+  mantiene caricamento e Retry utilizzabili. Home offre Retry dopo invalidazione
+  del read, senza applicare la risposta stale o avviare polling automatico.
+- Sei test mirati **PASS**. Verify locale e CI reali: **221 PASS/0 FAIL/0 SKIP**
+  (111TS+110JS), required checks/build/secret/diff PASS, lint storico1warning/7info.
+  PR CI `37223564169` testa checkout virtuale `5ae2a538`; main CI `37223667569`
+  testa effettivamente `969f5d51`, SUCCESS18:15:00UTC. Journal/sessione sono
+  conservati nei test dei metodi App; non è prova di retention runtime autenticata.
+- Primary aggiornato solo mediante fast-forward: clean, sette file source7/7
+  uguali al freeze e tree identico alla head approvata. I104 file di configurazione
+  e dist preesistenti sono byte-identici. Il generic build verificato nel worktree
+  è **OFF**; il dist/AppService TEST preservato non è attestato come nuovo.
+- Nuovo build/install TEST e collaudo autenticato Mini/Admin **NOT_RUN**. A03,
+  C04, pending, convergenza, prestazioni e dispositivo fisico restano distinti;
+  vecchia prepare A03 scaduta non riusata. Input/heavy lane appartiene a N:
+  nessun UI/SDK o build TEST concorrente da W. Nessun deploy, SQL o produzione.
+
+Le prove e gli stati dei checkpoint precedenti sono storici, non una nuova
+attestazione di runtime, credenziali, registry o backend distribuito.
+
+## Checkpoint storico — 2026-10-04 12:59 America/Santiago
+
+WECHAT-010 resta **EXECUTION**: integrazione Admin completata, accettazione runtime
+parziale. Admin PR128 è MERGED (`3201a311`) e CI main37175407216/Cloudflare37175407209
+SUCCESS. PR130 è MERGED (`82af13ef`) dopo riconciliazione documentale/review della
+candidata `e04603e3`; CI PR37175703098/Cloudflare37175703090 hanno realmente
+collaudato `c0837c4e`, tree identico `b8ed55b2`. CI main37176343479 e
+Cloudflare37176343496 SUCCESS; i tre job hanno checkout reale `82af13ef`, stesso
+tree. Deploy staging/production SKIPPED; nessuna applicazione o riapplicazione SQL.
+Primary Admin e cinque file staging preparati da altri sono preservati.
+
+Mini primary `00c25323` pulita: rispetto alla receipt compilata `f68afed9`
+cambiano soltanto otto Markdown; tutti102 file dist sono byte-identici.
+Nuove copie private dei runner distinguono receipt storica e checkout attuale,
+richiedendo esattamente otto modifiche documentali e checkout pulito.
+Review statica approvata senza finding,16 test puri sul solo nuovo guard e quattro
+controlli sintattici PASS; runner/receipt originali e controlli protetti invariati.
+
+Preflight read-only TEST catturati04:24:31/04:25:17 UTC: Worker `22107a6f`,
+registry155/latest `20261002180757`, digest SQL identity `9e4741b64d7b0999b3000f06990e922f`
+concordi. Login WeChat ordinario del Mini PASS, Account canonico caricato e sessione
+fresca alle01:29 Santiago. A03 conserva la sola receipt **PREPARED_ONLINE**:
+SDK disconnesso, zero Save/logout, nessuna modifica rete. La sessione preparata
+scadeva alle01:44:03 Santiago; la lettura successiva mostra Home con accesso
+WeChat disponibile. Tentativo chiuso **NOT_RUN_PREPARATION_EXPIRED**, receipt
+privata `root-not-run-expired-observation-20261004.json` SHA256 `e8ea75f1`;
+prepare originale invariato, nessun observe/logout/ACK, nessuna nuova autenticazione.
+Questo non accetta E05 né prova un evento logout o la generation corrente.
+
+Input CUA al debugger rifiutato `noWindowsAvailable`; AX/screenshot leggibili,
+ma un successivo click Throttling non apre il menu. Owner del prerequisito finestra:
+utente/controllo Mac; portare davanti DevTools e lasciare Network aperto. Non è
+prova OSlock o difetto applicativo. Dopo ripristino input serve una nuova normale
+sessione/preparazione; i preflight salvati non sono un gate fresco per nuovi casi.
+
+N comunica build finali e installazioni in-place Android `20fe`/iOS `c6a2`
+riuscite, processi posseduti chiusi. Android: SHA installata esatta,19 tabelle Room
+con COUNT/digest delle righe tipizzate/ordine schema identici prima e dopo,
+Room22/quickcheck OK. iOS: profilo TEST `154a` esatto, stessa identità keychain,
+container dati ricollocato e store popolati con integrità OK. La receipt install
+`844ca4e9` resta **pass=false**: guard percorso non preservato, confronto business
+prima/dopo completo e sessione UI non verificati; EXIT0 non promuove questo limite.
+CI main iOS37177424913 SUCCESS alle02:07:13 Santiago, checkout `433e`,
+1442 PASS/36 SKIP/0 FAIL. Receipt indipendente `a8aaf5ac` letta e hash verificato
+qui: checkout e ID/stati/motivi skip corrispondono alla PR15; log ufficiali, nessun
+xcresult remoto pubblicato o ispezionato. Ricevute Android `d9f6b39c`, install iOS
+`844ca4e9` e store iOS `5dc559a6` anch'esse lette e hash verificati da W;
+confermano l'installazione e i limiti descritti, non nuove osservazioni UI/DB.
+Sessione/retention completa UI, recovery e convergenza restano non verificati;
+nessuna nuova accettazione runtime nativa da W.
+Il controllo input ora segnala `noWindowsAvailable` anche per Android;
+DeviceHub riceve timeout. Nessun OSlock dedotto, auth reset o nuovo businesswrite.
+W resta senza build, runtime o benchmark concorrenti.
+
+N ha poi eseguito la classe Compose isolata: **3 PASS/1 FAIL/0 SKIP**, timeout
+5000ms al retry dialogo(test138), log salvato `59251eef`. Il precedente tentativo
+si era fermato al preflight senza invocare test. Review source-only W: la fixture
+non apre l'editor nel ViewModel, lasciando il target baseline assente; i Save
+vengono rifiutati prima del repository e il primo errore generico non prova
+l'hook iniettato. Causa sufficiente dal codice corrente, distinta dal solo timeout
+osservato nel log; nessun difetto di produzione dedotto. N ha corretto la sola
+fixture `62e3afa9`: normale openEditor e contatori repo, invarianti e timeout
+originali preservati. Review mirata W CONFIRMED_STATIC,0finding. Nuova classe
+isolata **4 PASS/0 FAIL/0 SKIP**, una invocazione, alle03:03:13 Santiago;
+log `8f1acda0`, receipt `471d727e`, review indipendente `c65aa90e` letti/hash
+verificati. Receipt conferma owned emulator PGgone/serialabsent e zero azioni sui
+simulatori autenticati. Il vecchio3P1F e preflightabort restano conservati.
+PR16 Android **MERGED** alle03:22:45 Santiago, merge/main `fe0927c3`;
+head `db6f110a`, CI37181929838 SUCCESS. N comunica receipt indipendente
+headCI `3b27`:1127 PASS/7 SKIP e lint54/0Kotlin. CI main37182631429 SUCCESS alle03:32:42 Santiago, checkout reale `fe0927c3`.
+Receipt indipendente `a8ed458c` letta e SHA256 verificato da W:1127 PASS/7 SKIP,
+74XML/12step, tutti ID/stati/skip e lint54 byte-identici a head e main precedente;
+zero nuovi warning o Kotlin. Metadata GitHub corrente SUCCESS verificata separatamente.
+Questa CI non esegue i quattro Compose isolati né accetta runtime autenticato.
+N comunica primary fast-forward con file locali/config/private/stash preservati,
+nessun autostash. App production e artefatti212/20fe invariati; questa è una
+integrazione test-only, non nuovo install o recovery autenticato.
+Simulatori autenticati preservati, nessun caso di sincronizzazione accettato.
+
+W ha ripristinato il client CUA e riletto DevTools: Home offre Sign in e
+screenshot mostra Network. Dopo rilascio corsia N e notifica C, W ha eseguito
+una sola verifica input: Raise supportato e apertura Throttling su screenshot
+fresco. Il click riceve server `-10005:noWindowsAvailable`, menu non apparso.
+Receipt osservazionale `38cfff30` e screenshot `51a92991` conservati0600, hash
+riletti/verificati; nessun SDK/auth/Offline/Save/nativeinput Android-iOS o campione.
+Corsia subito rilasciata. Nuova A03 non preparata; nessun blocker risolto o
+difetto applicativo/OSlock dedotto. Richiesto all'utente il click normale Network
+con DevTools davanti; è un prerequisito operativo, non una nuova approvazione. N conferma corsia native input/SDK/heavy libera, zero job locali propri;
+report finale `80b2c1d2` e handoff `9a398b98` letti e hash verificati da W.
+Resta unico inputowner Android/iOS; finestra Mini breve conclusa e rilasciata.
+N conferma zero ulteriori input/SDK/heavy, nessun nuovo GO funzionale o prestazionale.
+N comunica preparazione helper CSV04 **APPROVED_STATIC_ONLY** completa:
+handoff `6314eaa1`,8pin/current217/source1a350/readback447; riferimenti quattro
+client futuri NULL. Qualifica/GO/install/full11 ancora richiesti, runtime e campioni
+restano zero. Questa preparazione non risolve il prerequisito input.
+
+Ripresa successiva allo sblocco umano comunicato alle12:32 Santiago: N mantiene
+la prima finestra nativa, W zero UI/SDK/heavy. Hash dei quattro runner correnti
+confermati in sola lettura; runner.lock, arm C04 e root pending risultano assenti,
+senza attestare AppService o concedere GO. Prepare `423bc608` resta scaduta/intatta.
+N verifica alle12:44 le app effettivamente installate: Android5554 `20fe1478` e
+iOS459 `c6a205f4` coincidono con le build finali; path dati iOS uguale al postinstall,
+senza prova di retention business completa o sessione UI. Receipt `34ca8136`
+riletta e SHA256 verificato da W; sessione/scope/READY UNKNOWN.
+Il controllo UI fresco di N restituisce esplicitamente **Mac locked/manual unlock
+required**: receipt registrata alle12:50 `9e15e7ce`, riletta e SHA256 verificato da W.
+È un nuovo impedimento operativo, distinto dal precedente `noWindowsAvailable`;
+non è un difetto applicativo. Zero launch/input/businessmutation/build/install
+o campioni nuovi. N rilascia la corsia fisica e C conferma zero job/SDK/inflight;
+nessuna A03fresh/login/UI finché manca un nuovo segnale utile di sblocco.
+Richiesta umana già inviata da N, nessuna ulteriore richiesta o approvazione generica.
+
+Performance privata v14 è
+una copia con pin/path login correnti e relativi codici di errore, APPROVED_STATIC_DELTA_ONLY e sintassi PASS;
+nessuna suite v14 o raccolta eseguita. Il wiring SDK CLOSE/LAUNCH resta static-only.
+Conflitto C04, pending, convergenza quattro-client, misure residue e telefono
+restano non accettati.
+Nessun DONE o nuova qualifica globale; nessun deploy produzione, scrittura SQL diretta
+o riapplicazione di migrazioni.
+
+## Checkpoint storico — 2026-10-03 03:20 UTC
 
 WECHAT-010 resta **EXECUTION**, con gate locali consegnati e accettazione autenticata
 ancora aperta. Mini PR47/sorgente applicativa `f68afed9`, runtime TEST v11/102 file, verify219 e
