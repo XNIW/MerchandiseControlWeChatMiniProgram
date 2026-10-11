@@ -1,6 +1,24 @@
 # Active task
 
-## Checkpoint corrente — 2026-10-11 17:50 America/Santiago
+## Checkpoint corrente — 2026-10-11 18:00 America/Santiago
+
+Corretto il testo di errore condiviso mostrato nella lettura product-detail dopo
+il recupero C04: le quattro lingue ora descrivono una richiesta non completata
+senza promettere un modulo conservato. Solo quattro traduzioni, nessun cambio
+a logica form/outbox, autenticazione, sessioni o code. Source500ee402/patchd4d08565,
+freezea3afcb31, full verify PASS e review indipendente2/2 APPROVED; integrazione
+in preparazione. Copy **NOT_INSTALLED/runtime NOT_RUN**: build V12/e305 e
+configurazione private correnti preservate per il retest C04 già revisionato.
+Il fix del testo non diagnostica né chiude la precedente failure del reload.
+
+Recupero338160bc/release7926bf7f verificato; PR52 integrata e07f336b con CI
+head38174097336 e postmerge38174140808 SUCCESS. Il nuovo retest R2 7ffe8026,
+case7beba10f,33test PASS/review2/2 resta NOT_RUN: Mac locked all'ultimo controllo,
+sblocco umano richiesto e nessuna nuova finestra/SDK/input/SQL/Save. Pending,
+convergenza quattro-client, prestazioni e telefono aperti; N attende la CI iOS
+38173188925. WECHAT-010 EXECUTION, nessun DONE.
+
+## Checkpoint storico — 2026-10-11 17:50 America/Santiago
 
 Il recupero locale del failed-case C04 è verificato anche da due revisori sugli
 artefatti salvati: terminale338160bc e release7926bf7f. Home autenticata originale,
