@@ -716,3 +716,113 @@ canonico/errore rimosso. Terminal80591422; finalJPEGc2468e30. Release effettiva
 retehost/targetnativi. N/C/Client informati; slotchiuso. Nessun headerprivato nelle
 catture. Packetg02-account-locales-20261010. G02globale/dialoghipending/conflitto,
 C04live, convergenza, prestazioni e telefono restanoaperti; EXECUTION,nessunDONE.
+
+## 2026-10-10 18:08 America/Santiago — C04 baseline attuale revisionata
+
+**C04 v19 APPROVED source da due revisori indipendenti; prova autentica NOT_RUN.**
+Candidate `71019a89`, companion `941714df`, freeze `e9f73a2b`, pair `16ba16fb`:
+88 prove pure PASS. Deadline assoluta, latch attivo prima della connessione,
+cleanup di proprietà, unico Save Mini, cinque fixture e dettagli completi restano
+invariati. V12/source `e305f083` e configurazioni TEST sono invariati.
+
+Il nuovo rollout POS esterno ha cambiato la baseline: Worker `fdfb3a7e`, source
+`acb3e4ac`, CI38083172469 SUCCESS, registry158 con tre aggiunte POS. Il refresher
+precedente rifiuta correttamente VERSION_CHANGED; lo slot precedente viene
+ritirato prima di GO. Sono byte-identici i102 file pertinenti tra il precedente
+source servito e quello corrente. Capsule source `9f520d0c`, CI `5440af40`,
+lineage Client `c25a2ac0`: conteggio158, tre digest esatti, prefix155 e statement
+identity invariati. Nessuna attestazione di tutti155 corpi SQL o dei dati.
+
+Adattamento dedicato C04, senza alterare restoration155 o lo snapshot globale.
+Refresh readonly21:01:29 e21:03:44 UTC PASS, receipt `8666ef17` e `6a8df3b2`:
+versione/ETag/binding/target/allowlist/flag/tracing verificati. Nessuna equality
+attestata dei valori segreti, nessun deploy/apply/rotazione o modifica flag da W.
+Nuovo GO N21:03:08→21:18:08 UTC, checkpoint `8c72880b`, completamente distinto
+dallo slot ritirato. Il primo controllo CUA segnala Mac locked; sblocco manuale
+richiesto. Nessun nuovo case, connessione SDK, query business, draft o Save C04.
+
+Release anticipata effettiva21:07:40 UTC, receipt `8027fbf6`: zero processi runner
+C04 di W, SDK/SQL/Save/input zero, lock e fence assenti. Finestra chiusa, byte
+preservati `46f97e35`, path runtime attivo assente. Online/zh-Hans correnti non
+osservati per Mac locked; ultimo riscontro20:08 resta storico. N riacquista le
+risorse; nessuna quiete globale o runtime acceptance dedotta. Un nuovo tentativo
+richiede sblocco umano, nuovo GO N, preflight e sessione freschi. Controlli sui
+sette documenti: governance/privacy/secret scan/diffcheck PASS; app invariata.
+
+G02 Account nelle quattro lingue e logout offline senza pending restano i PASS
+limitati documentati sotto; PR51 integrata `259fb967`, CI head38082855727 e
+postmerge38083487701 SUCCESS. C04 live, pending, convergenza quattro-client,
+prestazioni e telefono restano aperti. **WECHAT-010 resta EXECUTION; nessun DONE.**
+
+## 2026-10-11 12:56 America/Santiago — C04 eseguito e FAIL riconciliato
+
+Caso d072: un Save Admin e un Save Mini respinto stale_version. SELECT finale
+15:56:53UTC conferma nome Admin preservato, zero scritture Mini riuscite, una
+ricevuta bloccata e dettagli/fixture/history invariati. Collector ORACLE_STALE
+primaSDK e continuazione FAIL SESSION_OR_SCOPE_INVALID preservati. Continuazione
+a3c39255 e riconciliatore readonly5599e8dd approvati2/2; nessun secondo Save/login.
+Primo rilascio ba28f840 tardivo42.131249s; secondo release94f7a491 anticipato,
+connessioni chiuse e lock assente. Terminale backend b3d3e6fd resta FAIL runtime,
+oracolo2ddda532; fence conservato per recupero UI, Mac nuovamente bloccato.
+Sblocco manuale richiesto; N riprende diagnosi iOS distinta. App/build/config
+invariati. C04 recovery, pending, convergenza, prestazioni e telefono aperti;
+EXECUTION, nessun DONE. Dettagli e limiti nel report canonico.
+
+## 2026-10-11 13:24 America/Santiago — diagnostico C04 corretto, runtime sospeso
+
+Finding P2 del candidato observer b0f21bd2 riprodotto con regressione pura RED
+sul sink completo. R2 97009930 usa solo hash/confronti/conteggi e sanitizza anche
+form e snapshot; 13 test puri PASS, review indipendenti APPROVED source-only 2/2.
+Freeze f9893958 e undici artefatti verificati; originali e FAIL conservati.
+N overall release effettivo 16:17:29UTC; CUA segnala ancora Mac locked. Nessun
+SDK/input/SQL/nuovo Save/login, nessuna finestra aperta, lock assente e fence
+conservato. Lo sblocco manuale è pendente. Fonte/app/build/config invariati;
+C04 runtime e WECHAT-010 non completati. Dettagli nel report canonico.
+
+
+## 2026-10-11 20:04 UTC — C04 diagnostic-only effettivo e recupero preparato
+
+Sblocco umano e nuova finestra N19:43:27→19:58:27. Observer R2 approvato
+97009930 effettivo19:45:34, terminal06c4a4d5: sessione scaduta/gen12, form dirty
+con bozza originale/revisione Admin, coda persistente originale/foreign vuota.
+SELECT readonly19:45:29/b5974129 e metadata protetti freschi: server/protected/
+history invariati. Zero nuovi Save/login/SDK input. Release complessiva reale
+19:47:35.693/415a311e, non il solo end runner19:45; lock assente, window chiusa,
+fence conservato. Originale FAIL/reload non accettato preservati.
+
+Helper recupero iniziale631fc704 rifiutato2/2 P2 (errore I/O post-unlink poteva
+lasciare fence disarmato). Nuova source e2b242a6/freeze623075b1 conserva tutti
+originali, riserva output prima unlink, finalizza sotto lock e ripristina
+exact hardlink senza sovrascrivere foreign owner su errore. 26 test unitari e
+fault injection su directory temporanee PASS (chunk7e3ba7); review2/2 APPROVED
+source-only. Prepare584f32 crea soltanto context/descriptor/SQL privati: nessun
+SDK/UI/SQL eseguito. Recupero UI NOT_RUN; nuova lease dopo release N necessaria.
+Nessun delta app/build/config/deploy/apply/flag/secret; EXECUTION, nessun DONE.
+
+
+## 2026-10-11 20:26:12 UTC — Recupero locale failed-case C04 effettivo
+
+GO N edfb8b60 entry20:18:49→20:33:49/cutoff20:32:49; sole issued/checkpoint.json
+adottato,5720 PREPONLY maiusato, nessuna estensione. Refresh metadata7aadfe/236551
+PASS; prepare/adopt file-only584f32/c5d27e. CUA nativa: Back2, conferma uscita
+bozza1, ordinaryWeChatLogin1, shopSelection0. Save/Retry/Reload/Reapply/SDKinput/
+newBusinessWrites0. Cinque JPEG originali privati, UI log effettivo conservato.
+
+Observer97009930 effettivo eba23920:23:50.451→.697: sessiontrue/rem862/gen13/
+fingerprint e actor-shop originali/Home/dirty0/noform/own+foreign queues0/wifi/
+exceptions0/cleanupcertain. SELECT TEST readonly finale20:24:17.823293,080a4449
+con envelope MCP originale; reconcile58fb88 exit0 entro60s, tutti gate full
+noOverwrite/protected/details/prices/images/history PASS. Terminal338160bc
+FAILED_CASE_LOCAL_UI_RECOVERY_VERIFIED, runtimeAcceptance=false/reloadAccepted=false.
+OriginalFAILb3d bytepreservato; fence originale6aa archiviato durabilmente sotto
+lock usando R2 e2b2 APPROVED2/2,26pure/tempfs PASS; globalfence/lock assenti.
+
+Actual overall release20:26:12.809/7926bf7f, window chiusa bytepreservata, Wrunner0,
+N/C/Client informati. Non promuovere oldaction-sheet intent o mixedform in reload
+PASS/bug prodotto. Reviewer saved-evidence richiesti; nessun nuovo caso avviato,
+nessun delta app/config/flag/secret/deploy/apply, nessun DONE. N riacquista risorse
+per il proprio Root9 definitivo; W solo docs/source, acceptance globale aperta.
+
+| 2026-10-11T20:50:07Z | WECHAT-010 | Failed-case local recovery independently verified; distinct reload retest source corrected and APPROVED2/2, runtime NOT_RUN | Recovery338160bc/release7926bf7f; originalFAILb3d3e6fd preserved. R1 P2/NOT_RUN; R2 7ffe8026/freeze12ca6ced/pair8b5ede03,33pure tests PASS. Actual CUA Mac locked; owner user/unlock requested, no new GO, app/TEST configuration unchanged, EXECUTION/no DONE |
+
+| 2026-10-11T20:52:06Z | WECHAT-010 | Recovery/retest checkpoint passed required local verification before authorized publication | Full verify exit0 (2994f2/a02cda), governance/privacy/secrets/typecheck/lint/tests/build and diffcheck PASS; application unchanged. New C04 remains NOT_RUN pending manual Mac unlock and fresh N lease, EXECUTION/no DONE |
