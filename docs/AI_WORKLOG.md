@@ -921,3 +921,43 @@ PG86250 assente, SDK/CUA/SQL/network/login/Save0. Full verify **PASS**:
 111 TS+120 MJS=231 PASS/0 FAIL/0 SKIP, governance/privacy/secret/type/lint/build
 completati. Log1c83d9b6; primo FAIL9d4636cd e release2beb3415 conservati.
 Integrazione sorgente in preparazione; NOT_INSTALLED, nessuna prova auth/reload.
+
+
+## 2026-10-11 19:02 America/Santiago — Sblocco ordinario IDE e QR ufficiale
+
+
+L’utente non trovava Esci/QR e ha richiesto il controllo autonomo. Nuova finestra
+ordinaria IDE: Logout1 effettivo21:38:49.838 UTC, modalità ospite osservata, QR
+non visibile nella finestra progetto. Ultimo input21:40:13.217 prima del cutoff;
+release amministrativa21:41:38.284584/3364c30e oltre deadline22.11s, FAIL_TIMING
+preservato. SDK/login business/Save/SQL/compile/cache erase0.
+
+Due finestre CLI successive fermate prima del dispatch: NOT_RUN3773a9a8/ef4ec1d5,
+comandi effettivi0. Produttore R2 con cleanup su SIGTERM/SIGINT verificato soltanto
+in fixture di processo0bdb9fe3; nessun accesso reale in quei test. Nuova finestra
+180s/45s, issuedab6a27b3: un solo comando ufficiale IDE login effettivo
+21:57:25.612185→21:57:55.666741 UTC. PG89411 assente, release898739d9 prima
+cutoff/deadline, SDK/CUA/login business/Save/SQL/compile/config0.
+Il terminale helper è FAIL e resta preservato: il guard PNG non ha riconosciuto
+il JPEG realmente prodotto dal vendor. Log attesta QR generated; file JFIF/EOI
+47192byte, immagine originale89ed4681 osservata470×470. Nessun secondo comando,
+nessun poll del risultato. QR mostrato soltanto all’utente per scansione fisica
+con lo stesso account; **IDEAuthenticated UNATTESTED**, risposta in attesa.
+Fix privato R3 del riconoscimento PNG/JPEG3ba8a93d, readback puroc4c06d45:
+source-only, nessuna nuova invocazione. Generazione QR non equivale ad accesso.
+
+PR54 integrataf82471bd; CI head38176865854/main38176932000 SUCCESS,
+231 PASS/0 FAIL/0 SKIP per ciascuna; receipt696db99b. Primarye305 clean verificata,
+copyNOT_INSTALLED. Nessuna accettazione auth/C04reload o DONE.
+
+
+### 2026-10-11 19:09 America/Santiago — QR rinnovato su richiesta umana
+
+L’utente ha segnalato QR scaduto/errore. Nuova finestra CLI180/45 issueda3edb066,
+produttore R3/3ba8a93d, un solo comando ufficiale: ingresso22:09:25.126089 UTC,
+release22:09:29.305136 UTC/53f5b874 prima del cutoff/deadline. PG90678 assente;
+JPEG reale470×470/47388byte, SHA5aa11f7a, generato e mostrato all’utente.
+Solo generazione QR verificata; IDEAuthenticated UNATTESTED, nessun result poll,
+SDK/CUA/login business/Save/SQL/compile/config0. Nuova scansione personale in
+attesa; eventuale errore richiesto come testo esatto. FAIL03/898739 e QR03/89ed
+restano preservati, nessun nuovo collaudo C04 o DONE.

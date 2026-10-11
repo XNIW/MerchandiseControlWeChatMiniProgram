@@ -1,6 +1,6 @@
 # Active task
 
-## Checkpoint corrente — 2026-10-11 18:32 America/Santiago
+## Checkpoint corrente — 2026-10-11 19:24 America/Santiago
 
 Sblocco umano verificato in DevTools; nuovo GO N issued8c04b589,
 21:09:04→21:24:04 UTC, per il caso distinto C04 R2 7beba10f.
@@ -26,7 +26,31 @@ normale nuovo accesso al profilo dell'IDE con scansione QR personale, stesso
 account, cache/dati/progetto preservati e senza ricompilazione. Owner utente;
 unblock «DevTools autenticato», poi nuova finestra e preflight autentici.
 
-Correzione separata del messaggio Home preparata: il fallback senza sessione
+L’utente non trovava Esci/QR e ha richiesto il controllo autonomo. Nuova finestra
+ordinaria IDE: Logout1 effettivo21:38:49.838 UTC, modalità ospite osservata, QR
+non visibile nella finestra progetto. Ultimo input21:40:13.217 prima del cutoff;
+release amministrativa21:41:38.284584/3364c30e oltre deadline22.11s, FAIL_TIMING
+preservato. SDK/login business/Save/SQL/compile/cache erase0.
+
+Due finestre CLI successive fermate prima del dispatch: NOT_RUN3773a9a8/ef4ec1d5,
+comandi effettivi0. Produttore R2 con cleanup su SIGTERM/SIGINT verificato soltanto
+in fixture di processo0bdb9fe3; nessun accesso reale in quei test. Nuova finestra
+180s/45s, issuedab6a27b3: un solo comando ufficiale IDE login effettivo
+21:57:25.612185→21:57:55.666741 UTC. PG89411 assente, release898739d9 prima
+cutoff/deadline, SDK/CUA/login business/Save/SQL/compile/config0.
+Il terminale helper è FAIL e resta preservato: il guard PNG non ha riconosciuto
+il JPEG realmente prodotto dal vendor. Log attesta QR generated; file JFIF/EOI
+47192byte, immagine originale89ed4681 osservata470×470. Nessun secondo comando,
+nessun poll del risultato. QR mostrato soltanto all’utente per scansione fisica
+con lo stesso account; **IDEAuthenticated UNATTESTED**, risposta in attesa.
+Fix privato R3 del riconoscimento PNG/JPEG3ba8a93d, readback puroc4c06d45:
+source-only al precedente checkpoint. Dopo risposta umana QR scaduto/errore,
+nuovo case04: un solo comando22:09:25→22:09:29 UTC, release53f5b874 prima cutoff,
+PG90678 assente. QR JPEG5aa11f7a470×470 mostrato; IDEAuthenticated UNATTESTED,
+nessun SDK/CUA/login business/Save/SQL/compile/config. Scansione in attesa.
+Generazione QR non equivale ad accesso; FAIL03 preservato.
+
+Correzione separata del messaggio Home integrata: il fallback senza sessione
 usa retryableError nelle quattro lingue già corrette in PR53, evitando di
 presentare un login fallito come aggiornamento fallito. Solo un'espressione
 text; sessioni, autenticazione, error mapping e viewState invariati.
@@ -40,12 +64,16 @@ review indipendente2/2 APPROVED/pair57689b56. Secondo verify effettivo
 21:31:44→21:31:46 UTC **PASS**:231 test/0 FAIL/0 SKIP, controlli governance,
 privacy, secret scan, typecheck, lint e build inclusi. Release9b22b969 prima
 del cutoff/deadline, process group proprietario assente e runtime input0.
-Primo FAIL conservato. Integrazione sorgente in preparazione; **NOT_INSTALLED**.
+Primo FAIL conservato. Sorgente integrato con PR54/f82471bd: CI head38176865854
+e main38176932000 SUCCESS, ciascuna231 PASS/0 FAIL/0 SKIP; receipt696db99b.
+Modifica **NOT_INSTALLED**; primary V12/e305 e configurazione preservati.
 PR53 integrata a7166d23, CI head38174582111 e main38174642319 SUCCESS;
 PR52 e recupero già integrati. Runtime V12/e305 e configurazione preservati.
 
 N ha comunicato CI iOS38173188925 SUCCESS e merge normale PR22/d57876ed;
-installazione e collaudo nativi restano nella lane N. W0SDK/UI/input/heavy.
+installazione e collaudo nativi restano nella lane N. N riferisce poi main CI
+FAIL e un nuovo Root9 su simulatore isolato in corso; nessuna accettazione
+nativa dedotta da quei messaggi. W0SDK/UI/DevToolsCLI/input/heavy/SQL.
 Pending, convergenza quattro-client, prestazioni e telefono restano aperti.
 WECHAT-010 EXECUTION, nessun DONE o accettazione globale.
 
