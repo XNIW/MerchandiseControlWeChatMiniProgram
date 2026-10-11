@@ -14,7 +14,144 @@ con modifiche locali preesistenti preservate. Build correnti da riconciliare pri
 dei nuovi PASS cross-client. Runtime TEST/configurazione e fixture sono nel packet
 privato già autorizzato; nessuna credenziale nel report.
 
-## Checkpoint corrente — 2026-10-10 17:08 America/Santiago
+## Checkpoint corrente — 2026-10-11 17:50 America/Santiago
+
+Il recupero locale del failed-case C04 è verificato anche da due revisori sugli
+artefatti salvati: terminale338160bc e release7926bf7f. Home autenticata originale,
+code vuote e dati protetti invariati; il FAILb3d3e6fd e reloadAccepted=false restano
+preservati. Nessuna accettazione retroattiva del reload.
+
+Retest distinto da baseline riconciliata preparato soltanto nei file privati.
+R1 115ed691 non eseguito e respinto P2 per possibile riuso di osservazione Home
+fra finestre. R2 7ffe8026/freeze12ca6ced/pair8b5ede03:33test puri/temp-fs PASS e
+review indipendente2/2 APPROVED. Chiusura legata a SHA/cutoff/tempi del lease
+corrente, TTL ridotto del tempo trascorso e SQL fresco ricontrollati durante
+archiviazione e rollback. Oracolo reload-readback dedicato; nomi/revisione
+correnti, identità originale e fixture/history complete; niente restore extra.
+
+Nuovo case7beba10f è WAIT_BEFORE_SQL/NOT_RUN: nessuna query business, login,
+SDK/input o Save del retest. Ultima lettura CUA effettiva del turno: Mac locked; owner utente,
+sblocco manuale richiesto, poi servono nuovo GO N esclusivo e preflight/sessione
+freschi. Nessun GO o lease attivo W. App V12/e305 e configurazione TEST invariati.
+N ha pubblicato il candidato iOS867c9b23/PR22; CI38173188925 in corso all'ultimo
+riscontro, distinta dal fullband locale9PASS e dalla vecchia CI fallita.
+C04 reload, pending, convergenza quattro-client, prestazioni e telefono restano
+aperti. WECHAT-010 EXECUTION; nessun DONE o pilot readiness.
+
+## Checkpoint storico — 2026-10-11 17:26 America/Santiago
+
+**Recupero locale del failed-case C04 verificato; reload originale non accettato.**
+Nuovo GO effettivo edfb8b60,20:18:49→20:33:49 UTC, cutoff20:32:49. Usato soltanto
+issued/checkpoint.json; preparazione5720 mai emessa, transport copy conservata.
+Baseline Worker protetta aggiornata all'ingresso, app V12/e305 e flag invariati.
+
+Gesti nativi effettivi: Back2, consenso uscita dalla sola bozza1, login WeChat
+ordinario1; shop selezionato automaticamente già originale. Save/Retry/Reload/
+reapply/SDK input/nuove scritture business zero. Cinque JPEG nativi conservati.
+Observer R2 effettivo20:23:50: Home pulita, form assente, dirty0, sessione valida
+862s, generazione13, stesso account/shop, fingerprint originale, coda persistente
+originale/foreign vuota, wifi, zero eccezioni e disconnect certo.
+
+SELECT indipendente finale20:24:17.823293 UTC,080a4449, riconciliata entro60s:
+nome Admin, dettagli/prezzi/immagini, cinque fixture e Mini history invariati.
+Terminale338160bc FAILED_CASE_LOCAL_UI_RECOVERY_VERIFIED: runtimeAcceptance=false,
+reloadAccepted=false; FAILb3d3e6fd byte-preservato. Fence6aa1 archiviato durabilmente
+con byte originali sotto lock; lock e fence globale assenti. La pulizia non
+attesta il ramo effettivo della vecchia action-sheet né un difetto applicativo.
+
+Release complessiva reale20:26:12.809 UTC/7926bf7f, prima deadline; runner W0,
+window attiva archiviata. N/C/Client informati; N riprende il proprio Root9 sulla
+correzione fullband definitiva. W resta fuori dai dispositivi. C04 reload richiede
+una prova distinta da baseline riconciliata; pending, convergenza quattro-client,
+prestazioni e telefono restano aperti. WECHAT-010 EXECUTION, nessun DONE.
+
+## Checkpoint storico — 2026-10-11 17:04 America/Santiago
+
+Diagnostico C04 R2 autentico in sola lettura, 19:45:34 UTC, osservazione
+`06c4a4d5`: nessuna scrittura pendente originale o foreign, form originale
+ancora dirty con bozza conservata e revisione Admin; sessione scaduta
+naturalmente, generazione12. Nessun nuovo Save, login o input SDK.
+È un diagnostico, non accettazione del reload; i FAIL originali restano tali.
+
+Finestra diagnostica nuova19:43:27→19:58:27 UTC, metadata Worker protetti
+freschi e SELECT indipendente19:45:29 (`b5974129`): noOverwrite, fixture,
+prezzi/dettagli e history invariati. Release complessiva effettiva19:47:35.693
+UTC (`415a311e`), connessione chiusa, lock assente e finestra attiva archiviata.
+Fence originale ancora armato; app V12/e305 e configurazione TEST invariati.
+
+Recupero UI del caso fallito preparato, non eseguito. Due revisori hanno
+rifiutato il primo helper per P2: errore terminale poteva liberare il fence.
+Originale conservato; R2 `e2b242a6`, freeze `623075b1`, 26 test puri/temp-fs
+PASS e review indipendente2/2. Riserva output, journal durabile e rollback
+sotto lock preservano i byte e qualsiasi owner diverso. Il recupero richiede
+nuova finestra, navigazione/login ordinari, Home pulita stesso account/shop,
+coda persistente vuota e SELECT finale fresca. Nessun Save/Retry/Reload/reapply.
+N usa un proprio slot Root9; W resta0 SDK/input/heavy in attesa del rilascio.
+WECHAT-010 resta EXECUTION; pending, convergenza, prestazioni e telefono aperti.
+
+## Checkpoint storico — 2026-10-11 13:24 America/Santiago
+
+Diagnostico readonly R2 `97009930` preparato sullo stesso caso: P2 di privacy
+del report chiuso, originale frozen preservato, 13 test puri PASS e review
+indipendente 2/2. Nessuna esecuzione SDK/UI/SQL del diagnostico; runtime NOT_RUN.
+N rilascia le risorse 16:17:29 UTC; la lettura CUA del turno trova ancora Mac
+locked. Servono sblocco manuale e nuova finestra esclusiva; fence conservato.
+
+
+C04 è stato eseguito sul caso d072e509, con un solo Save Admin e un solo
+Save Mini respinto come stale_version. La lettura finale indipendente delle
+15:56:53 UTC conferma nome Admin preservato, nessuna scrittura Mini riuscita,
+una sola ricevuta bloccata e fixture/dettagli/history invariati.
+
+Il ricaricamento UI non è accettato: il primo collector si ferma su
+ORACLE_STALE prima del SDK; la continuazione in sola lettura, revisionata 2/2,
+restituisce FAIL SESSION_OR_SCOPE_INVALID dopo la scadenza della sessione
+iniziale. I FAIL restano preservati, senza nuovi Save o login. Connessioni
+chiuse, lock assente e finestre chiuse; fence conservato per il recupero UI.
+Il Mac è nuovamente bloccato; sblocco manuale richiesto. Nessun DONE.
+
+Riconciliazione backend b3d3e6fd, release94f7a491, oracolo finale2ddda532.
+V12/e305 e Workerfdfb/sourceacb/registry158 invariati; le altre lane restano
+distinte e aperte. Dettagli nel report canonico e nella matrice corrente.
+
+## Checkpoint storico — 2026-10-10 18:08 America/Santiago
+
+**C04 v19 APPROVED source da due revisori indipendenti; prova autentica NOT_RUN.**
+Candidate `71019a89`, companion `941714df`, freeze `e9f73a2b`, pair `16ba16fb`:
+88 prove pure PASS. Deadline assoluta, latch attivo prima della connessione,
+cleanup di proprietà, unico Save Mini, cinque fixture e dettagli completi restano
+invariati. V12/source `e305f083` e configurazioni TEST sono invariati.
+
+Il nuovo rollout POS esterno ha cambiato la baseline: Worker `fdfb3a7e`, source
+`acb3e4ac`, CI38083172469 SUCCESS, registry158 con tre aggiunte POS. Il refresher
+precedente rifiuta correttamente VERSION_CHANGED; lo slot precedente viene
+ritirato prima di GO. Sono byte-identici i102 file pertinenti tra il precedente
+source servito e quello corrente. Capsule source `9f520d0c`, CI `5440af40`,
+lineage Client `c25a2ac0`: conteggio158, tre digest esatti, prefix155 e statement
+identity invariati. Nessuna attestazione di tutti155 corpi SQL o dei dati.
+
+Adattamento dedicato C04, senza alterare restoration155 o lo snapshot globale.
+Refresh readonly21:01:29 e21:03:44 UTC PASS, receipt `8666ef17` e `6a8df3b2`:
+versione/ETag/binding/target/allowlist/flag/tracing verificati. Nessuna equality
+attestata dei valori segreti, nessun deploy/apply/rotazione o modifica flag da W.
+Nuovo GO N21:03:08→21:18:08 UTC, checkpoint `8c72880b`, completamente distinto
+dallo slot ritirato. Il primo controllo CUA segnala Mac locked; sblocco manuale
+richiesto. Nessun nuovo case, connessione SDK, query business, draft o Save C04.
+
+Release anticipata effettiva21:07:40 UTC, receipt `8027fbf6`: zero processi runner
+C04 di W, SDK/SQL/Save/input zero, lock e fence assenti. Finestra chiusa, byte
+preservati `46f97e35`, path runtime attivo assente. Online/zh-Hans correnti non
+osservati per Mac locked; ultimo riscontro20:08 resta storico. N riacquista le
+risorse; nessuna quiete globale o runtime acceptance dedotta. Un nuovo tentativo
+richiede sblocco umano, nuovo GO N, preflight e sessione freschi. Controlli sui
+sette documenti: governance/privacy/secret scan/diffcheck PASS; app invariata.
+
+G02 Account nelle quattro lingue e logout offline senza pending restano i PASS
+limitati documentati sotto; PR51 integrata `259fb967`, CI head38082855727 e
+postmerge38083487701 SUCCESS. C04 live, pending, convergenza quattro-client,
+prestazioni e telefono restano aperti. **WECHAT-010 resta EXECUTION; nessun DONE.**
+
+## Checkpoint storico — 2026-10-10 17:08 America/Santiago
 
 **PASS autentico limitato G02: Account online e offline nelle quattro lingue
 zh-Hans/en/es/it.** V12/source `e305f083` invariati. Nuovo handoff N
@@ -214,7 +351,7 @@ metodi prestazionali e dipendenze nel [report canonico](WECHAT-010-REPORT.md).
 | C01 | Catalogo CRUD e ciclo archivia/ripristina | Mini/Admin | PASS autentico preservato | 13 CRUD/lifecycle originari e cinque fixture | Preservare ID/revisioni/readback | Identità confermate dal server, readback esatto |
 | C02 | Fornitori/categorie rinomina e riassegnazione | Mini/Admin | PASS autentico preservato | Rinomina/riassegnazione e riferimenti verificati | Preservare prove | Riferimenti attivi corretti e tombstone coerenti |
 | C03 | Ricerca/paging catalogo e relazioni | Mini | PASS DevTools campionato | Nove limiti Unicode, sette letture/lingua, paging7×50 e sort3×150 concordi SQL | Nessun claim intero dataset/telefono | Nessun duplicato/omissione; contesto stabile |
-| C04 | Duplicati, double tap, revision conflict | Mini/Admin | Doubletap PASS; restoration limitata PASS; nuovo stale NOT_RUN | Un solo ripristino Admin21:14:02.023448; helperv16/v12guard 7c986c17/55purePASS in review; SELECT TEST disponibile, nessun nuovo case live | Un Admin Save e un Mini stale Save, draft preservato e Reload latest nativo | Nessuna sovrascrittura o duplicazione involontaria |
+| C04 | Duplicati, double tap, revision conflict | Mini/Admin | Doubletap PASS; stale rejection/no overwrite verificati; recupero locale failed-case PASS; reload originale non accettato, FAIL preservato | d072:1 Admin Save/1 Mini stale Save; backendb3d preservato; ordinary Back2/discard1/login1, Home/actor-shop/queue0; final080a4449, recovery338160bc/release7926bf7f | Prova distinta del reload da baseline riconciliata e nuova lease; non ripetere il Save del caso fallito | Nessuna sovrascrittura o duplicazione; terminale form e coda osservati nel contesto valido |
 | C05 | Prezzi CLP/frazioni/legacy e History multipagina | Mini/Admin | PASS isolato/readback; multipagina runtime NOT_RUN | CLP/frazioni/legacy,185eventi isolati, quattro lingue/SQL | History multipagina solo con dati disponibili | Valore persistito invariato; ordinamento e audit esatti |
 | D01 | Upload/sostituzione/rimozione DevTools | Mini/Admin | PASS DevTools autentico preservato | Upload camera/sostituzione galleria/rimozione osservati | Preservare limiti DevTools | Versioni e primaria corrispondono alla UI |
 | D02 | Picker/anteprima annullati e file temporanei | Mini | NOT_RUN residuo runtime | Regressioni/preview diagnostiche riconciliate | Picker/preview cancel e gestione file temporanei nel runtime | Zero intent involontari e nessun file necessario perso |
