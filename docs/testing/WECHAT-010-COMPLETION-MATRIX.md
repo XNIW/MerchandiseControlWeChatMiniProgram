@@ -14,7 +14,56 @@ con modifiche locali preesistenti preservate. Build correnti da riconciliare pri
 dei nuovi PASS cross-client. Runtime TEST/configurazione e fixture sono nel packet
 privato già autorizzato; nessuna credenziale nel report.
 
-## Checkpoint corrente — 2026-10-11 18:00 America/Santiago
+## Checkpoint corrente — 2026-10-11 18:32 America/Santiago
+
+Sblocco umano verificato in DevTools; nuovo GO N issued8c04b589,
+21:09:04→21:24:04 UTC, per il caso distinto C04 R2 7beba10f.
+Worker TEST protetto aggiornato all'ingresso e SELECT before autentica
+21:10:12.327857 UTC/9da33ce0. Un solo accesso WeChat ordinario: challenge
+HTTP200 con contratto valido, ma nessuna sessione valida attestata.
+Il guard iniziale ha fermato prepare-stale-edit alle21:10:16.733 UTC:
+**FAIL / SESSION_OR_SCOPE_INVALID**, eccezioni0, nessuna bozza o input catalogo,
+AdminSave0/MiniSave0/Reload0. Reload e runtime acceptance restano NOT_RUN.
+
+Release complessiva effettiva21:14:22.307502 UTC/d455de19 prima del cutoff:
+runner proprietario assente, disconnect certo, lock/fence globale assenti,
+finestra archiviata. Nessun secondo login, replay, retry o modifica business.
+Il FAIL originale b3d3e6fd e il recupero338160bc restano byte-preservati.
+
+Il log corrente dell'IDE alle21:09:58.356 UTC indica errcode-80001,
+needToken1, forceLogin-1. Il codice ufficiale installato identifica -80001
+come DEV_NEED_RELOGIN; questa prova dell'host non attesta da sola la causa
+completa del login business. Ispezione UI esclusiva successiva: profilo mostra
+soltanto «退出登录» (Esci), nessun QR. Logout/login business/SDK/SQL zero;
+release21:21:42.392772 UTC/918527a5 prima del cutoff. Richiesto all'utente il
+normale nuovo accesso al profilo dell'IDE con scansione QR personale, stesso
+account, cache/dati/progetto preservati e senza ricompilazione. Owner utente;
+unblock «DevTools autenticato», poi nuova finestra e preflight autentici.
+
+Correzione separata del messaggio Home preparata: il fallback senza sessione
+usa retryableError nelle quattro lingue già corrette in PR53, evitando di
+presentare un login fallito come aggiornamento fallito. Solo un'espressione
+text; sessioni, autenticazione, error mapping e viewState invariati.
+Source3a55a3f6/patch e45d9777/freeze a35922f1: review indipendente2/2
+APPROVED, pair0d4d12a3. Primo verify effettivo21:28:49→21:28:51 UTC **FAIL**:
+TS111 PASS; MJS119 PASS/1 FAIL, aspettativa del vecchio testo in un test esistente.
+Release2beb3415, process group proprietario assente, SDK/UI/SQL/network/login/Save0.
+Aggiornata soltanto quell’aspettativa a retryableError; tutti i controlli di
+rientro, scope e markup preservati. R2 patchf484cfd1/testd233b55a/freeze b70c31c7,
+review indipendente2/2 APPROVED/pair57689b56. Secondo verify effettivo
+21:31:44→21:31:46 UTC **PASS**:231 test/0 FAIL/0 SKIP, controlli governance,
+privacy, secret scan, typecheck, lint e build inclusi. Release9b22b969 prima
+del cutoff/deadline, process group proprietario assente e runtime input0.
+Primo FAIL conservato. Integrazione sorgente in preparazione; **NOT_INSTALLED**.
+PR53 integrata a7166d23, CI head38174582111 e main38174642319 SUCCESS;
+PR52 e recupero già integrati. Runtime V12/e305 e configurazione preservati.
+
+N ha comunicato CI iOS38173188925 SUCCESS e merge normale PR22/d57876ed;
+installazione e collaudo nativi restano nella lane N. W0SDK/UI/input/heavy.
+Pending, convergenza quattro-client, prestazioni e telefono restano aperti.
+WECHAT-010 EXECUTION, nessun DONE o accettazione globale.
+
+## Checkpoint storico — 2026-10-11 18:00 America/Santiago
 
 Corretto il testo di errore condiviso mostrato nella lettura product-detail dopo
 il recupero C04: le quattro lingue ora descrivono una richiesta non completata
@@ -361,7 +410,7 @@ metodi prestazionali e dipendenze nel [report canonico](WECHAT-010-REPORT.md).
 | ID | Requisito | Repository | Stato attuale | Evidenza/build | Azione mancante | Accettazione |
 |---|---|---|---|---|---|---|
 | A01 | Pairing e login personale distinto | Mini/Admin | PASS storico preservato | Pairing/login personale autentici; mapping invariato | Nessun nuovo pairing | Identità canonica e login distinto |
-| A02 | Sessione attuale e rientro dopo scadenza | tutti | PASS Mini scadenza naturale e rientro senza pending; expiry pending NOT_RUN | V12: Home login dopo scadenza reale, login ordinario canonico; rientro post-logout gen7/sidecar aa02e734; nessuna precondizione forzata | Scadenza reale durante pending e prove native residue | Scope esatto e margine sessione sufficiente |
+| A02 | Sessione attuale e rientro dopo scadenza | tutti | PASS storico Mini scadenza naturale e rientro senza pending; expiry pending NOT_RUN; accesso corrente non attestato | V12: rientro storico gen7/sidecar aa02e734. Nuovo tentativo21:09: challenge200 valido, session guard FAIL; host IDE DEV_NEED_RELOGIN, causa completa business non attestata | Accesso IDE con QR personale e nuova verifica autentica; scadenza durante pending e prove native residue | Scope esatto e margine sessione sufficiente |
 | A03 | Logout/foreground con pending conserva/elimina | Mini | PASS v12 logout locale offline senza pending/rientro; conserva/elimina NOT_RUN | Caso5258e46a: un tap, gen5→6→7, registry invariato, pending0; terminal5125a336/release55679684 e review2/2; FAIL storici preservati | Conserva/elimina con pending autentico in nuovo handoff/sessione | Consenso rispettato, pending persistito o eliminato esplicitamente |
 | A04 | Cambio account/shop, cache e callback tardive | tutti | PASS isolato; runtime cross-client NOT_RUN | Mini fences e native scope/cancellation/restore guard PASS | Cambio contesto effettivamente autorizzato, callback/cache/outbox osservate | Zero invii o applicazioni tardive fuori scope |
 | B01 | Home e vendite readonly, ricerca/dettaglio | Mini/Admin | PASS autentico preservato | 17scenari storici attribuibili ai byte invariati | Preservare le prove | Valori e identità concordi con SELECT |
@@ -369,7 +418,7 @@ metodi prestazionali e dipendenze nel [report canonico](WECHAT-010-REPORT.md).
 | C01 | Catalogo CRUD e ciclo archivia/ripristina | Mini/Admin | PASS autentico preservato | 13 CRUD/lifecycle originari e cinque fixture | Preservare ID/revisioni/readback | Identità confermate dal server, readback esatto |
 | C02 | Fornitori/categorie rinomina e riassegnazione | Mini/Admin | PASS autentico preservato | Rinomina/riassegnazione e riferimenti verificati | Preservare prove | Riferimenti attivi corretti e tombstone coerenti |
 | C03 | Ricerca/paging catalogo e relazioni | Mini | PASS DevTools campionato | Nove limiti Unicode, sette letture/lingua, paging7×50 e sort3×150 concordi SQL | Nessun claim intero dataset/telefono | Nessun duplicato/omissione; contesto stabile |
-| C04 | Duplicati, double tap, revision conflict | Mini/Admin | Doubletap PASS; stale rejection/no overwrite verificati; recupero locale failed-case PASS; reload originale non accettato, FAIL preservato | d072:1 Admin Save/1 Mini stale Save; backendb3d preservato; ordinary Back2/discard1/login1, Home/actor-shop/queue0; final080a4449, recovery338160bc/release7926bf7f | Prova distinta del reload da baseline riconciliata e nuova lease; non ripetere il Save del caso fallito | Nessuna sovrascrittura o duplicazione; terminale form e coda osservati nel contesto valido |
+| C04 | Duplicati, double tap, revision conflict | Mini/Admin | Doubletap PASS; stale rejection/no overwrite verificati; recupero locale failed-case PASS; reload originale FAIL preservato; nuovo R2 FAIL di prerequisito, reload NOT_RUN | d072:1 Admin Save/1 Mini stale Save; final080a4449/recovery338160bc/release7926bf7f. Nuovo7beba10f: session guard FAIL, bozza/Save/Reload0, before9da33ce0/released455de19 | Nuovo accesso IDE con QR personale, nuova prova distinta, lease e preflight freschi; nessun replay dei due casi | Nessuna sovrascrittura o duplicazione; terminale form e coda osservati nel contesto valido |
 | C05 | Prezzi CLP/frazioni/legacy e History multipagina | Mini/Admin | PASS isolato/readback; multipagina runtime NOT_RUN | CLP/frazioni/legacy,185eventi isolati, quattro lingue/SQL | History multipagina solo con dati disponibili | Valore persistito invariato; ordinamento e audit esatti |
 | D01 | Upload/sostituzione/rimozione DevTools | Mini/Admin | PASS DevTools autentico preservato | Upload camera/sostituzione galleria/rimozione osservati | Preservare limiti DevTools | Versioni e primaria corrispondono alla UI |
 | D02 | Picker/anteprima annullati e file temporanei | Mini | NOT_RUN residuo runtime | Regressioni/preview diagnostiche riconciliate | Picker/preview cancel e gestione file temporanei nel runtime | Zero intent involontari e nessun file necessario perso |

@@ -1,6 +1,55 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Checkpoint corrente — 2026-10-11 18:00 America/Santiago
+## Checkpoint corrente — 2026-10-11 18:32 America/Santiago
+
+Sblocco umano verificato in DevTools; nuovo GO N issued8c04b589,
+21:09:04→21:24:04 UTC, per il caso distinto C04 R2 7beba10f.
+Worker TEST protetto aggiornato all'ingresso e SELECT before autentica
+21:10:12.327857 UTC/9da33ce0. Un solo accesso WeChat ordinario: challenge
+HTTP200 con contratto valido, ma nessuna sessione valida attestata.
+Il guard iniziale ha fermato prepare-stale-edit alle21:10:16.733 UTC:
+**FAIL / SESSION_OR_SCOPE_INVALID**, eccezioni0, nessuna bozza o input catalogo,
+AdminSave0/MiniSave0/Reload0. Reload e runtime acceptance restano NOT_RUN.
+
+Release complessiva effettiva21:14:22.307502 UTC/d455de19 prima del cutoff:
+runner proprietario assente, disconnect certo, lock/fence globale assenti,
+finestra archiviata. Nessun secondo login, replay, retry o modifica business.
+Il FAIL originale b3d3e6fd e il recupero338160bc restano byte-preservati.
+
+Il log corrente dell'IDE alle21:09:58.356 UTC indica errcode-80001,
+needToken1, forceLogin-1. Il codice ufficiale installato identifica -80001
+come DEV_NEED_RELOGIN; questa prova dell'host non attesta da sola la causa
+completa del login business. Ispezione UI esclusiva successiva: profilo mostra
+soltanto «退出登录» (Esci), nessun QR. Logout/login business/SDK/SQL zero;
+release21:21:42.392772 UTC/918527a5 prima del cutoff. Richiesto all'utente il
+normale nuovo accesso al profilo dell'IDE con scansione QR personale, stesso
+account, cache/dati/progetto preservati e senza ricompilazione. Owner utente;
+unblock «DevTools autenticato», poi nuova finestra e preflight autentici.
+
+Correzione separata del messaggio Home preparata: il fallback senza sessione
+usa retryableError nelle quattro lingue già corrette in PR53, evitando di
+presentare un login fallito come aggiornamento fallito. Solo un'espressione
+text; sessioni, autenticazione, error mapping e viewState invariati.
+Source3a55a3f6/patch e45d9777/freeze a35922f1: review indipendente2/2
+APPROVED, pair0d4d12a3. Primo verify effettivo21:28:49→21:28:51 UTC **FAIL**:
+TS111 PASS; MJS119 PASS/1 FAIL, aspettativa del vecchio testo in un test esistente.
+Release2beb3415, process group proprietario assente, SDK/UI/SQL/network/login/Save0.
+Aggiornata soltanto quell’aspettativa a retryableError; tutti i controlli di
+rientro, scope e markup preservati. R2 patchf484cfd1/testd233b55a/freeze b70c31c7,
+review indipendente2/2 APPROVED/pair57689b56. Secondo verify effettivo
+21:31:44→21:31:46 UTC **PASS**:231 test/0 FAIL/0 SKIP, controlli governance,
+privacy, secret scan, typecheck, lint e build inclusi. Release9b22b969 prima
+del cutoff/deadline, process group proprietario assente e runtime input0.
+Primo FAIL conservato. Integrazione sorgente in preparazione; **NOT_INSTALLED**.
+PR53 integrata a7166d23, CI head38174582111 e main38174642319 SUCCESS;
+PR52 e recupero già integrati. Runtime V12/e305 e configurazione preservati.
+
+N ha comunicato CI iOS38173188925 SUCCESS e merge normale PR22/d57876ed;
+installazione e collaudo nativi restano nella lane N. W0SDK/UI/input/heavy.
+Pending, convergenza quattro-client, prestazioni e telefono restano aperti.
+WECHAT-010 EXECUTION, nessun DONE o accettazione globale.
+
+## Checkpoint storico — 2026-10-11 18:00 America/Santiago
 
 Corretto il testo di errore condiviso mostrato nella lettura product-detail dopo
 il recupero C04: le quattro lingue ora descrivono una richiesta non completata

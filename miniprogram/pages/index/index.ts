@@ -420,7 +420,7 @@ Page({
     const signedOut = app.sessionStore.load() === null;
     if (signedOut) this.clearSignedOutView();
     this.setData({
-      errorMessage: this.data.text.error,
+      errorMessage: signedOut ? this.data.text.retryableError : this.data.text.error,
       viewState: (signedOut ? "signed_out" : "error") as ViewState,
     });
   },

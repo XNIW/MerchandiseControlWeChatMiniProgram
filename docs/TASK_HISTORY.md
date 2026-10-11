@@ -828,3 +828,46 @@ per il proprio Root9 definitivo; W solo docs/source, acceptance globale aperta.
 | 2026-10-11T20:52:06Z | WECHAT-010 | Recovery/retest checkpoint passed required local verification before authorized publication | Full verify exit0 (2994f2/a02cda), governance/privacy/secrets/typecheck/lint/tests/build and diffcheck PASS; application unchanged. New C04 remains NOT_RUN pending manual Mac unlock and fresh N lease, EXECUTION/no DONE |
 
 | 2026-10-11T21:00:07.292273+00:00 | WECHAT-010 | C04 read-page error copy corrected and source-reviewed; ordinary draft preservation unchanged | Four translations only500ee402/patchd4d08565; full verify PASS and2/2 APPROVED. NOT_INSTALLED/runtime NOT_RUN, primary V12/e305/config preserved; old reload failure and Mac unlock gate remain open |
+
+### 2026-10-11 18:23 America/Santiago — C04 distinto fermato al requisito auth; diagnostico IDE e testo Home
+
+- GO effettivo N8c04b589; Worker protetto fresco, before SELECT9da33ce0.
+- Caso7beba10f preparazioneFAIL SESSION_OR_SCOPE_INVALID21:10:16.733 UTC,
+  login ordinario1/bozza0/AdminSave0/MiniSave0/Reload0/eccezioni0.
+- Challenge HTTP200 e contratto valido; sessione valida non attestata. Cause
+  complete wx.login non attestate, nessuna autorizzazione forzata o replay.
+- Release d455de19 alle21:14:22.307502 UTC prima cutoff: runner/lock/fence assenti,
+  disconnect certo/window archiviata. OriginalFAIL e recupero immutati.
+- Log host21:09:58-80001 corrisponde a DEV_NEED_RELOGIN nel vendor ufficiale;
+  nuova ispezione profilo mostra solo Esci, senza QR, logout/SDK/SQL0.
+  Release918527a5 alle21:21:42.392772 UTC. Handoff QR personale richiesto all'utente.
+- Corretto solo il fallback testuale Home senza sessione a retryableError;
+  source3a55a3f6/patch e45d9777/freeze a35922f1, review e verify in corso,
+  NOT_INSTALLED. Le quattro traduzioni PR53 sono integrate a7166d23/CI verde.
+- W0SDK/UI/heavy, N riprende integrazione/installazione nativa. Task EXECUTION;
+  reload, pending, convergenza, prestazioni e telefono ancora aperti.
+
+
+## 2026-10-11 18:31 America/Santiago — Home copy review e prima verifica reale
+
+Due revisori in sola lettura APPROVED il singolo fallback Home senza sessione,
+source3a55a3f6/pair0d4d12a3. N ha concesso un solo slot verify; ingresso effettivo
+21:28:49.626653 UTC, release21:28:51.663954 UTC/2beb3415 prima di cutoff/deadline.
+Process group85310 assente; SDK/CUA/SQL/network/login/Save0.
+Verify **FAIL**: TS111 PASS, MJS119 PASS/1 FAIL; il test home-login-retry attende
+ancora il testo di aggiornamento precedente per backend_temporary senza sessione.
+Log9d4636cd preservato. Corretto soltanto quell’assert alla frase retryableError;
+nessun nuovo test o rilassamento di retry/state/scope. R2 patchf484cfd1, testd233b55a,
+freeze b70c31c7; riesame ai due revisori esistenti, nuovo verify NOT_RUN.
+Source e runtime distinti: NOT_INSTALLED, auth/reload/C04 non accettati.
+N mantiene risorse native; W nessuna finestra SDK/UI/heavy attiva.
+
+
+### Home R2 — review e secondo verify effettivi
+
+Review source-only2/2 APPROVED/pair57689b56. Secondo slot N, ingresso effettivo
+21:31:44.715365 UTC, release21:31:46.679176 UTC/9b22b969 prima del cutoff/deadline,
+PG86250 assente, SDK/CUA/SQL/network/login/Save0. Full verify **PASS**:
+111 TS+120 MJS=231 PASS/0 FAIL/0 SKIP, governance/privacy/secret/type/lint/build
+completati. Log1c83d9b6; primo FAIL9d4636cd e release2beb3415 conservati.
+Integrazione sorgente in preparazione; NOT_INSTALLED, nessuna prova auth/reload.
