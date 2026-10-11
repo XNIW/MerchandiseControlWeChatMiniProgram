@@ -75,7 +75,7 @@ for (const code of ["offline", "backend_temporary"]) {
       assert.equal(h.page.data.viewState, "signed_out");
       assert.equal(
         h.page.data.errorMessage,
-        h.page.data.text[code === "offline" ? "offline" : "error"],
+        h.page.data.text[code === "offline" ? "offline" : "retryableError"],
       );
       assert.equal(h.page.data.currentShop, null);
       assert.equal(h.page.data.netRevenue, "—");
