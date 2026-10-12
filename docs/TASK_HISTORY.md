@@ -911,3 +911,51 @@ Solo generazione QR verificata; IDEAuthenticated UNATTESTED, nessun result poll,
 SDK/CUA/login business/Save/SQL/compile/config0. Nuova scansione personale in
 attesa; eventuale errore richiesto come testo esatto. FAIL03/898739 e QR03/89ed
 restano preservati, nessun nuovo collaudo C04 o DONE.
+
+
+## 2026-10-11 19:42 America/Santiago — Profilo IDE: lettura bloccata dal Mac
+
+Nuova lease N solo profilo pubblico readonly, ingresso effettivo22:41:18.539632 UTC.
+Un tentativo CUA ha restituito Mac locked/automatic unlock unsuccessful; nessuna
+lettura valida del profilo, auth UNATTESTED. Input/CLI/SDK/login/QRrefresh/Save/SQL0,
+processi e connessioni propri0. Release22:42:00.117927 UTC/a68e7775 prima della
+harddeadline22:42:30, risorse restituite a N. Richiesto sblocco manuale all’utente,
+con progetto/cache/dati conservati e senza ricompilare. Nessun retry su lease
+scaduta: servirà nuova finestra prima di osservare il profilo. C04 non eseguito.
+
+
+## 2026-10-11 21:27 America/Santiago — Stato pubblico IDE letto dal comando ufficiale
+
+Primo lease già scaduto alla consegna: NOT_RUN77e96b20, nessun comando. Nuovo
+lease specifico, un solo islogin ufficiale: ingresso00:24:22.086051 UTC12Oct,
+release00:24:22.408215 UTC/cf00cef0, PG4679 assente, exit0, entro deadline/60s.
+Nessun GUI/unlock/login/QRrefresh/SDK/businessLogin/SQL/compile/Save/sessioncfg.
+Il lettore attendeva isLogin e ha registrato UNATTESTED/null, ricevuta preservata.
+Readback causale soltanto dei byte già catturati: router ISLOGINef1e0c63 e handler
+vendor731d8454 restituiscono {login: ILoginService.isUserLogin()}. Risposta esatta
+{login:boolean} con valore false; f03b5f1a registra stato pubblico GUEST al tempo
+della query, senza secondo comando, fallback, ticket o account values esposti.
+Mini/businessAuth e C04 restano UNATTESTED. Parser privato futuro correttoe160df42,
+non eseguito. Richiesta disponibilità umana «pronto a scansionare», con telefono
+WeChat aperto e nuovo QR visibile, prima di generare un codice che può scadere.
+Nessuna nuova richiesta di permesso, auth già autorizzata; lease futuro necessario.
+
+## 2026-10-12 09:46 America/Santiago — Home dopo accesso umano; guard TTL ferma l’ammissione C04
+
+L’utente ha risposto «Fatto» con due screenshot originali: il secondo mostra Home dello shop TASK068E REHEARSAL 260618231325 e riepilogo caricato, aggiornamento mostrato2026-10-12T12:40:19Z. Ritirata la richiesta QR prima di qualsiasi CLI/login/QR; nessuna nuova domanda di scansione. Screenshot non convertito in prova di sessione o C04.
+
+Una sola osservazione SDK ufficiale in finestra N specifica read-only, producer c2ee9cbd: release effettiva12:46:51.746UTC/9ab80816b8fa0431b4b3d983662f893fa9d99bd5f6b1eb5fd6c3266f3c92fdda prima cutoff/deadline. Sessione locale presente, actor fingerprint uguale al recupero, shop esatto, Home, rete wifi, generation1, queue0/dirty0/busyfalse/corruptfalse/imagesfalse/foreignfalse. Terminale FAIL_READONLY_OBSERVATION / SESSION_OR_SCOPE_INVALID per TTL507s inferiore al minimo600s; soglia preservata. Nessuna validazione server Auth fresca dedotta. Disconnect certo, lock proprietario rilasciato, SDK1/CUA0/login0/Save0/SQL0/compile0. Nessun nuovo caso C04, bozza o replay. Runtime acceptance resta false; preparazione del normale rinnovo UI già autorizzato in finestra separata.
+
+Receipt privato: /Users/minxiang/Projects/_codex-private/wechat-010-admin-audit/native-completion-20260928/mini-home-session-readonly-ef8afb32-6cfb-44e9-9e90-993279fffbf0/actual-overall-release.json. FAIL precedenti preservati; sorgenti copy integrate NOT_INSTALLED, primary V12/e305 e dati/configurazione invariati. Nessun DONE.
+
+## Checkpoint corrente — 2026-10-12 11:28 America/Santiago
+
+**WECHAT-010 resta EXECUTION; correzione del budget Auth preparata e verificata localmente, non installata.** Dopo «Fatto» dell’utente, Home TEST osservata in screenshot e lettura locale: actor/shop attesi e queue/dirty0, ma TTL507s<600 ha fermato l’ammissione C04. Successivo unico tap Sign in effettivo13:06:13.556UTC; l’osservatore R2 ha fallito13:06:13.572, appena16ms dopo il tap, senza attendere l’avvio della UI. FAIL originale dc9964 preservato; lettura distinta13:13:03/9ef97a conferma signed_out, nessuna nuova sessione. Nessun nuovo caso C04, bozza, Save o SQLwrite.
+
+Diagnostico UI distinto mostra exchange POST `(canceled)`,0B,8.00s; questo stato è stato estratto soltanto dai dati AX già catturati, f3d37ad7. Nessun HTTP status/risposta server catturati, nessun Auth PASS. Release UI84498 effettiva13:25:20.480644 oltredeadline13:24:41, FAIL di timing preservato; timing dei singoli input non attestato. Tutte chiamate UI concluse, nessun processo/SDK/lock trattenuto. Log host precedenti al tentativo non usati per assegnare la causa.
+
+Il contratto Admin servito acb3e4ac prevede claim RPC5s→Tencent5s→verify RPC5s→issue RPC5s; client Mini interrompeva ogni richiesta a8s. Delta applicativo minimo: solo POST `/api/auth/wechat/mini/exchange` ha ora limite25s, con letture e altre POST/mutazioni a8s, nessun retry, schema/session lifetime/capability invariati. Questa compatibilità di budget è verificata dal codice; non prova quale passaggio remoto abbia rallentato il tentativo reale. Nuovi test coprono scambio12s senza retry, logout durante handoff tardivo con normale revoca del receipt, e catalogo9s ancora rifiutato secondo mapping existingoffline.
+
+Osservatore privato R4 corregge l’onset: attesa readiness80s con deadline anche per ogni lettura, stato pubblico limitato, global180s/reserva10s, margine ingresso240s/tap120s; stessi guard actor/shop/fresh profile/TTL600 e cleanup. Pure5PASS0FAIL; non eseguito su app reale. Full verify su Node26.7.0 PASS114TS+120MJS=234,0FAIL0SKIP, con un warning in file preesistente invariato. Prima esecuzione Node26.11.1 separata conservata; successiva esecuzione pinned necessaria per allineare engines. Freeze source581ebb18; due revisori read-only autorizzati hanno approvato la revisione finale source-only, nessun finding residuo. Primary V12/e305, configurazione/dati e tutti i failedcase restano invariati. Delta NOT_INSTALLED, Auth/runtime/C04 reload NOT_RUN. Prima di qualsiasi installazione o nuovo C04 servono scope operativo fresco, preflight e adapter compatibile con la nuova build; nessun replay di case conclusi.
+
+N riferisce9/9 originali iOS sul prodotto corretto e Root07 integrato iniziato14:17:08UTC; lane nativa e serverAuth restano distinte. Nessuna convergenza quattro-client, prestazione, telefono o approvazione globale dedotta. Nessun DONE.

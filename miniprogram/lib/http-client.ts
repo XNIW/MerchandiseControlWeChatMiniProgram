@@ -7,6 +7,10 @@ import {
 import type { MiniProgramPlatform, PlatformResponse } from "./platform";
 
 const responseByteBudget = 131_072;
+const defaultRequestTimeoutMilliseconds = 8_000;
+// The direct exchange awaits three trusted RPCs and Tencent, each bounded at
+// five seconds by the Admin boundary. Allow their combined budget plus transit.
+const directExchangeTimeoutMilliseconds = 25_000;
 
 // The Mini runtime need not provide TextEncoder. Count Unicode scalar values,
 // including surrogate pairs, exactly as UTF-8 serialization does.
@@ -118,7 +122,16 @@ export class HttpClient {
   ): Promise<T> {
     this.#validatePath(path);
     this.#validatePostOptions(options);
-    return this.#request<T>("POST", `${this.#baseUrl}${path}`, body, session, options);
+    return this.#request<T>(
+      "POST",
+      `${this.#baseUrl}${path}`,
+      body,
+      session,
+      options,
+      path === "/api/auth/wechat/mini/exchange"
+        ? directExchangeTimeoutMilliseconds
+        : defaultRequestTimeoutMilliseconds,
+    );
   }
 
   async #request<T>(
@@ -127,6 +140,7 @@ export class HttpClient {
     data?: unknown,
     session?: HttpSession,
     options: HttpPostOptions = {},
+    timeoutMilliseconds = defaultRequestTimeoutMilliseconds,
   ): Promise<T> {
     const headers: Record<string, string> = {
       Accept: "application/json",
@@ -153,7 +167,7 @@ export class HttpClient {
         headers,
         method,
         redirect: "manual",
-        timeoutMilliseconds: 8_000,
+        timeoutMilliseconds,
         url,
       });
     } catch (error) {

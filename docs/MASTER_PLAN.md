@@ -1,6 +1,19 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-## Checkpoint corrente — 2026-10-11 19:24 America/Santiago
+## Checkpoint corrente — 2026-10-12 11:28 America/Santiago
+
+**WECHAT-010 resta EXECUTION; correzione del budget Auth preparata e verificata localmente, non installata.** Dopo «Fatto» dell’utente, Home TEST osservata in screenshot e lettura locale: actor/shop attesi e queue/dirty0, ma TTL507s<600 ha fermato l’ammissione C04. Successivo unico tap Sign in effettivo13:06:13.556UTC; l’osservatore R2 ha fallito13:06:13.572, appena16ms dopo il tap, senza attendere l’avvio della UI. FAIL originale dc9964 preservato; lettura distinta13:13:03/9ef97a conferma signed_out, nessuna nuova sessione. Nessun nuovo caso C04, bozza, Save o SQLwrite.
+
+Diagnostico UI distinto mostra exchange POST `(canceled)`,0B,8.00s; questo stato è stato estratto soltanto dai dati AX già catturati, f3d37ad7. Nessun HTTP status/risposta server catturati, nessun Auth PASS. Release UI84498 effettiva13:25:20.480644 oltredeadline13:24:41, FAIL di timing preservato; timing dei singoli input non attestato. Tutte chiamate UI concluse, nessun processo/SDK/lock trattenuto. Log host precedenti al tentativo non usati per assegnare la causa.
+
+Il contratto Admin servito acb3e4ac prevede claim RPC5s→Tencent5s→verify RPC5s→issue RPC5s; client Mini interrompeva ogni richiesta a8s. Delta applicativo minimo: solo POST `/api/auth/wechat/mini/exchange` ha ora limite25s, con letture e altre POST/mutazioni a8s, nessun retry, schema/session lifetime/capability invariati. Questa compatibilità di budget è verificata dal codice; non prova quale passaggio remoto abbia rallentato il tentativo reale. Nuovi test coprono scambio12s senza retry, logout durante handoff tardivo con normale revoca del receipt, e catalogo9s ancora rifiutato secondo mapping existingoffline.
+
+Osservatore privato R4 corregge l’onset: attesa readiness80s con deadline anche per ogni lettura, stato pubblico limitato, global180s/reserva10s, margine ingresso240s/tap120s; stessi guard actor/shop/fresh profile/TTL600 e cleanup. Pure5PASS0FAIL; non eseguito su app reale. Full verify su Node26.7.0 PASS114TS+120MJS=234,0FAIL0SKIP, con un warning in file preesistente invariato. Prima esecuzione Node26.11.1 separata conservata; successiva esecuzione pinned necessaria per allineare engines. Freeze source581ebb18; due revisori read-only autorizzati hanno approvato la revisione finale source-only, nessun finding residuo. Primary V12/e305, configurazione/dati e tutti i failedcase restano invariati. Delta NOT_INSTALLED, Auth/runtime/C04 reload NOT_RUN. Prima di qualsiasi installazione o nuovo C04 servono scope operativo fresco, preflight e adapter compatibile con la nuova build; nessun replay di case conclusi.
+
+N riferisce9/9 originali iOS sul prodotto corretto e Root07 integrato iniziato14:17:08UTC; lane nativa e serverAuth restano distinte. Nessuna convergenza quattro-client, prestazione, telefono o approvazione globale dedotta. Nessun DONE.
+
+
+## Checkpoint storico — 2026-10-11 19:24 America/Santiago
 
 Sblocco umano verificato in DevTools; nuovo GO N issued8c04b589,
 21:09:04→21:24:04 UTC, per il caso distinto C04 R2 7beba10f.
