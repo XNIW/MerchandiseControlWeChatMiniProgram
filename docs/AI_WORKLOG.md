@@ -1053,3 +1053,15 @@ Auth09/10/11 ordinarie concluse20:08:46.832/20:27:58.925/20:41:55.125UTC, genera
 D02 R3:51test puri/review2/2 approvate; caso`d4b03f91` preparato, senza lease/fence/SQL/Gallery/runtime. Prima preparazione conserva FAIL_TIMING con Home20:37:00.326UTC oltre deadline; seconda conserva NOT_RUN_D02_MAC_LOCKED20:48:34.715UTC, risorse trattenute0. Nuovo lavoro UI richiede sblocco OS manuale e ingresso operativo fresco.
 
 Preview TEST ufficiale H01 generata20:11:38.360UTC, processo rilasciato; telefono disponibile, risultato fisico non ancora ricevuto: H01 NOT_RUN/nessun PASS telefono. P05: 11 intervalli osservati Auth01–11 tra 5.853 e 11.199 s, con clock UTC host, SDK e polling inclusi; cold/cache, clock monotonic, tap/paint e tempi server non misurati; nessun SLA/p95 o accettazione P05. D03/D06:25prove pure di route, runtime NOT_RUN. Convergenza nativa resta senza accettazione quattro-client; nessun DONE globale.
+
+## Evento esecuzione verificato — 2026-10-12 20:02 America/Santiago
+
+PR56 integrata su `cb6f7817`: CI head38264091773 e main38268739725 SUCCESS riconfermate via GitHub, primary pulito e build V13 già installata. C04 V23 accepted/closed resta valido nel proprio perimetro.
+
+Il menu reale del simulatore `模拟操作 → WiFi` è stato aperto e usato: Offline22:45:44UTC, osservazione SDK `none`22:45:58/`5685b38e`; WiFi ripristinato22:46:31, osservazione `wifi`22:46:40/`8abea640`. Home/pending0/dirty0, due SDK disconnessi e nessun Save; release22:47:27.267/`6dbef251`. Questo risolve la ricerca del menu e il prerequisito della rete simulata autentica; non accetta retroattivamente pending R5/R6 né esegue R8.
+
+D02 `d4b03f91`: ingresso autentico e primo Gallery effettivo, poi FAIL del registratore root (`wTrace.actions` non disponibile). Timing preciso del tap non recuperato, nessuna selezione file né Save. Picker annullato ordinariamente, Back e Home; osservatore readonly verifica zero file normalizzati e JPEG originale invariato, SQL indipendente non rileva effetti server. Terminale22:54:34.126/`d722e1a4`: `D02_FAILED_TRACE_RECOVERED_NOT_ACCEPTED`, fence proprietario archiviato e FAIL preservato. Corretto il riferimento del registratore usando oggetto esplicito/globale; prova pura tra chiamate completata, nessun nuovo PASS runtime.
+
+Auth12 e Auth13 ordinarie concluse22:48:15.048/22:56:55.591UTC; Auth13 `c61f2deb`, generazione25, TTL891s solo all’osservazione, actor/shop originali, Home pulita e disconnect certo. Nuovo D02 `bd0bfb47` preparato ma non ammesso: CUA restituisce Mac locked prima di Database, senza lease, SQL, SDK, Gallery o Save; lock/fence assenti e risorse trattenute0. Owner dello sblocco OS: utente, richiesta manuale inviata; dopo lo sblocco servono nuova finestra e controlli correnti, senza riutilizzare una sessione scaduta.
+
+Pending R8, D02 accettazione, D03/D06, convergenza quattro-client e misure finali restano da completare. H01: telefono dichiarato disponibile e preview TEST già generata, ma nessun esito fisico ricevuto; validità attuale del vecchio QR non attestata. WECHAT-010 resta EXECUTION; nessun DONE o rilascio pubblico.

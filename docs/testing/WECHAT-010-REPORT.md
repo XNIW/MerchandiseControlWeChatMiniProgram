@@ -1,6 +1,18 @@
 # WECHAT-010 — completamento funzionale e accettazione
 
-## Checkpoint corrente — 2026-10-12 17:55 America/Santiago
+## Checkpoint corrente — 2026-10-12 20:02 America/Santiago
+
+PR56 integrata su `cb6f7817`: CI head38264091773 e main38268739725 SUCCESS riconfermate via GitHub, primary pulito e build V13 già installata. C04 V23 accepted/closed resta valido nel proprio perimetro.
+
+Il menu reale del simulatore `模拟操作 → WiFi` è stato aperto e usato: Offline22:45:44UTC, osservazione SDK `none`22:45:58/`5685b38e`; WiFi ripristinato22:46:31, osservazione `wifi`22:46:40/`8abea640`. Home/pending0/dirty0, due SDK disconnessi e nessun Save; release22:47:27.267/`6dbef251`. Questo risolve la ricerca del menu e il prerequisito della rete simulata autentica; non accetta retroattivamente pending R5/R6 né esegue R8.
+
+D02 `d4b03f91`: ingresso autentico e primo Gallery effettivo, poi FAIL del registratore root (`wTrace.actions` non disponibile). Timing preciso del tap non recuperato, nessuna selezione file né Save. Picker annullato ordinariamente, Back e Home; osservatore readonly verifica zero file normalizzati e JPEG originale invariato, SQL indipendente non rileva effetti server. Terminale22:54:34.126/`d722e1a4`: `D02_FAILED_TRACE_RECOVERED_NOT_ACCEPTED`, fence proprietario archiviato e FAIL preservato. Corretto il riferimento del registratore usando oggetto esplicito/globale; prova pura tra chiamate completata, nessun nuovo PASS runtime.
+
+Auth12 e Auth13 ordinarie concluse22:48:15.048/22:56:55.591UTC; Auth13 `c61f2deb`, generazione25, TTL891s solo all’osservazione, actor/shop originali, Home pulita e disconnect certo. Nuovo D02 `bd0bfb47` preparato ma non ammesso: CUA restituisce Mac locked prima di Database, senza lease, SQL, SDK, Gallery o Save; lock/fence assenti e risorse trattenute0. Owner dello sblocco OS: utente, richiesta manuale inviata; dopo lo sblocco servono nuova finestra e controlli correnti, senza riutilizzare una sessione scaduta.
+
+Pending R8, D02 accettazione, D03/D06, convergenza quattro-client e misure finali restano da completare. H01: telefono dichiarato disponibile e preview TEST già generata, ma nessun esito fisico ricevuto; validità attuale del vecchio QR non attestata. WECHAT-010 resta EXECUTION; nessun DONE o rilascio pubblico.
+
+## Checkpoint storico — 2026-10-12 17:55 America/Santiago
 
 **PR56/V13 e C04 V23 sono verificati; WECHAT-010 resta EXECUTION.** Primary/compiled `cb6f7817`, CI head/main234PASS0FAIL0SKIP e configurazione TEST invariata. C04 V23 conflitto/Reload resta accepted/closed DevTools; i FAIL precedenti sono preservati. Il vecchio fence C04 doubletap `cc2ad01c` è stato archiviato con owner verificato: terminale `421dc361`, archivio e release root20:06:49.610UTC/`c9ec0668`. È chiusura files-only del caso storico, non image D01 né nuovo PASS V13/telefono.
 

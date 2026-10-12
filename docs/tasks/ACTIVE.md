@@ -1,6 +1,10 @@
 # Active task
 
-## Checkpoint corrente — 2026-10-12 17:55 America/Santiago
+## Checkpoint corrente — 2026-10-12 20:02 America/Santiago
+
+PR56 è integrata (`cb6f7817`), con CI head/main SUCCESS riconfermata. Il menu rete del simulatore è ora verificato: Offline → `none`, ripristino → `wifi`, senza Save. D02 `d4b03f91` ha fallito nel registratore root dopo il primo Gallery; recupero concluso con Home pulita e SQL invariato, senza accettazione del caso. Il nuovo `bd0bfb47` resta non avviato: CUA segnala Mac bloccato prima di qualunque input. Dettagli e prove nel checkpoint corrente del report WECHAT-010. Pending R8, immagini residue, convergenza, prestazioni e telefono restano aperti; WECHAT-010 EXECUTION, nessun DONE.
+
+## Checkpoint storico — 2026-10-12 17:55 America/Santiago
 
 **PR56/V13 e C04 V23 sono verificati; WECHAT-010 resta EXECUTION.** Primary/compiled `cb6f7817`, CI head/main234PASS0FAIL0SKIP e configurazione TEST invariata. C04 V23 conflitto/Reload resta accepted/closed DevTools; i FAIL precedenti sono preservati. Il vecchio fence C04 doubletap `cc2ad01c` è stato archiviato con owner verificato: terminale `421dc361`, archivio e release root20:06:49.610UTC/`c9ec0668`. È chiusura files-only del caso storico, non image D01 né nuovo PASS V13/telefono.
 
