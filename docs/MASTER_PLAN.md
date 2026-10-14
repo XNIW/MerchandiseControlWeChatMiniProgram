@@ -1,6 +1,46 @@
 # MerchandiseControl WeChat Mini Program — Master Plan
 
-## Checkpoint corrente — 2026-10-12 11:28 America/Santiago
+## Checkpoint corrente — 2026-10-12 20:02 America/Santiago
+
+PR56 è integrata (`cb6f7817`), con CI head/main SUCCESS riconfermata. Il menu rete del simulatore è ora verificato: Offline → `none`, ripristino → `wifi`, senza Save. D02 `d4b03f91` ha fallito nel registratore root dopo il primo Gallery; recupero concluso con Home pulita e SQL invariato, senza accettazione del caso. Il nuovo `bd0bfb47` resta non avviato: CUA segnala Mac bloccato prima di qualunque input. Dettagli e prove nel checkpoint corrente del report WECHAT-010. Pending R8, immagini residue, convergenza, prestazioni e telefono restano aperti; WECHAT-010 EXECUTION, nessun DONE.
+
+## Checkpoint storico — 2026-10-12 17:55 America/Santiago
+
+**PR56/V13 e C04 V23 sono verificati; WECHAT-010 resta EXECUTION.** Primary/compiled `cb6f7817`, CI head/main234PASS0FAIL0SKIP e configurazione TEST invariata. C04 V23 conflitto/Reload resta accepted/closed DevTools; i FAIL precedenti sono preservati. Il vecchio fence C04 doubletap `cc2ad01c` è stato archiviato con owner verificato: terminale `421dc361`, archivio e release root20:06:49.610UTC/`c9ec0668`. È chiusura files-only del caso storico, non image D01 né nuovo PASS V13/telefono.
+
+Auth09/10/11 ordinarie concluse20:08:46.832/20:27:58.925/20:41:55.125UTC, generazioni17/19/21. Account server/profile/shop esatti, Home pulita e code vuote; disconnect certo/lock assente. Auth11 receipt`69c3fc5a`, TTL887s soltanto all’osservazione, senza estensione. R8 pending:72test puri/review2/2 approvate, runtime non ammesso perché rete Mini autentica `none` non attestata; il probe debuggerOffline restituisce `wifi`. R5/R6 FAIL e recupero R6 restano distinti dall’accettazione pending.
+
+D02 R3:51test puri/review2/2 approvate; caso`d4b03f91` preparato, senza lease/fence/SQL/Gallery/runtime. Prima preparazione conserva FAIL_TIMING con Home20:37:00.326UTC oltre deadline; seconda conserva NOT_RUN_D02_MAC_LOCKED20:48:34.715UTC, risorse trattenute0. Nuovo lavoro UI richiede sblocco OS manuale e ingresso operativo fresco.
+
+Preview TEST ufficiale H01 generata20:11:38.360UTC, processo rilasciato; telefono disponibile, risultato fisico non ancora ricevuto: H01 NOT_RUN/nessun PASS telefono. P05: 11 intervalli osservati Auth01–11 tra 5.853 e 11.199 s, con clock UTC host, SDK e polling inclusi; cold/cache, clock monotonic, tap/paint e tempi server non misurati; nessun SLA/p95 o accettazione P05. D03/D06:25prove pure di route, runtime NOT_RUN. Convergenza nativa resta senza accettazione quattro-client; nessun DONE globale.
+
+## Checkpoint storico — 2026-10-12 16:42 America/Santiago
+
+PR56/V13 cb6f e CI head/main SUCCESS234PASS restano verificati; C04 V23 conflitto/Reload è accepted/closed DevTools. Il lavoro resta EXECUTION: nuovi casi pending, immagini residue, convergenza, misure e telefono richiedono le proprie prove autentiche.
+
+Pending R5/R6 hanno fallimenti pre-Save preservati e recupero reale R6 verificato (terminale ca372ab8, non accepted). Probe debuggerOffline→getNetworkType wifi, Online ripristinato; nuovo ingresso pending attende la route rete autentica. Fence storico doubletap cc2ad01c ancora da riconciliare. D02 R2 source41PASS/review2/2; R3 screenshot inline in preparazione. Telefono confermato disponibile, H01 NOT_RUN/nessun QR ancora. Dettagli e limiti nel report e nella matrice correnti.
+
+
+## Checkpoint storico — 2026-10-12 15:30 America/Santiago
+
+**V13 integrata e C04 conflitto/Reload autentico PASS DevTools; WECHAT-010 resta EXECUTION.** PR56 merged `cb6f7817`, CI head38264091773 e main38268739725 SUCCESS,234PASS0FAIL0SKIP. Nuova normale Auth05 conclusa18:30:10.674UTC: Account server/profile/shop corretti, gen9/TTL892s, Home/pending0/dirty0, disconnect certo e lock assente; receipt `a7e2e551`. Il TTL vale all’osservazione e non è esteso.
+
+C04 V23 `e8cd1a16`: due review source approvate, registry161/provenienza immutata, finestra18:18:29.239→18:33:29.239UTC. Un Save Admin del solo nome e un Save Mini obsoleto: zero scritture Mini riuscite, una ricevuta stale e un audit blocked. Conferma confronto18:21:49.047 e scelta nativa Reload18:22:20.097 effettive; modulo con nome/revisione Admin e outbox/dirty0, poi Home pulita. SQL indipendente finale preserva nome Admin, stock/prezzi/immagini e fixture protette. Terminale `STALE_REVISION_DEVTOOLS_ACCEPTED_AND_CASE_CLOSED`18:28:19.376/`d76182aa`; fence archiviato e lock assente, release root18:29:05.762/`d99702d2`.
+
+Primo controllo readonly Reload: FAIL `ORACLE_STALE` prima dell’SDK, senza risultato reloaded. I tre file originali, hash/inode e FAIL sono conservati nell’archivio del tentativo; request, SQL, sorgente e finestra restano invariati. Nuovo SELECT fresco e osservazione readonly completata18:27:00.861 legano la nuova ricevuta all’oracolo fresco; nessun Save o Reload aggiuntivo. C04 V22 `fd9403b6` mantiene il FAIL di budget/MiniSave0 e il suo recupero, senza replay o ripristino server.
+
+Pending R5 preparato52test puri PASS e review2/2 approvate; A03/E02/E03 nuova serie runtime non ancora iniziata. D02 source in preparazione. Convergenza nativa, serie prestazioni e telefono fisico restano gate separati; nessun PASS globale o DONE.
+
+
+## Checkpoint storico — 2026-10-12 14:29 America/Santiago
+
+**V13 installata e login autentico verificato; WECHAT-010 resta EXECUTION.** PR56 merged `cb6f7817`, CI head38264091773/main38268739725 SUCCESS,234PASS0FAIL0SKIP. Reader pristine R3 e installer/guard/bridge R2 approvati da due revisori; vecchi candidati e rilievi preservati. FF primary e305→cb6f e tre soli file dist installati/configurazione TEST identica. Pristine SDK rilasciato17:05:47.862/a2adbe44; installazione e lock rilasciati17:05:50.406/665a9f44; compilazione ordinaria1click, Home/frame nuovo17:12:05.906/5086e9cf.
+
+Nuova normale autenticazione V13: un Sign in/logout0, Account letto dal server con profilo/shop esatti, Home/sessione/gen1/TTL890s al17:14:49.807UTC, pending0/dirty0/busyfalse. Terminale `FRESH_AUTH_SCOPE_VERIFIED`, receipt `fc8473d6`; disconnect certo e lock rilasciato, nessun Save/SQL. Questo è PASS circoscritto al rinnovo e scope autentico; sessione non estesa e nessun risultato di convergenza o prestazioni dedotto.
+
+C04 distinto e4c404b7: Worker preflight aggiornato e SELECT TEST autentico, poi FAIL `LIVE_REGISTRY_CHANGED` prima della bozza/UI/Save, poiché history161 invece158. SDK concluso17:18:04.448, chiusura17:20:46.693/6a0bb1f2, lock/fence assenti, bozza/AdminSave/MiniSave/Reload0. FAIL preservato e nessun replay. Le tre aggiunte POS sono state lette in SQL senza scritture e confrontate byte per byte con GitHub commit Admin6d2bcf1/CI38243799965 SUCCESS; proof c7c534d1. Sono limitate alla funzione privata di recovery import POS; nuova lineage161/C04v22 in preparazione e review, senza allentare primo155/fixture/Worker/identità/concorrenza. C04 reload e gli altri gate autentici restano aperti; nessun DONE.
+
+## Checkpoint storico — 2026-10-12 11:28 America/Santiago
 
 **WECHAT-010 resta EXECUTION; correzione del budget Auth preparata e verificata localmente, non installata.** Dopo «Fatto» dell’utente, Home TEST osservata in screenshot e lettura locale: actor/shop attesi e queue/dirty0, ma TTL507s<600 ha fermato l’ammissione C04. Successivo unico tap Sign in effettivo13:06:13.556UTC; l’osservatore R2 ha fallito13:06:13.572, appena16ms dopo il tap, senza attendere l’avvio della UI. FAIL originale dc9964 preservato; lettura distinta13:13:03/9ef97a conferma signed_out, nessuna nuova sessione. Nessun nuovo caso C04, bozza, Save o SQLwrite.
 
